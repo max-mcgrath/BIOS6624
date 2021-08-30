@@ -1,17 +1,32 @@
-# Bios6624Class
+BIOS 6624 - Max McGrath 
+====
 
-**PI:**Nichole Carlson  
-**Analyst**:Nichole Carlson  
+**PI**: Nichole Carlson  
+**Analyst**: Nichole Carlson  
 
-This is the example repository for the project work for Bios6624. In this course we will complete 5 projects (0-4). Each project is contained in a single subfolder. Each of these subfolders have the same folder structure described below.  Not, in the .gitignore file the DataRaw and DataProcessed folders are ignored. So they will exist with the analyst, but not on Github. This prevents data sharing prior to final release with publication.
+This is Max McGrath's repository for BIOS 6624 - Advanced Statistical Methods 
+and Analysis. Each directory contains the files needed to reproduce
+analysis for one of the five projects described below. Descriptions
+of the directories structure follow.
 
-Details about the folder structure for a project:
+Project details
+====
+
+Project | Topic 
+- | -
+Project 0 | Regression Analsysis
+Project 1 | Bayesian Regression
+Project 2 | Study Design & Grant Writing
+Project 3 | Survival Analysis
+Project 4 | Simulation
+
+
+Folder structure
+====
 
 File | Description
----|---------------------------------------------------------------------
-Background | contains the background information for the analysis
-Code | contains all R scripts for this project
-DataRaw | contain all raw data provided by investigators
-DataProcessed | contains the processed data used for analysis
-Reports | contains all output, rmarkdown files and report
+- | -
+Background | Background information for the analysis
+Code | R scripts for this project
+Reports | Output, R Markdown files and report
 
