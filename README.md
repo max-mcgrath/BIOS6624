@@ -12,21 +12,21 @@ of the directories structure follow.
 Project details
 ====
 
-Project | Topic 
-- | -
-Project 0 | Regression Analsysis
-Project 1 | Bayesian Regression
-Project 2 | Study Design & Grant Writing
-Project 3 | Survival Analysis
-Project 4 | Simulation
+| Project | Topic |
+| --- | --- |
+|Project 0 | Regression Analsysis |
+|Project 1 | Bayesian Regression |
+|Project 2 | Study Design & Grant Writing |
+|Project 3 | Survival Analysis |
+|Project 4 | Simulation |
 
 
 Folder structure
 ====
 
-File | Description
-- | -
-Background | Background information for the analysis
-Code | R scripts for this project
-Reports | Output, R Markdown files and report
+| File | Description |
+| --- | --- |
+| Background | Background information for the analysis |
+| Code | R scripts for this project |
+| Reports | Output, R Markdown files and report |
 
