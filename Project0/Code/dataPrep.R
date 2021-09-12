@@ -57,5 +57,22 @@ questionTwoData <- withDateTimes %>%
 
 write_rds(questionTwoData, "DataProcessed/questionTwoData")
 
+# Question 3
+# Select only relevant columns, remove any days that have missing or
+#   erroneous measurements (still unsure of what constitutes erroneous or how
+#   to handle missing data, but this will do for now). Currently using 
+#   booklet time for analysis, probably will incorporate memTime later
+questionThreeData <- dataRaw %>%
+    select(subjectID = SubjectID, 
+           day = DAYNUMB,
+           bookletTime = Booklet..Sample.interval.Decimal.Time..mins.,
+           memTime = MEMs..Sample.interval.Decimal.Time..mins.,
+           cortisolUgDl = Cortisol..ug.dl., 
+           dheaPgDl = DHEA..pg.dl.) %>%
+    group_by(subjectID, day) %>%
+    filter(!any(is.na(bookletTime)),
+           !any(cortisolUgDl == 9999),
+           !any(dheaPgDl == 1500))
 
+write_rds(questionThreeData, "DataProcessed/questionThreeData")
 
