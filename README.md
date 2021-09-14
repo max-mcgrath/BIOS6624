@@ -14,7 +14,7 @@ Project details
 
 | Project | Topic |
 | --- | --- |
-|Project 0 | Regression Analsysis |
+|Project 0 | Regression Analysis |
 |Project 1 | Bayesian Regression |
 |Project 2 | Study Design & Grant Writing |
 |Project 3 | Survival Analysis |

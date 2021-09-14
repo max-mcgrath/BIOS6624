@@ -51,12 +51,12 @@ changes of cortisol and DHEA over time.
 ### Analysis
 
 Knowing the data consists of repeated observations from each subject, it is 
-foreseeable that intrasubject DHEA and cortisol levels will be correlated. So,
+foreseeable that intrasubject DHEA and cortisol levels are correlated. So,
 to quantify changes in DHEA and cortisol over time, two linear mixed-effects 
-models (one for each hormone) were fit with the intercept allowed to vary by 
+models (one for each hormone) were fit with intercepts allowed to vary by 
 subject, thereby accounting for this correlation. Further, given
 the known diurnal trend in which DHEA and cortisol peak 30 minutes after waking,
-the fixed components of the linear models were segmented into piecewise
+the fixed effects of the linear models were segmented into piecewise
 components wherein the linear trends were allowed to differ before and after
 30 minutes after waking. For each model, time after waking was used as the sole
 predictor, and the natural log of the measurement of DHEA and cortisol levels 
