@@ -1,0 +1,71 @@
+---
+title: "Project 0 Report"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+    - \preauthor{\begin{flushleft}}
+    - \postauthor{\end{flushleft}}  
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+<!-- Citation: Header flags from William Lippitt -->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This analysis evaluates the efficacy of a novel, take-home collection device
+used to measure salivary cortisol and DHEA levels throughout the day. The
+device was provided to 31 healthy control subjects who were asked to collect
+saliva samples immediately upon waking, 30 minutes after waking, before lunch,
+and 600 minutes after waking. The time of waking and the time before lunch were
+left to the discretion of each subject. Each subject was asked to collect 
+four samples per day for three days, providing a maximum of 12 samples per
+subject. 
+
+The samples were collected using a filter
+paper device termed the Saliva Procurement and Integrated Testing (SPIT)
+booklet which was kept in a bottle with an electronic monitoring cap. Subjects
+were asked to manually record the time the sample was taken, and the electronic
+monitoring cap also recorded the timing of the sample. From each sample,
+cortisol and DHEA levels were measured in nanomoles per liter. 
+
+This analysis has three aims: (1) evaluate the agreement between the subject's
+recordings of sampling times and those recorded by the electronic monitoring 
+cap, (2) evaluate subject adherence to specified sample timing, and (3) quantify
+changes of cortisol and DHEA over time.
+
+## Methods
+
+### Data Preperation
+
+### Analysis
+
+Knowing the data consists of repeated observations from each subject, it is 
+foreseeable that intrasubject DHEA and cortisol levels will be correlated. So,
+to quantify changes in DHEA and cortisol over time, two linear mixed-effects 
+models (one for each hormone) were fit with the intercept allowed to vary by 
+subject, thereby accounting for this correlation. Further, given
+the known diurnal trend in which DHEA and cortisol peak 30 minutes after waking,
+the fixed components of the linear models were segmented into piecewise
+components wherein the linear trends were allowed to differ before and after
+30 minutes after waking. For each model, time after waking was used as the sole
+predictor, and the natural log of the measurement of DHEA and cortisol levels 
+were used as responses for each hormone's respective model.
+
+## Results
+
+## Conclusions
+
+## Reproducible research information
+
+## Appendix
