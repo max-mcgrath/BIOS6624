@@ -40,6 +40,7 @@ withDateTimes24 <- dataRaw %>%
 
 write_rds(withDateTimes24, "DataProcessed/withDateTimes24")
 
+# Question 2  ------------------------------------------------------------------
 # Limit data to 2nd (30 minutes after waking) and 4th (10 hours after waking) 
 #   observation, calculate respective adherence to study procedure, remove
 #   unneeded columns
@@ -57,7 +58,7 @@ questionTwoData <- withDateTimes %>%
 
 write_rds(questionTwoData, "DataProcessed/questionTwoData")
 
-# Question 3
+# Question 3 -------------------------------------------------------------------
 # Select only relevant columns, remove any days that have missing or
 #   erroneous measurements (still unsure of what constitutes erroneous or how
 #   to handle missing data, but this will do for now). Currently using 
@@ -66,13 +67,17 @@ questionThreeData <- dataRaw %>%
     select(subjectID = SubjectID, 
            day = DAYNUMB,
            bookletTime = Booklet..Sample.interval.Decimal.Time..mins.,
-           memTime = MEMs..Sample.interval.Decimal.Time..mins.,
-           cortisolUgDl = Cortisol..ug.dl., 
-           dheaPgDl = DHEA..pg.dl.) %>%
-    group_by(subjectID, day) %>%
-    filter(!any(is.na(bookletTime)),
-           !any(cortisolUgDl == 9999),
-           !any(dheaPgDl == 1500))
+           cortisol = Cortisol..nmol.L., 
+           dhea = DHEA..nmol.L.,
+           collectionSample = Collection.Sample) %>%
+    filter(!is.na(bookletTime),
+           (cortisol != 9999),
+           (dhea != 1500),
+           (cortisol < 40)) %>%
+    mutate(logTime = log(bookletTime + 1),
+           logCortisol = log(cortisol),
+           logDHEA = log(dhea))
 
+# Write data to relevant folder
 write_rds(questionThreeData, "DataProcessed/questionThreeData")
 
