@@ -65,8 +65,9 @@ questionThreeData <- read_rds("DataProcessed/questionThreeData")
 
 # Further data adjustment necessary to create piecewise regression
 # Choose breakpoint to be mean of second observation
-breakPoint <- mean(questionThreeData$bookletTime[
-    questionThreeData$collectionSample == 2])
+# breakPoint <- max(questionThreeData$bookletTime[
+#     questionThreeData$collectionSample == 2])
+breakPoint <- 30
 
 # Create new columns
 piecewiseData <- questionThreeData %>%
@@ -263,8 +264,12 @@ plotDataAll <- allSubjectPredictions %>%
 # Plot all subject predictions
 (ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
         geom_line(aes(colour = subjectID)) +
-        geom_point(data = piecewiseData, 
-                   aes(x = bookletTime, y = logDHEA, colour = as.factor(subjectID))))
+        labs(title = "Predicted Log DHEA vs Minutes Past Waking",
+             x = "Minutes Past Waking", y = "Predicted log(dhea) (nmol/L)"))
+
+# Currently unused code chunk to add observed data to above plot
+# geom_point(data = piecewiseData, 
+#            aes(x = bookletTime, y = logDHEA, colour = as.factor(subjectID)))
 
 # logCortisol ------------------------------------------------------------------
 # Fit random intercepts model for DHEA
@@ -328,5 +333,5 @@ plotDataAll <- allSubjectPredictions %>%
 # Plot all subject predictions
 (ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
         geom_line(aes(colour = subjectID)) +
-        geom_point(data = piecewiseData, 
-                   aes(x = bookletTime, y = logCortisol, colour = as.factor(subjectID))))
+        labs(title = "Predicted Log Cortisol vs Minutes Past Waking",
+             x = "Minutes Past Waking", y = "Predicted log(cortisol) (nmol/L)"))
