@@ -1,0 +1,32 @@
+# Load libraries
+library(lme4)
+library(dplyr)
+
+# Aim 2 ------------------------------------------------------------------------
+# Read data
+questionTwoData <- read_rds("DataProcessed/questionTwoData")
+
+# Plot book versus MEM adherence
+ggplot(data = questionTwoData, aes(x = recordType, y = adherence)) +
+    geom_boxplot()
+
+# Create table comparing Book and MEM Adherence
+adherenceTable <- questionTwoData %>%
+    group_by(recordType) %>%
+    summarise(total = length(.data$adherence),
+              naCount = sum(is.na(.data$adherence)),
+              countLess7_5 = sum(abs(.data$adherence) <= 7.5, na.rm = TRUE),
+              percentLess7_5 = sum(abs(.data$adherence) <= 7.5, na.rm = TRUE) / 
+                  sum(!is.na(.data$adherence)), 
+              count7_5to15 = sum(abs(.data$adherence) > 7.5 & 
+                                     abs(.data$adherence) <= 15, na.rm = TRUE),
+              percent7_5to15 = sum(abs(.data$adherence) > 7.5 & 
+                                       abs(.data$adherence) <= 15, 
+                                   na.rm = TRUE) / 
+                  sum(!is.na(.data$adherence)),
+              countGreater15 = sum(abs(.data$adherence) > 15, na.rm = TRUE),
+              percentGreater15 = sum(abs(.data$adherence) > 15, na.rm = TRUE) / 
+                  sum(!is.na(.data$adherence)),
+              countLess15 = sum(abs(.data$adherence) <= 15, na.rm = TRUE),
+              percentLess15 = sum(abs(.data$adherence) <= 15, na.rm = TRUE) / 
+                  sum(!is.na(.data$adherence)))
