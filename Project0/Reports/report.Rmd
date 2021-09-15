@@ -19,12 +19,19 @@ geometry: margin=1in
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+setwd("..")
+source("Code/1-DataPrep.R")
+source("Code/2-EDA.R")
+source("Code/3-Analysis-Aim1.R")
+source("Code/4-Analysis-Aim2.R")
+source("Code/5-Analysis-Aim3.R")
 ```
 
 ## Introduction
 
 This analysis evaluates the efficacy of a novel, take-home collection device
-used to measure salivary cortisol and DHEA levels throughout the day. The
+used to measure salivary cortisol and DHEA levels throughout the day, and
+examines DHEA and cortisol level time trends. The
 device was provided to 31 healthy control subjects who were asked to collect
 saliva samples immediately upon waking, 30 minutes after waking, before lunch,
 and 600 minutes after waking. The time of waking and the time before lunch were
@@ -44,6 +51,11 @@ This analysis has three aims: (1) evaluate agreement between the subject's
 recordings of sampling times and those recorded by the MEM, (2) evaluate subject
 adherence to specified sample timing, and (3) quantify
 changes of cortisol and DHEA over time.
+
+As such, we will test three hypotheses: (1) Subject's booklet recordings and the
+times recorded by the MEM are significantly correlated, (2) ..., and (3) DHEA
+and cortisol levels are positively correlated with time until 30 minutes after
+waking and then negatively correlated with time for the remainder of the day.
 
 ## Methods
 
@@ -68,7 +80,8 @@ foreseeable that intrasubject DHEA and cortisol levels are correlated. So,
 to quantify changes in DHEA and cortisol over time, two linear mixed-effects 
 models (one for each hormone) were fit with intercepts allowed to vary by 
 subject, thereby accounting for this correlation. Further, given
-the known diurnal trend in which DHEA and cortisol peak 30 minutes after waking,
+the known diurnal trend in which DHEA and cortisol levels peak 30 minutes after 
+waking and then taper throughout the day,
 the fixed effects of the linear models were segmented into piecewise
 components wherein the linear trends were allowed to differ before and after
 30 minutes after waking. For each model, time after waking was used as the sole
@@ -77,9 +90,30 @@ were used as responses for each hormone's respective model.
 
 ## Results
 
+The linear model used to test the hypothesis that subject's booklet recordings 
+and the times recorded by the MEM are significantly correlated had an estimated 
+slope coefficient of 0.9938 with a p-value less than .001. A plot of the MEM
+recorded times versus the subject recorded times is included in the appendix
+in Figure ???.
+
+
+
 ## Conclusions
 
 ## Reproducible research information
+
+The code used to generate this analysis is available on GitHub 
+at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project0
+. The `Background` folder contains information pertinent to understanding the
+analysis but unnecessary for reproducing it. The `Code` folder contains five
+files: `1-DataPrep.R`, `2-EDA.R`, `3-Analysis-Aim1.R`, `4-Analysis-Aim2.R`, and
+`5-Analysis-Aim3.R`. These R scripts are dependent upon a data file 
+`Data/Project0_Clean_v2.csv` which is not available on GitHub, but may be requested
+by emailing `max.mcgrath@ucdenver.edu`. To run the complete analysis, each
+script should be run in the order of the number preceding its filename. The
+last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
+be used to generate this report (note that it also depends on the aforementioned
+data).
 
 This analysis was performed using R version 4.0.4. The following non-base R 
 packages were used: lme4 (1.1.26), dplyr (1.0.5), ggplot2 (3.3.3),

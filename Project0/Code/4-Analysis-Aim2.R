@@ -6,27 +6,22 @@ library(dplyr)
 # Read data
 questionTwoData <- read_rds("DataProcessed/questionTwoData")
 
-# Plot book versus MEM adherence
-ggplot(data = questionTwoData, aes(x = recordType, y = adherence)) +
-    geom_boxplot()
-
 # Create table comparing Book and MEM Adherence
-adherenceTable <- questionTwoData %>%
-    group_by(recordType) %>%
-    summarise(total = length(.data$adherence),
-              naCount = sum(is.na(.data$adherence)),
-              countLess7_5 = sum(abs(.data$adherence) <= 7.5, na.rm = TRUE),
-              percentLess7_5 = sum(abs(.data$adherence) <= 7.5, na.rm = TRUE) / 
-                  sum(!is.na(.data$adherence)), 
-              count7_5to15 = sum(abs(.data$adherence) > 7.5 & 
-                                     abs(.data$adherence) <= 15, na.rm = TRUE),
-              percent7_5to15 = sum(abs(.data$adherence) > 7.5 & 
-                                       abs(.data$adherence) <= 15, 
-                                   na.rm = TRUE) / 
-                  sum(!is.na(.data$adherence)),
-              countGreater15 = sum(abs(.data$adherence) > 15, na.rm = TRUE),
-              percentGreater15 = sum(abs(.data$adherence) > 15, na.rm = TRUE) / 
-                  sum(!is.na(.data$adherence)),
-              countLess15 = sum(abs(.data$adherence) <= 15, na.rm = TRUE),
-              percentLess15 = sum(abs(.data$adherence) <= 15, na.rm = TRUE) / 
-                  sum(!is.na(.data$adherence)))
+adherenceProportions <- questionTwoData %>% 
+    group_by(Collection.Sample) %>%
+    summarise(total = n(),
+              memNACount = sum(is.na(.data$memAdherence)),
+              bookNACount = sum(is.na(.data$bookAdherence)),
+              averageMemDiscr = mean(memAdherence, na.rm = TRUE),
+              averageBookDiscr = mean(bookAdherence, na.rm = TRUE),
+              memPercLess7_5 = sum(abs(.data$memAdherence) <= 7.5, na.rm = TRUE) / 
+                  sum(!is.na(.data$memAdherence)),
+              bookPercLess7_5 = sum(abs(.data$bookAdherence) <= 7.5, na.rm = TRUE) / 
+                  sum(!is.na(.data$bookAdherence)),
+              memPercLess15 = sum(abs(.data$memAdherence) <= 15, na.rm = TRUE) / 
+                  sum(!is.na(.data$memAdherence)),
+              bookPercLess15 = sum(abs(.data$bookAdherence) <= 15, na.rm = TRUE) / 
+                  sum(!is.na(.data$bookAdherence)))
+
+# Print data
+adherenceProportions

@@ -26,6 +26,9 @@ car::residualPlot(timesLinearModel)
 # Summarize findings
 summary(timesLinearModel)
 
+# Confidence interval
+confint(timesLinearModel)
+
 # Section below checks possibility of using minutes since waking rather than
 #   raw date time
 # Read Data

@@ -4,9 +4,7 @@ library(stringr)
 library(hms)
 
 # Load raw data
-dataRaw <- read.csv(paste0("/Users/maxmcgrath/Documents/CUDenver/Fall21/BIOS66",
-                           "24/bios6624-MaxMcGrath/Project0/DataRaw/Project0_C",
-                           "lean_v2.csv"))
+dataRaw <- read.csv("DataRaw/Project0_Clean_v2.csv")
 
 # Convert columns to datetimes, then take difference between bookletTime and
 #   and memTime
@@ -20,7 +18,7 @@ withDateTimes <- dataRaw %>%
                format = "%H:%M")),
            diffMemBooklet = difftime(memTime, bookletTime, units = "mins"))
 
-write_rds(withDateTimes24, "DataProcessed/withDateTimes")
+write_rds(withDateTimes, "DataProcessed/withDateTimes")
 
 adherenceData <- dataRaw %>%
     select(subjectID = SubjectID, 
@@ -39,15 +37,15 @@ write_rds(adherenceData, "DataProcessed/adherenceData")
 #   unneeded columns
 questionTwoData <- withDateTimes %>%
     filter(.data$Collection.Sample == 2 | .data$Collection.Sample == 4) %>%
-    mutate(book = 
+    mutate(bookAdherence = 
                ifelse(.data$Collection.Sample == 2,
                       .data$Booklet..Sample.interval.Decimal.Time..mins. - 30,
                       .data$Booklet..Sample.interval.Decimal.Time..mins. - 600),
-           mem = 
+           memAdherence = 
                ifelse(.data$Collection.Sample == 2,
                       .data$MEMs..Sample.interval.Decimal.Time..mins. - 30,
-                      .data$MEMs..Sample.interval.Decimal.Time..mins. - 600)) %>% 
-    pivot_longer(cols = book:mem, names_to = "recordType", values_to = "adherence")
+                      .data$MEMs..Sample.interval.Decimal.Time..mins. - 600)) %>%
+    select(Collection.Sample, bookAdherence, memAdherence)
 
 write_rds(questionTwoData, "DataProcessed/questionTwoData")
 
