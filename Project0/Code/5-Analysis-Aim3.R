@@ -11,10 +11,6 @@ questionThreeData <- read_rds("DataProcessed/questionThreeData")
 # Choose breakpoint
 breakPoint <- 30
 
-# Unused code to set breakpoint to mean of second daily observation
-# breakPoint <- max(questionThreeData$bookletTime[
-#     questionThreeData$collectionSample == 2])
-
 # Create new columns
 piecewiseData <- questionThreeData %>%
     mutate(I30 = as.numeric(bookletTime >= breakPoint),
@@ -30,6 +26,9 @@ dheaLM <- lmer(logDHEA ~ bookletTime + I30_minus30 + (1 | subjectID),
 summary(dheaLM)
 confint(dheaLM)
 plot(dheaLM)
+
+# Get random intercept range
+range(coef(dheaLM)$subjectID[1, ])
 
 # Extract fixed coefficients
 betaOne <- coef(dheaLM)$subjectID[1, 2]
@@ -99,6 +98,9 @@ cortisolLM <- lmer(logCortisol ~ bookletTime + I30_minus30 + (1 | subjectID),
 summary(cortisolLM)
 confint(cortisolLM)
 plot(cortisolLM)
+
+# Get random intercept range
+range(coef(dheaLM)$subjectID[1, ])
 
 # Extract fixed coefficients
 betaOne <- coef(cortisolLM)$subjectID[1, 2]

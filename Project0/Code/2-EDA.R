@@ -3,6 +3,40 @@ library(lme4)
 library(dplyr)
 library(ggplot2)
 
+# Aim 1  ------------------------------------------------------------------------
+# Read data
+withDateTimes <- read_rds("DataProcessed/withDateTimes")
+
+# Booklet times versus MEM Times
+(ggplot(data = withDateTimes, aes(x = bookletTime, y = diffMemBooklet, 
+                                  color = Collection.Sample)) +
+                geom_point() +
+                labs(title = "MEM Time Bias Relative to Booklet Time",
+                     x = "Booklet Recorded Time",
+                     y = "Difference between MEM and Booklet Records "))
+
+# Aim 2  ------------------------------------------------------------------------
+# Read data
+withDateTimes <- read_rds("DataProcessed/withDateTimes")
+
+aimTwoPlotData <- withDateTimes %>%
+        filter(.data$Collection.Sample == 2 | .data$Collection.Sample == 4) %>%
+        mutate(book = 
+                       ifelse(.data$Collection.Sample == 2,
+                              .data$Booklet..Sample.interval.Decimal.Time..mins. - 30,
+                              .data$Booklet..Sample.interval.Decimal.Time..mins. - 600),
+               mem = 
+                       ifelse(.data$Collection.Sample == 2,
+                              .data$MEMs..Sample.interval.Decimal.Time..mins. - 30,
+                              .data$MEMs..Sample.interval.Decimal.Time..mins. - 600)) %>% 
+        pivot_longer(cols = book:mem, names_to = "recordType", 
+                     values_to = "adherence")
+
+
+# Plot book versus MEM adherence
+ggplot(data = aimTwoPlotData, aes(x = recordType, y = adherence)) +
+        geom_boxplot()
+
 # Aim 3 ------------------------------------------------------------------------
 # Read data
 questionThreeData <- read_rds("DataProcessed/questionThreeData")

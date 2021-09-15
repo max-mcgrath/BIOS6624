@@ -5,7 +5,7 @@ library(car)
 
 # Aim 1 ------------------------------------------------------------------------
 # Read data
-withDateTimes24 <- read_rds("DataProcessed/withDateTimes24")
+withDateTimes24 <- read_rds("DataProcessed/withDateTimes")
 
 # Plot Data
 ggplot(data = withDateTimes24, mapping = aes(x = bookletTime, y = memTime)) +
@@ -28,6 +28,10 @@ summary(timesLinearModel)
 
 # Confidence interval
 confint(timesLinearModel)
+
+# Calculate Summary Statistics
+mean(withDateTimes$diffMemBooklet, na.rm = TRUE)
+    
 
 # Section below checks possibility of using minutes since waking rather than
 #   raw date time

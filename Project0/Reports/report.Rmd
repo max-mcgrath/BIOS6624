@@ -70,8 +70,9 @@ this section, as minutes since waking (which is used for the other sections
 of this analysis), yielded a fit with obviously correlated residuals. The
 slope estimate of this model was then examined to quantify correlation between
 the examined times, and a t-test was conducted to evaluate the estimates
-statistical significance. A plot comparing booklet times and MEM times is also
-provided.
+statistical significance. The mean difference between times recorded by MEM and
+those recorded in the booklets was also calculated. A plot comparing booklet 
+times and MEM times is also provided.
 
 Aim 2: ...
 
@@ -94,11 +95,55 @@ The linear model used to test the hypothesis that subject's booklet recordings
 and the times recorded by the MEM are significantly correlated had an estimated 
 slope coefficient of 0.9938 with a p-value less than .001. A plot of the MEM
 recorded times versus the subject recorded times is included in the appendix
-in Figure ???.
+in Figure ???. On average, the MEM recorded times are 7.71 minutes later than
+those recorded in the book. A plot of the difference between MEM and booklet
+records is provided in Figure ???.
 
+Of the 93 observations for 30 minutes after waking, 33 MEM records and 6 booklet
+records were missing. Of those that were not missing, 75.0% of MEM records and
+79.3% of booklet records were within 7.5 minutes of subjects' wake-time records.
+Further, 86.7% of MEM records and 95% of booklet records are within 15 minutes 
+of the 30 minute protocol. On average, MEM records were 11.3 minutes after the
+30 minute protocol, and booklet records were 3.49 minutes after the 30 minute 
+protocol.
 
+Of the 93 observations for the 600 minute protocol, 21 MEM records and 16
+booklet records were missing. Of those that were not missing, 29.2% of MEM 
+records and
+42.9% of booklet records were within 7.5 minutes of subjects' wake-time records.
+45.8% of MEM records and 53.2% of booklet records were within 15 minutes of the
+600 minute protocol. On average, MEM records and book records differed from the
+600 minute protocol by 54.1 and 42.1 minutes respectively. A box-plot for 
+protocol adherence by record type is provided in Figure ???.
+
+Given greater number of complete observations and the superior 
+protocol-adherence of booklet records, booklet records were used for the models 
+analyzing DHEA and cortisol. Specifically, booklet
+recorded minutes after waking were used as the predictor. Records with missing 
+booklet times were discarded. Additionally, to meet error assumptions for linear
+models, the natural log of DHEA and cortisol levels in nanomoles per Liter
+were used as the responses for their respective models. 
+
+For the DHEA model, random intercept estimates for the subjects ranged from 
+-0.019 to 0.107 with a standard deviation of 0.530.
+The piecewise regression model used to analyze DHEA involves
+the estimation of two regression coefficients. The first estimates the slope
+of the data prior to the break at 30 minutes, and it was estimated to be 
+-0.193 with a 95% confidence interval of (-0.026, -0.128). The second
+coefficient estimates the change in slope following the break and was estimated
+to be 0.018 with a 95% confidence interval of (0.011, 0.0244). 
+
+For the cortisol model, random intercept estimates for the subjects ranged from
+-0.019 to 0.107 with a standard deviation of 0.336. The estimate of the slope
+coefficient prior to 30 minutes after waking was 0.003829 with a 95% confidence
+interval of (-0.004, 0.011), and the estimate of the change in slope from
+before to after 30 minutes was -0.005913 with a 95% confidence interval of
+(-0.014, 0.001). Plots of both models for all estimated intercepts are provided
+in Figures ??? and ???.
 
 ## Conclusions
+
+### Limitations and Further Analysis
 
 ## Reproducible research information
 
@@ -108,7 +153,8 @@ at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project0
 analysis but unnecessary for reproducing it. The `Code` folder contains five
 files: `1-DataPrep.R`, `2-EDA.R`, `3-Analysis-Aim1.R`, `4-Analysis-Aim2.R`, and
 `5-Analysis-Aim3.R`. These R scripts are dependent upon a data file 
-`Data/Project0_Clean_v2.csv` which is not available on GitHub, but may be requested
+`Data/Project0_Clean_v2.csv` which is not available on GitHub, but may be 
+requested
 by emailing `max.mcgrath@ucdenver.edu`. To run the complete analysis, each
 script should be run in the order of the number preceding its filename. The
 last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
