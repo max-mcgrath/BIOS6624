@@ -80,7 +80,7 @@ plotDataAll <- allSubjectPredictions %>%
     mutate(grid = rep(grid, times = length(unique(subjectID))))
 
 # Plot all subject predictions
-(ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
+(aimThreePlot1 <- ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
         geom_line(aes(colour = subjectID)) +
         labs(title = "Predicted Log DHEA vs Minutes Past Waking",
              x = "Minutes Past Waking", y = "Predicted log(dhea) (nmol/L)"))
@@ -152,7 +152,7 @@ plotDataAll <- allSubjectPredictions %>%
     mutate(grid = rep(grid, times = length(unique(subjectID))))
 
 # Plot all subject predictions
-(ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
+(aimThreePlot2 <- ggplot(data = plotDataAll, aes(x = grid, y = predicted)) +
         geom_line(aes(colour = subjectID)) +
         labs(title = "Predicted Log Cortisol vs Minutes Past Waking",
              x = "Minutes Past Waking", y = "Predicted log(cortisol) (nmol/L)"))

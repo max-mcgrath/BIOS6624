@@ -5,20 +5,21 @@ library(car)
 
 # Aim 1 ------------------------------------------------------------------------
 # Read data
-withDateTimes24 <- read_rds("DataProcessed/withDateTimes")
+withDateTimes <- read_rds("DataProcessed/withDateTimes")
 
 # Plot Data
-ggplot(data = withDateTimes24, mapping = aes(x = bookletTime, y = memTime)) +
+(aimOnePlot <- ggplot(data = withDateTimes, 
+                     mapping = aes(x = bookletTime, y = memTime)) +
     geom_point() +
     geom_smooth(method = 'lm') +
     labs(title = "Electronic Monitoring Cap vs. Booklet Time",
-         x = "Booklet Time", y = "Electronic Monitoring Cap Time")
+         x = "Booklet Time", y = "Electronic Monitoring Cap Time"))
 
 # Create linear model to evaluate correlation
 #   Note: times are converted to numeric as summary.lm() doesn't handle 
 #   datetimes well
 timesLinearModel <- lm(as.numeric(bookletTime) ~ as.numeric(memTime), 
-                       data = withDateTimes24)
+                       data = withDateTimes)
 
 # Evaluate linear model assumptions
 car::residualPlot(timesLinearModel)

@@ -7,18 +7,16 @@ author: |
 header-includes:
     - \usepackage{setspace}\doublespacing
     - \usepackage{titling}
-    - \preauthor{\begin{flushleft}}
-    - \postauthor{\end{flushleft}}  
 output: pdf_document
 indent: true
 mainfont: Times New Roman
 fontsize: 12pt
 geometry: margin=1in
 ---
-<!-- Citation: Header flags from William Lippitt -->
+<!-- Citation: Some formatting from William Lippitt and Joe Froelicher -->
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 setwd("..")
 source("Code/1-DataPrep.R")
 source("Code/2-EDA.R")
@@ -27,17 +25,18 @@ source("Code/4-Analysis-Aim2.R")
 source("Code/5-Analysis-Aim3.R")
 ```
 
+\newpage
+
 ## Introduction
 
-This analysis evaluates the efficacy of a novel, take-home collection device
-used to measure salivary cortisol and DHEA levels throughout the day, and
+This analysis evaluates the viability of a novel, take-home collection device
+used to measure salivary cortisol and DHEA levels throughout the day and
 examines DHEA and cortisol level time trends. The
 device was provided to 31 healthy control subjects who were asked to collect
 saliva samples immediately upon waking, 30 minutes after waking, before lunch,
-and 600 minutes after waking. The time of waking and the time before lunch were
+and 600 minutes after waking. The time of waking and the time of lunch were
 left to the discretion of each subject. Each subject was asked to collect 
-four samples per day for three days, providing a maximum of 12 samples per
-subject. 
+four samples per day for three days, providing a total of 372 observations.
 
 The samples were collected using a filter
 paper device termed the Saliva Procurement and Integrated Testing (SPIT)
@@ -52,34 +51,55 @@ recordings of sampling times and those recorded by the MEM, (2) evaluate subject
 adherence to specified sample timing, and (3) quantify
 changes of cortisol and DHEA over time.
 
-As such, we will test three hypotheses: (1) Subject's booklet recordings and the
-times recorded by the MEM are significantly correlated, (2) ..., and (3) DHEA
+As such, two hypotheses will be tested: (1) Subject's booklet recordings and the
+times recorded by the MEM are significantly correlated, and (2) DHEA
 and cortisol levels are positively correlated with time until 30 minutes after
 waking and then negatively correlated with time for the remainder of the day.
+Further, conclusions will be drawn regarding subject adherence based on the
+findings of the analyses.
 
 ## Methods
 
 ### Data Preperation
 
+In general, the data provided was filtered for missing and erroneous values in
+accordance with the needs of each section of analysis. When 
+evaluating correlation between subjects'
+booklet recorded times and MEM times, 87 missing time records were removed (26 
+with missing booklet records, 52 with missing MEM records, and 9 with both). 
+When comparing strict differences between record types, only records with both
+values present were examined. Record missingness is further discussed when
+examining subject protocol compliance.
+
+When examining DHEA levels and cortisol levels, all observation with missing
+booklet time records were removed. Further, 1 observation with cortesol levels
+greater than 40 nanomoles per liter was removed, and 6 observations with DHEA
+levels equal to 5.205 nanomoles per liter were removed, as those measurements
+were deemed to be errors caused instrumentation limitations.
+
 ### Analysis
 
-To evaluate agreement between the subjects' booklet recordings of sampling 
+To evaluate agreement between the subjects' booklet records sample
 times and those recorded by the MEM, a linear model was fit with MEM time as the
 response variable and booklet time as the predictor. Raw times were used for 
 this section, as minutes since waking (which is used for the other sections
 of this analysis), yielded a fit with obviously correlated residuals. The
 slope estimate of this model was then examined to quantify correlation between
-the examined times, and a t-test was conducted to evaluate the estimates
+the times, and a t-test was conducted to evaluate the estimate's
 statistical significance. The mean difference between times recorded by MEM and
 those recorded in the booklets was also calculated. A plot comparing booklet 
 times and MEM times is also provided.
 
-Aim 2: ...
+To analyze protocol adherence, booklet records and MEM records were examined
+seperately through summary statistics identifying proportions of missingness
+and proportions of observations within 7.5 and 15 minutes of the 30 and 600
+minute observation protocols. Average differences between protocol times and
+recorded times were also calculated for both record types.
 
 Knowing the data consists of repeated observations from each subject, it is 
 foreseeable that intrasubject DHEA and cortisol levels are correlated. So,
 to quantify changes in DHEA and cortisol over time, two linear mixed-effects 
-models (one for each hormone) were fit with intercepts allowed to vary by 
+models (one for each hormone) were fit with intercepts being allowed to vary by 
 subject, thereby accounting for this correlation. Further, given
 the known diurnal trend in which DHEA and cortisol levels peak 30 minutes after 
 waking and then taper throughout the day,
@@ -95,9 +115,9 @@ The linear model used to test the hypothesis that subject's booklet recordings
 and the times recorded by the MEM are significantly correlated had an estimated 
 slope coefficient of 0.9938 with a p-value less than .001. A plot of the MEM
 recorded times versus the subject recorded times is included in the appendix
-in Figure ???. On average, the MEM recorded times are 7.71 minutes later than
+in Figure 1. On average, the MEM recorded times are 7.71 minutes later than
 those recorded in the book. A plot of the difference between MEM and booklet
-records is provided in Figure ???.
+records is provided in Figure 2.
 
 Of the 93 observations for 30 minutes after waking, 33 MEM records and 6 booklet
 records were missing. Of those that were not missing, 75.0% of MEM records and
@@ -114,9 +134,9 @@ records and
 45.8% of MEM records and 53.2% of booklet records were within 15 minutes of the
 600 minute protocol. On average, MEM records and book records differed from the
 600 minute protocol by 54.1 and 42.1 minutes respectively. A box-plot for 
-protocol adherence by record type is provided in Figure ???.
+protocol adherence by record type is provided in Figure 3.
 
-Given greater number of complete observations and the superior 
+Given greater number of complete observations and the seemingly superior 
 protocol-adherence of booklet records, booklet records were used for the models 
 analyzing DHEA and cortisol. Specifically, booklet
 recorded minutes after waking were used as the predictor. Records with missing 
@@ -139,13 +159,52 @@ coefficient prior to 30 minutes after waking was 0.003829 with a 95% confidence
 interval of (-0.004, 0.011), and the estimate of the change in slope from
 before to after 30 minutes was -0.005913 with a 95% confidence interval of
 (-0.014, 0.001). Plots of both models for all estimated intercepts are provided
-in Figures ??? and ???.
+in Figures 4 and 5.
 
 ## Conclusions
 
-### Limitations and Further Analysis
+Regarding, concordance between between booklet and MEM sample time records,
+we conclude that there is strong agreement between the two based on the 
+magnitude of the regression slope estimate and its significance. However, on
+average MEM records were later than booklet records. This is seen again when
+looking at MEM and booklet record adherence to study protocol, where in both 
+the 30 and 600 minutes after waking protocols booklet records were, on average
+and in proportion, closer to the specified times.
 
-## Reproducible research information
+Regarding time patterns of the hormone measurements, DHEA was shown to be 
+negatively associated with time before 30 minutes after waking, with a reduction
+in the magnitude of negative relationship after 30 minutes, the former of which is 
+contradictory to known biological rhythms. The model for cortisol did not have
+any statistically significant coefficients, so, once again, the known biological
+rhythms of the hormone were not significantly captured by the model with the 
+provided data.
+
+While many of the measurements of DHEA and cortisol
+were within the pre-specified time boundaries, there exist limitations
+to that analysis which, coupled with the findings of the linear models, question
+subject adherence. Specifically, all sample timing adherences were based on subjects 
+reported wake times and the corresponding first daily sample. Should a subject
+fail to adhere to the first-sample protocol by failing to record a measurement
+immediately upon waking, it would bias any attempts to measure adherence for the
+remaining samples. Further, the measured hormone levels' failed to reflect
+known biological patterns in the linear models. While that failure may be 
+caused by lack of power or poor choice of model, it is reasonable to suspect
+that the results may have been biased by lack of subject adherence to study
+protocol, thereby questioning the viability of the sample collection method
+used in this study.
+
+### Limitations
+
+As discussed above, there is notable missingness throughout the data with regard
+to booklet and MEM sample time records, which may impact results. No missingness
+was imputed for any section, but, given the nature of the study in which there was
+an attempt to record each sample time twice using two different methods, an
+imputation strategy to increase the amount of data on sample timing seems
+viable. 
+
+\newpage
+
+## Reproducibility
 
 The code used to generate this analysis is available on GitHub 
 at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project0
@@ -165,4 +224,26 @@ This analysis was performed using R version 4.0.4. The following non-base R
 packages were used: lme4 (1.1.26), dplyr (1.0.5), ggplot2 (3.3.3),
 stringr (1.4.0), hms (1.0.0), car (3.0-10), and tidyverse (1.3.0).
 
+\newpage
+
 ## Appendix
+
+```{r, fig.cap = "Plot comparing recorded times from electronic monitoring cap to those recorded by subjects in booklet. Blue line corresponds to the regression estimates described in Results section."}
+aimOnePlot
+```
+
+```{r, fig.cap = "Plot comparing MEM time relative to booklet time. Observations above 0 on the y-axis represent observations where the MEM time was later than the booklet time, with observations below 0 on the y-axis are observations where the recorded MEM time preceded the recorded booklet time."}
+aimOnePlot2
+```
+
+```{r, fig.cap = "Plot comparing protocol adherence by record type. The left box-plot shows booklet records, with observations above 0 being records that were recorded after the time specified by study protocol. The right box-plot is the same but for MEM records."}
+aimTwoPlot
+```
+
+```{r, fig.cap = "Predicted values for log(DHEA) for each subject's random intercept."}
+aimThreePlot1
+```
+
+```{r, fig.cap = "Predicted values for log(cortisol) for each subject's random intercept."}
+aimThreePlot2
+```

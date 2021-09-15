@@ -8,10 +8,11 @@ library(ggplot2)
 withDateTimes <- read_rds("DataProcessed/withDateTimes")
 
 # Booklet times versus MEM Times
-(ggplot(data = withDateTimes, aes(x = bookletTime, y = diffMemBooklet, 
+(aimOnePlot2 <- ggplot(data = withDateTimes, 
+                         aes(x = bookletTime, y = diffMemBooklet, 
                                   color = Collection.Sample)) +
                 geom_point() +
-                labs(title = "MEM Time Bias Relative to Booklet Time",
+                labs(title = "MEM Time Relative to Booklet Time",
                      x = "Booklet Recorded Time",
                      y = "Difference between MEM and Booklet Records "))
 
@@ -34,8 +35,11 @@ aimTwoPlotData <- withDateTimes %>%
 
 
 # Plot book versus MEM adherence
-ggplot(data = aimTwoPlotData, aes(x = recordType, y = adherence)) +
-        geom_boxplot()
+(aimTwoPlot <- ggplot(data = aimTwoPlotData, aes(x = recordType, y = adherence)) +
+        geom_boxplot() +
+                labs(title = "Protocol Adherence by Record Type",
+                     x = "Record Type",
+                     y = "Difference Between Protocol and Record"))
 
 # Aim 3 ------------------------------------------------------------------------
 # Read data
