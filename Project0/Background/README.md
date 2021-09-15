@@ -29,24 +29,37 @@ these times significantly correlated?  How much difference is there between the 
 # Data Variable definitions
 __Subjectid__: Subject number
 __CollectionDate__: Date of sample collection formatted as mm/dd/yyyy
+
 __Collection Sample__: ordering of samples over the day ranging from 1-4. 1 is 
 at waking, 2 ~30 min from waking, 3 at ~lunch and 4 at ~10 hours after waking.
+
 __Booklet: Clock time__: Time of day of sample collection noted by participant 
 formatted as hh:mm in military time.
+
 __MEMs: Clock time__: Time of day of sample collection by electronic cap stamp 
 formatted as hh:mm in military time.
+
 __Sleep Diary reported wake time__: Time of day of waking formatted as hh:mm in 
 military time.
+
 __Booklet: Sample interval__: Number of hours and minutes from waking recorded 
 by participant formatted as hh:mm where waking was recorded as midnight 00:00
+
 __Booklet: Sample interval Decimal Time (mins)__: Number of minutes from waking 
 for the sample as recorded by participant.
+
 __MEMs__: Sample interval: Number of hours and minutes from waking electronic 
 cap stamp formatted as hh:mm where waking was recorded as midnight 00:00
+
 __MEMs: Sample interval Decimal Time (mins)__: Number of minutes from waking 
 electronic stamp.
+
 __Cortisol (ug/dl)__: Cortisol levels in nanograms/deciliter units.
+
 __DHEA (pg/dl)__: DHEA levels in picograms/deciliter units.
+
 __Cortisol (nmol/L)__: Cortisol levels in a different unit.
+
 __DHEA (nmol/L)__: DHEA levels in a different unit.
+
 __DAYNUMBER__: Number of the day samples were collected. 1-3 days.
