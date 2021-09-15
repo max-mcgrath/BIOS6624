@@ -8,7 +8,8 @@ files: `1-DataPrep.R`, `2-EDA.R`, `3-Analysis-Aim1.R`, `4-Analysis-Aim2.R`, and
 requested by emailing `max.mcgrath@ucdenver.edu`. 
 
 To run the complete analysis, each
-script should be run in the order of the number preceding its filename. The
-last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
+script should be run in the order of the number preceding its filename. Note
+that the working directory should be set to `Project0` prior to running the 
+code files. The last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
 be used to generate a report on the data (note that `report.Rmd` runs all
 code files and is also dependent on the aforementioned data file)
