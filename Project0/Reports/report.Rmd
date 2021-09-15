@@ -34,14 +34,15 @@ subject.
 
 The samples were collected using a filter
 paper device termed the Saliva Procurement and Integrated Testing (SPIT)
-booklet which was kept in a bottle with an electronic monitoring cap. Subjects
+booklet which was kept in a bottle with an electronic monitoring cap (MEM). 
+Subjects
 were asked to manually record the time the sample was taken, and the electronic
 monitoring cap also recorded the timing of the sample. From each sample,
 cortisol and DHEA levels were measured in nanomoles per liter. 
 
-This analysis has three aims: (1) evaluate the agreement between the subject's
-recordings of sampling times and those recorded by the electronic monitoring 
-cap, (2) evaluate subject adherence to specified sample timing, and (3) quantify
+This analysis has three aims: (1) evaluate agreement between the subject's
+recordings of sampling times and those recorded by the MEM, (2) evaluate subject
+adherence to specified sample timing, and (3) quantify
 changes of cortisol and DHEA over time.
 
 ## Methods
@@ -49,6 +50,18 @@ changes of cortisol and DHEA over time.
 ### Data Preperation
 
 ### Analysis
+
+To evaluate agreement between the subjects' booklet recordings of sampling 
+times and those recorded by the MEM, a linear model was fit with MEM time as the
+response variable and booklet time as the predictor. Raw times were used for 
+this section, as minutes since waking (which is used for the other sections
+of this analysis), yielded a fit with obviously correlated residuals. The
+slope estimate of this model was then examined to quantify correlation between
+the examined times, and a t-test was conducted to evaluate the estimates
+statistical significance. A plot comparing booklet times and MEM times is also
+provided.
+
+Aim 2: ...
 
 Knowing the data consists of repeated observations from each subject, it is 
 foreseeable that intrasubject DHEA and cortisol levels are correlated. So,
@@ -67,5 +80,9 @@ were used as responses for each hormone's respective model.
 ## Conclusions
 
 ## Reproducible research information
+
+This analysis was performed using R version 4.0.4. The following non-base R 
+packages were used: lme4 (1.1.26), dplyr (1.0.5), ggplot2 (3.3.3),
+stringr (1.4.0), hms (1.0.0), car (3.0-10), and tidyverse (1.3.0).
 
 ## Appendix

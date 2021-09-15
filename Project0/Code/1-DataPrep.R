@@ -1,6 +1,7 @@
 # Load required libraries
 library(tidyverse)
 library(stringr)
+library(hms)
 
 # Load raw data
 dataRaw <- read.csv(paste0("/Users/maxmcgrath/Documents/CUDenver/Fall21/BIOS66",
@@ -11,34 +12,26 @@ dataRaw <- read.csv(paste0("/Users/maxmcgrath/Documents/CUDenver/Fall21/BIOS66",
 #   and memTime
 withDateTimes <- dataRaw %>%
     # Convert dates / times to POSIXct
-    mutate(bookletTime = as.POSIXct(strptime(paste0(.data$Collection.Date, "-", 
-                                         .data$Booket..Clock.Time), 
-                                  format = "%m/%d/%Y-%H:%M")),
-           memTime = as.POSIXct(strptime(paste0(.data$Collection.Date, "-", 
-                                     .data$MEMs..Clock.Time), 
-                              format = "%m/%d/%Y-%H:%M")),
-           reportedWake = as.POSIXct(strptime(
-               paste0(.data$Collection.Date, "-",
-                      .data$Sleep.Diary.reported.wake.time), 
-                                              format = "%m/%d/%Y-%H:%M")),
-           diffMemBooklet = difftime(memTime, bookletTime, units = "mins"))
-
-# Convert columns to datetimes, then take difference between bookletTime and
-#   and memTime. Note however, that unlike above dates are not included in 
-#   datetime, so the calculated date will be taken from your system date. This 
-#   is so that all differences may be evaluated as if they occurred on the same 
-#   day
-withDateTimes24 <- dataRaw %>%
-    # Convert dates / times to POSIXct
-    mutate(bookletTime = as.POSIXct(strptime(.data$Booket..Clock.Time, 
+    mutate(bookletTime = as_hms(strptime(.data$Booket..Clock.Time, 
                                              format = "%H:%M")),
-           memTime = as.POSIXct(strptime(.data$MEMs..Clock.Time, 
+           memTime = as_hms(strptime(.data$MEMs..Clock.Time, 
                                          format = "%H:%M")),
-           reportedWake = as.POSIXct(strptime(.data$Sleep.Diary.reported.wake.time, 
+           reportedWake = as_hms(strptime(.data$Sleep.Diary.reported.wake.time, 
                format = "%H:%M")),
            diffMemBooklet = difftime(memTime, bookletTime, units = "mins"))
 
-write_rds(withDateTimes24, "DataProcessed/withDateTimes24")
+write_rds(withDateTimes24, "DataProcessed/withDateTimes")
+
+adherenceData <- dataRaw %>%
+    select(subjectID = SubjectID, 
+           day = DAYNUMB,
+           bookletTime = Booklet..Sample.interval.Decimal.Time..mins.,
+           memTime = MEMs..Sample.interval.Decimal.Time..mins.,
+           collectionSample = Collection.Sample) %>%
+    filter(!is.na(bookletTime),
+           !is.na(memTime))
+
+write_rds(adherenceData, "DataProcessed/adherenceData")
 
 # Question 2  ------------------------------------------------------------------
 # Limit data to 2nd (30 minutes after waking) and 4th (10 hours after waking) 
