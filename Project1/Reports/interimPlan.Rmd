@@ -1,0 +1,81 @@
+---
+title: "Interim Data Analysis Plan"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+## Introduction
+
+We received data of 3935 observations for 715 patients with HIV who began 
+receiving highly active antiretroviral treatment (HAART). The data includes 
+baseline values for each individual prior to starting treatment, then up 
+to 8 years of longitudinal measurements for the patients as they received
+HAART treatment. Each observation includes laboratory and quality of life
+measures, as well as demographic and other health information. Most relevant to
+this analysis, each observation indicates whether patients used
+illicit drugs via injection or opiates via any method of
+administration.
+
+The goal of this analysis is to identify whether HAART deferentially impacts
+patients who report using drugs prior to receiving treatment relative to those
+who did not report using drugs at baseline.
+The efficacy of HAART will be evaluated using four treatment outcomes: (1) viral
+load, (2) CD4+ T cell counts, (3) aggregate physical quality of life score, and 
+(4) aggregate mental quality of life score. We will test the hypothesis that
+patients who report using illicit drugs prior to beginning treatment have worse
+health outcomes after two years of treatment than those who did not report
+using hard drugs at baseline.
+
+## Preliminary Analysis Plan
+
+Patients will only be included in this analysis if they have no missing values
+for any of the four treatment outcomes, the indicator of whether they used hard 
+drugs at baseline, or any of the baseline covariates described below. If it is
+determined that there is insufficient data using this definition of complete 
+cases, the definition may be expanded to allow for differing sample sizes for 
+each outcome based on data availability.
+
+Data will first be summarized for relevant covariates and outcomes 
+at both baseline and after
+two years of treatment. Treatment outcomes will then be analyzed using linear
+models in both a frequentist context (multivariable least squares regression) 
+and using Bayesian linear regression. For each framework four models will be
+used, one for each
+treatment outcome, with differences in each outcome from baseline to two years
+being used as the response. Hard drug use at baseline will be the primary
+variable of interest, and age, body mass index, smoking status, education,
+race/ethnicity, and adherence will be included in each model as they are likely
+correlated with drug use and the outcomes. All covariate values
+will be those measured at baseline, except adherence which will use second year
+values. 
+
+For the Bayesian linear models, credible intervals for the coefficients 
+corresponding with drug use will be used to assess the direction and significance
+of the correlation between drug use and each treatment outcome. For the
+frequentist linear models, coefficient point estimates and t-test p-values will
+be used to evaluate the same relationship. Concordance or lack thereof between
+the two paradigms as well as any limitations to the study will be discussed.
+
+
+
+
+
+
+
+
