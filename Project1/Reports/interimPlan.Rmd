@@ -65,6 +65,12 @@ correlated with drug use and the outcomes. All covariate values
 will be those measured at baseline, except adherence which will use second year
 values. 
 
+For the Bayesian model, all priors will be non-informative to reflect a lack of
+a priori knowledge surrounding the associations between predictors and outcomes.
+Specifically, coefficient priors will be Gaussian with a mean of 0 and a
+variance of 100,000 and error priors will be gamma distributions with shape and
+rate parameters both equal to .001.
+
 For the Bayesian linear models, credible intervals for the coefficients 
 corresponding with drug use will be used to assess the direction and significance
 of the correlation between drug use and each treatment outcome. For the
