@@ -31,8 +31,8 @@ fullData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
     mutate(LOG_VLOAD_DIFF = LOG_VLOAD_2 - LOG_VLOAD_0,
            LEU3N_DIFF = LEU3N_2 - LEU3N_0,
            MENT_DIFF = AGG_MENT_2 - AGG_MENT_0,
-           PHYS_DIFF = AGG_PHYS_2 - AGG_PHYS_0,
-           .keep = "unused")
+           PHYS_DIFF = AGG_PHYS_2 - AGG_PHYS_0) %>%
+    select(-LOG_VLOAD_2, -LEU3N_2, -AGG_MENT_2, -AGG_PHYS_2)
 
 # Keep only complete cases
 cleanData <- fullData %>% drop_na()
