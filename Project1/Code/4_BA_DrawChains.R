@@ -51,7 +51,7 @@ vloadUniMM <- model.matrix(LOG_VLOAD_DIFF ~ DRUGS_0 + LOG_VLOAD_0,
                            data = vloadData)
 vloadMultiNoDrugsMM <- model.matrix(LOG_VLOAD_DIFF ~ . -DRUGS_0,
                                     data = vloadData)
-vloadMultiMM <- model.matrix(LOG_VLOAD_DIFF ~ .,
+vloadMultiMM <- model.matrix(LOG_VLOAD_DIFF ~ DRUGS_0 + .,
                                     data = vloadData)
 
 # LEU3N Model Matrices
@@ -61,7 +61,7 @@ leu3nUniMM <- model.matrix(LEU3N_DIFF ~ DRUGS_0 + LEU3N_0,
                            data = leu3nData)
 leu3nMultiNoDrugsMM <- model.matrix(LEU3N_DIFF ~ . -DRUGS_0,
                                     data = leu3nData)
-leu3nMultiMM <- model.matrix(LEU3N_DIFF ~ .,
+leu3nMultiMM <- model.matrix(LEU3N_DIFF ~ DRUGS_0 + .,
                              data = leu3nData)
 
 # MENT Model Matrices
@@ -71,7 +71,7 @@ mentUniMM <- model.matrix(MENT_DIFF ~ DRUGS_0 + MENT_0,
                            data = mentData)
 mentMultiNoDrugsMM <- model.matrix(MENT_DIFF ~ . -DRUGS_0,
                                     data = mentData)
-mentMultiMM <- model.matrix(MENT_DIFF ~ .,
+mentMultiMM <- model.matrix(MENT_DIFF ~ DRUGS_0 + .,
                              data = mentData)
 
 # PHYS Model Matrices
@@ -81,7 +81,7 @@ physUniMM <- model.matrix(PHYS_DIFF ~ DRUGS_0 + PHYS_0,
                            data = physData)
 physMultiNoDrugsMM <- model.matrix(PHYS_DIFF ~ . -DRUGS_0,
                                     data = physData)
-physMultiMM <- model.matrix(PHYS_DIFF ~ .,
+physMultiMM <- model.matrix(PHYS_DIFF ~ DRUGS_0 + .,
                              data = physData)
 
 # Create JAGS data lists
