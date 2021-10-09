@@ -13,7 +13,7 @@ N <- nrow(cleanData)
 # Number of predictors (differs by model but not outcome)
 pUniNoDrugs <- 2
 pUni <- pUniNoDrugs + 1
-pMultiNoDrugs <- 13
+pMultiNoDrugs <- 11
 pMulti <- pMultiNoDrugs + 1
 
 # Error priors (same for all models)
@@ -298,3 +298,73 @@ physMultiChains <- coda.samples(physMultiMod,
                                 n.iter = iter)
 physMultiDIC <- dic.samples(physMultiMod, 
                             n.iter = iter, type = "pD")
+
+
+# Convert chains to data frames, add parameter names ---------------------------
+# VLOAD
+vloadUniNoDrugsDF <- bind_rows(as.data.frame(vloadUniNoDrugsChains[[1]]), 
+                               as.data.frame(vloadUniNoDrugsChains[[2]]))
+colnames(vloadUniNoDrugsDF) <- c(colnames(vloadUniNoDrugsMM), "sigma")
+
+vloadUniDF <- bind_rows(as.data.frame(vloadUniChains[[1]]), 
+                        as.data.frame(vloadUniChains[[2]]))
+colnames(vloadUniDF) <- c(colnames(vloadUniMM), "sigma")
+
+vloadMultiNoDrugsDF <- bind_rows(as.data.frame(vloadMultiNoDrugsChains[[1]]), 
+                                 as.data.frame(vloadMultiNoDrugsChains[[2]]))
+colnames(vloadMultiNoDrugsDF) <- c(colnames(vloadMultiNoDrugsMM), "sigma")
+
+vloadMultiDF <- bind_rows(as.data.frame(vloadMultiChains[[1]]), 
+                          as.data.frame(vloadMultiChains[[2]]))
+colnames(vloadMultiDF) <- c(colnames(vloadMultiMM), "sigma")
+
+# LEU3N
+leu3nUniNoDrugsDF <- bind_rows(as.data.frame(leu3nUniNoDrugsChains[[1]]), 
+                              as.data.frame(leu3nUniNoDrugsChains[[2]]))
+colnames(leu3nUniNoDrugsDF) <- c(colnames(leu3nUniNoDrugsMM), "sigma")
+
+leu3nUniDF <- bind_rows(as.data.frame(leu3nUniChains[[1]]), 
+                       as.data.frame(leu3nUniChains[[2]]))
+colnames(leu3nUniDF) <- c(colnames(leu3nUniMM), "sigma")
+
+leu3nMultiNoDrugsDF <- bind_rows(as.data.frame(leu3nMultiNoDrugsChains[[1]]), 
+                                as.data.frame(leu3nMultiNoDrugsChains[[2]]))
+colnames(leu3nMultiNoDrugsDF) <- c(colnames(leu3nMultiNoDrugsMM), "sigma")
+
+leu3nMultiDF <- bind_rows(as.data.frame(leu3nMultiChains[[1]]), 
+                         as.data.frame(leu3nMultiChains[[2]]))
+colnames(leu3nMultiDF) <- c(colnames(leu3nMultiMM), "sigma")
+
+# MENT
+mentUniNoDrugsDF <- bind_rows(as.data.frame(mentUniNoDrugsChains[[1]]), 
+                              as.data.frame(mentUniNoDrugsChains[[2]]))
+colnames(mentUniNoDrugsDF) <- c(colnames(mentUniNoDrugsMM), "sigma")
+
+mentUniDF <- bind_rows(as.data.frame(mentUniChains[[1]]), 
+                       as.data.frame(mentUniChains[[2]]))
+colnames(mentUniDF) <- c(colnames(mentUniMM), "sigma")
+
+mentMultiNoDrugsDF <- bind_rows(as.data.frame(mentMultiNoDrugsChains[[1]]), 
+                                as.data.frame(mentMultiNoDrugsChains[[2]]))
+colnames(mentMultiNoDrugsDF) <- c(colnames(mentMultiNoDrugsMM), "sigma")
+
+mentMultiDF <- bind_rows(as.data.frame(mentMultiChains[[1]]), 
+                         as.data.frame(mentMultiChains[[2]]))
+colnames(mentMultiDF) <- c(colnames(mentMultiMM), "sigma")
+
+# PHYS
+physUniNoDrugsDF <- bind_rows(as.data.frame(physUniNoDrugsChains[[1]]), 
+                              as.data.frame(physUniNoDrugsChains[[2]]))
+colnames(physUniNoDrugsDF) <- c(colnames(physUniNoDrugsMM), "sigma")
+
+physUniDF <- bind_rows(as.data.frame(physUniChains[[1]]), 
+                              as.data.frame(physUniChains[[2]]))
+colnames(physUniDF) <- c(colnames(physUniMM), "sigma")
+
+physMultiNoDrugsDF <- bind_rows(as.data.frame(physMultiNoDrugsChains[[1]]), 
+                       as.data.frame(physMultiNoDrugsChains[[2]]))
+colnames(physMultiNoDrugsDF) <- c(colnames(physMultiNoDrugsMM), "sigma")
+
+physMultiDF <- bind_rows(as.data.frame(physMultiChains[[1]]), 
+                                as.data.frame(physMultiChains[[2]]))
+colnames(physMultiDF) <- c(colnames(physMultiMM), "sigma")

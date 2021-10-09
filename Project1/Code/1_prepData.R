@@ -28,7 +28,7 @@ yearTwo <- dataRaw %>%
            .keep = "unused")
 
 # Combine data, create outcome difference columns, create race and education
-#   covariates
+#   covariates, drop reference columns
 fullData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
     mutate(LOG_VLOAD_DIFF = LOG_VLOAD_2 - LOG_VLOAD_0,
            LEU3N_DIFF = LEU3N_2 - LEU3N_0,
@@ -45,7 +45,7 @@ fullData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
     mutate(SMOKE = as.numeric(.data$SMOKE_0 == 3)) %>%
     mutate(ADH_2 = as.numeric(.data$ADH_2 == 1 | .data$ADH_2 == 2)) %>%
     select(-LOG_VLOAD_2, -LEU3N_2, -MENT_2, -PHYS_2,
-           -EDUC_0, -RACE_0, -NEWID, -SMOKE_0)
+           -EDUC_0, -RACE_0, -NEWID, -SMOKE_0, -WHITE_NH, -HS)
 
 # Keep only complete cases
 cleanData <- fullData %>% drop_na() %>%
