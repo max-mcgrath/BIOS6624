@@ -2,7 +2,12 @@ source("Code/4_BA_DrawChains.R")
 
 # Means, credible intervals, posterior probabilities ---------------------------
 postProbLog <- function(x) {
-    inBounds <- sum(x < log(1.10) & x > log(.90))
+    inBounds <- sum(x < log(1.1) & x > log(.9))
+    1 - (inBounds / length(x))
+}
+
+postProb <- function(x, mean, eps) {
+    inBounds <- sum(x < eps & x > -eps)
     1 - (inBounds / length(x))
 }
 
@@ -16,19 +21,26 @@ hpd <- function(x, alpha = 0.05){
     c(x[k], x[n - m + k])
 }
 
+# Store epsilons for calculation of posterior probabilities
+leu3nMean <- mean(leu3nData$LEU3N_0)
+leu3nEps <- abs(mean(leu3nData$LEU3N_0))*.1
+mentMean <- mean(mentData$MENT_0)
+mentEps <- abs(mean(mentData$MENT_0))*.1
+physMean <- abs(mean(physData$PHYS_0))
+physEps <- abs(mean(physData$PHYS_0))*.1
 
 # Summarize VLOAD chains
 vloadChains <- bind_rows(
-    "uniNoDrugs" = pivot_longer(vloadUniNoDrugsDF,
+    "vloadUniNoDrugs" = pivot_longer(vloadUniNoDrugsDF,
                                 cols = everything(),
                                 names_to = "param"),
-    "uni" = pivot_longer(vloadUniDF,
+    "vloadUni" = pivot_longer(vloadUniDF,
                          cols = everything(),
                          names_to = "param"),
-    "multiNoDrugs" = pivot_longer(vloadMultiNoDrugsDF,
+    "vloadMultiNoDrugs" = pivot_longer(vloadMultiNoDrugsDF,
                          cols = everything(),
                          names_to = "param"),
-    "multi" = pivot_longer(vloadMultiDF,
+    "vloadMulti" = pivot_longer(vloadMultiDF,
                            cols = everything(),
                            names_to = "param"),
     .id = "model")
@@ -36,7 +48,7 @@ vloadChains <- bind_rows(
 
 vloadChainsSummary <- vloadChains %>%
     group_by(model, param) %>%
-    summarize(mean = mean(value),
+    summarize(bayesEst = mean(value),
               hpdLower = hpd(value, alpha = 0.05)[1],
               hpdUpper = hpd(value, alpha = 0.05)[2],
               lowerQuant = quantile(value, .05),
@@ -45,71 +57,78 @@ vloadChainsSummary <- vloadChains %>%
 
 # Summarize LEU3N chains
 leu3nChains <- bind_rows(
-    "uniNoDrugs" = pivot_longer(leu3nUniNoDrugsDF,
+    "leu3nUniNoDrugs" = pivot_longer(leu3nUniNoDrugsDF,
                                 cols = everything(),
                                 names_to = "param"),
-    "uni" = pivot_longer(leu3nUniDF,
+    "leu3nUni" = pivot_longer(leu3nUniDF,
                          cols = everything(),
                          names_to = "param"),
-    "multiNoDrugs" = pivot_longer(leu3nMultiNoDrugsDF,
+    "leu3nMultiNoDrugs" = pivot_longer(leu3nMultiNoDrugsDF,
                                   cols = everything(),
                                   names_to = "param"),
-    "multi" = pivot_longer(leu3nMultiDF,
+    "leu3nMulti" = pivot_longer(leu3nMultiDF,
                            cols = everything(),
                            names_to = "param"),
     .id = "model")
 
-
 leu3nChainsSummary <- leu3nChains %>%
     group_by(model, param) %>%
-    summarize(mean = mean(value),
-              upper95 = quantile(value, .95),
-              lower95 = quantile(value, .05))
+    summarize(bayesEst = mean(value),
+              hpdLower = hpd(value, alpha = 0.05)[1],
+              hpdUpper = hpd(value, alpha = 0.05)[2],
+              lowerQuant = quantile(value, .05),
+              upperQuant = quantile(value, .95),
+              postProb = postProb(value, mean = leu3nMean, eps = leu3nEps))
 
 # Summarize MENT chains
 mentChains <- bind_rows(
-    "uniNoDrugs" = pivot_longer(mentUniNoDrugsDF,
+    "mentUniNoDrugs" = pivot_longer(mentUniNoDrugsDF,
                                 cols = everything(),
                                 names_to = "param"),
-    "uni" = pivot_longer(mentUniDF,
+    "mentUni" = pivot_longer(mentUniDF,
                          cols = everything(),
                          names_to = "param"),
-    "multiNoDrugs" = pivot_longer(mentMultiNoDrugsDF,
+    "mentMultiNoDrugs" = pivot_longer(mentMultiNoDrugsDF,
                                   cols = everything(),
                                   names_to = "param"),
-    "multi" = pivot_longer(mentMultiDF,
+    "mentMulti" = pivot_longer(mentMultiDF,
                            cols = everything(),
                            names_to = "param"),
     .id = "model")
 
 mentChainsSummary <- mentChains %>%
     group_by(model, param) %>%
-    summarize(mean = mean(value),
-              upper95 = quantile(value, .95),
-              lower95 = quantile(value, .05))
+    summarize(bayesEst = mean(value),
+              hpdLower = hpd(value, alpha = 0.05)[1],
+              hpdUpper = hpd(value, alpha = 0.05)[2],
+              lowerQuant = quantile(value, .05),
+              upperQuant = quantile(value, .95),
+              postProb = postProb(value, mentMean, eps = mentEps))
 
 # Summarize PHYS chains
 physChains <- bind_rows(
-    "uniNoDrugs" = pivot_longer(physUniNoDrugsDF,
+    "physUniNoDrugs" = pivot_longer(physUniNoDrugsDF,
                                 cols = everything(),
                                 names_to = "param"),
-    "uni" = pivot_longer(physUniDF,
+    "physUni" = pivot_longer(physUniDF,
                          cols = everything(),
                          names_to = "param"),
-    "multiNoDrugs" = pivot_longer(physMultiNoDrugsDF,
+    "physMultiNoDrugs" = pivot_longer(physMultiNoDrugsDF,
                                   cols = everything(),
                                   names_to = "param"),
-    "multi" = pivot_longer(physMultiDF,
+    "physMulti" = pivot_longer(physMultiDF,
                            cols = everything(),
                            names_to = "param"),
     .id = "model")
 
-
 physChainsSummary <- physChains %>%
     group_by(model, param) %>%
-    summarize(mean = mean(value),
-              upper95 = quantile(value, .95),
-              lower95 = quantile(value, .05))
+    summarize(bayesEst = mean(value),
+              hpdLower = hpd(value, alpha = 0.05)[1],
+              hpdUpper = hpd(value, alpha = 0.05)[2],
+              lowerQuant = quantile(value, .05),
+              upperQuant = quantile(value, .95),
+              postProb = postProb(value, mean = physMean, eps = physEps))
 
 
 # DIC --------------------------------------------------------------------------
@@ -150,3 +169,18 @@ deviances <- data.frame("model" = c("vloadUniNoDrugs", "vloadUni", "vloadMultiNo
                                   sum(physMultiNoDrugsDIC$deviance) + sum(physMultiNoDrugsDIC[[2]]),
                                   sum(physMultiDIC$deviance) + sum(physMultiDIC[[2]]))
                         )
+
+# Create table(s) summarizing relevant information -----------------------------
+drugsCoeff <- bind_rows(filter(vloadChainsSummary, param == "DRUGS_0"),
+                       filter(leu3nChainsSummary, param == "DRUGS_0"),
+                       filter(mentChainsSummary, param == "DRUGS_0"),
+                       filter(physChainsSummary, param == "DRUGS_0")) %>%
+    select(-param)
+
+fullBayesianSummary <- deviances %>%
+    left_join(drugsCoeff, by = "model")
+
+fullSummary <- fullBayesianSummary %>%
+    full_join(fullFreqSummary, by = "model") %>%
+    mutate(across(!model, round, 2)) %>%
+    select(model, bayesEst, freqEst, AIC, DIC, postProb, pVal, hpdLower, hpdUpper)

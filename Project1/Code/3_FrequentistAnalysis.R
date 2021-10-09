@@ -1,50 +1,90 @@
 source("Code/1_prepData.R")
 
-# Univariate analysis - First run intercept only model, then use drug use at
-#   baseline as predictor
-lmVLOAD <- lm(LOG_VLOAD_DIFF ~ DRUGS_0 + LOG_VLOAD_0, data = cleanData)
-summary(lmVLOAD)
+# Run univariable and multivariable frequentist analyses -----------------------
+# VLOAD
+lmVloadUniNoDrugs <- lm(LOG_VLOAD_DIFF ~ LOG_VLOAD_0, data = vloadData)
+summary(lmVloadUniNoDrugs)
+AIC(lmVloadUniNoDrugs)
 
-lmLEU3N <- lm(LEU3N_DIFF ~ DRUGS_0 + LEU3N_0, data = cleanData)
-summary(lmLEU3N)
+lmVloadUni <- lm(LOG_VLOAD_DIFF ~ DRUGS_0 + LOG_VLOAD_0, data = vloadData)
+summary(lmVloadUni)
+AIC(lmVloadUni)
 
-lmMENT <- lm(MENT_DIFF ~ DRUGS_0 + AGG_MENT_0, data = cleanData)
-summary(lmMENT)
+lmVloadMultiNoDrugs <- lm(LOG_VLOAD_DIFF ~ . -DRUGS_0, data = vloadData)
+summary(lmVloadNoDrugs)
+AIC(lmVloadNoDrugs)
 
-lmPHYS <- lm(PHYS_DIFF ~ DRUGS_0 + AGG_PHYS_0, data = cleanData)
-summary(lmPHYS)
+lmVloadMulti <- lm(LOG_VLOAD_DIFF ~ ., data = vloadData)
+summary(lmVloadMulti)
+AIC(lmVloadMulti)
 
-# Multivariate analysis
-lmVLOAD_FULL <- lm(LOG_VLOAD_DIFF ~ DRUGS_0 + EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                       SMOKE_0 + ADH_2 + LOG_VLOAD_0, data = cleanData)
-lmVLOAD_FULL_NO_DRUGS <- lm(LOG_VLOAD_DIFF ~ EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                       SMOKE_0 + ADH_2 + LOG_VLOAD_0, data = cleanData)
-summary(lmVLOAD_FULL)
-summary(lmVLOAD_FULL_NO_DRUGS)
-AIC(lmVLOAD_FULL)
+# LEU3N 
+lmLeu3nUniNoDrugs <- lm(LEU3N_DIFF ~ LEU3N_0, data = leu3nData)
+summary(lmLeu3nUniNoDrugs)
+AIC(lmLeu3nUniNoDrugs)
 
+lmLeu3nUni <- lm(LEU3N_DIFF ~ DRUGS_0 + LEU3N_0, data = leu3nData)
+summary(lmLeu3nUni)
+AIC(lmLeu3nUni)
 
-lmLEU3N_FULL <- lm(LEU3N_DIFF ~ DRUGS_0 + EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                  SMOKE_0 + ADH_2 + LEU3N_0, data = cleanData)
-lmLEU3N_FULL_NO_DRUGS <- lm(LEU3N_DIFF ~ EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                       SMOKE_0 + ADH_2 + LEU3N_0, data = cleanData)
-summary(lmLEU3N_FULL)
-summary(lmLEU3N_FULL_NO_DRUGS)
-AIC(lmLEU3N_FULL)
+lmLeu3nMultiNoDrugs <- lm(LEU3N_DIFF ~ . -DRUGS_0, data = leu3nData)
+summary(lmLeu3nMultiNoDrugs)
+AIC(lmLeu3nMultiNoDrugs)
 
-lmMENT_FULL <- lm(MENT_DIFF ~ DRUGS_0 + EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                 SMOKE_0 + ADH_2 + AGG_MENT_0, data = cleanData)
-lmMENT_FULL_NO_DRUGS <- lm(MENT_DIFF ~ EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                      SMOKE_0 + ADH_2 + AGG_MENT_0, data = cleanData)
-summary(lmMENT_FULL)
-summary(lmMENT_FULL_NO_DRUGS)
-AIC(lmMENT_FULL)
+lmLeu3nMulti <- lm(LEU3N_DIFF ~ ., data = leu3nData)
+summary(lmLeu3nMulti)
+AIC(lmLeu3nMulti)
 
-lmPHYS_FULL <- lm(PHYS_DIFF ~ DRUGS_0 + EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                 SMOKE_0 + ADH_2 + AGG_PHYS_0, data = cleanData)
-lmPHYS_FULL_NO_DRUGS <- lm(PHYS_DIFF ~ EDUC_0 + AGE_0 + RACE_0 + BMI_0 + 
-                      SMOKE_0 + ADH_2 + AGG_PHYS_0, data = cleanData)
-summary(lmPHYS_FULL)
-summary(lmPHYS_FULL_NO_DRUGS)
-AIC(lmPHYS_FULL)
-        
+# MENT
+lmMentUniNoDrugs <- lm(MENT_DIFF ~ MENT_0, data = mentData)
+summary(lmMentUniNoDrugs)
+AIC(lmMentUniNoDrugs)
+
+lmMentUni <- lm(MENT_DIFF ~ DRUGS_0 + MENT_0, data = mentData)
+summary(lmMentUni)
+AIC(lmMentUni)
+
+lmMentMultiNoDrugs <- lm(MENT_DIFF ~ . -DRUGS_0, data = mentData)
+summary(lmMentMultiNoDrugs)
+AIC(lmMentMultiNoDrugs)
+
+lmMentMulti <- lm(MENT_DIFF ~ ., data = mentData)
+summary(lmMentMulti)
+AIC(lmMentMulti)
+
+# PHYS 
+lmPhysUniNoDrugs <- lm(PHYS_DIFF ~ PHYS_0, data = physData)
+summary(lmPhysUniNoDrugs)
+AIC(lmPhysUniNoDrugs)
+
+lmPhysUni <- lm(PHYS_DIFF ~ DRUGS_0 + PHYS_0, data = physData)
+summary(lmPhysUni)
+AIC(lmPhysUni)
+
+lmPhysMultiNoDrugs <- lm(PHYS_DIFF ~ . -DRUGS_0, data = physData)
+summary(lmPhysMultiNoDrugs)
+AIC(lmPhysMultiNoDrugs)
+
+lmPhysMulti <- lm(PHYS_DIFF ~ ., data = physData)
+summary(lmPhysMulti)
+AIC(lmPhysMulti)
+
+# Create table summarizing results ---------------------------------------------
+fullFreqSummary <- data.frame(
+    "model" = c("vloadUniNoDrugs", "vloadUni", "vloadMultiNoDrugs", "vloadMulti", 
+              "leu3nUniNoDrugs", "leu3nUni", "leu3nMultiNoDrugs", "leu3nMulti",
+              "mentUniNoDrugs", "mentUni", "mentMultiNoDrugs", "mentMulti",
+              "physUniNoDrugs", "physUni", "physMultiNoDrugs", "physMulti"),
+    "freqEst" = c(NA, coef(lmVloadUni)[["DRUGS_0"]], NA, coef(lmVloadMulti)[["DRUGS_0"]],
+                NA, coef(lmLeu3nUni)[["DRUGS_0"]], NA, coef(lmLeu3nMulti)[["DRUGS_0"]],
+                NA, coef(lmMentUni)[["DRUGS_0"]], NA, coef(lmMentMulti)[["DRUGS_0"]],
+                NA, coef(lmPhysUni)[["DRUGS_0"]], NA, coef(lmPhysMulti)[["DRUGS_0"]]),
+    "AIC" = c(AIC(lmVloadUniNoDrugs), AIC(lmVloadUni), AIC(lmVloadMultiNoDrugs), AIC(lmVloadMulti),
+            AIC(lmLeu3nUniNoDrugs), AIC(lmLeu3nUni), AIC(lmLeu3nMultiNoDrugs), AIC(lmLeu3nMulti),
+            AIC(lmMentUniNoDrugs), AIC(lmMentUni), AIC(lmMentMultiNoDrugs), AIC(lmMentMulti),
+            AIC(lmPhysUniNoDrugs), AIC(lmPhysUni), AIC(lmPhysMultiNoDrugs), AIC(lmPhysMulti)),
+    "pVal" = c(NA, summary(lmVloadUni)$coefficients["DRUGS_0", 4], NA, summary(lmVloadMulti)$coefficients["DRUGS_0", 4],
+               NA, summary(lmLeu3nUni)$coefficients["DRUGS_0", 4], NA, summary(lmLeu3nMulti)$coefficients["DRUGS_0", 4],
+               NA, summary(lmMentUni)$coefficients["DRUGS_0", 4], NA, summary(lmMentMulti)$coefficients["DRUGS_0", 4],
+               NA, summary(lmPhysUni)$coefficients["DRUGS_0", 4], NA, summary(lmPhysMulti)$coefficients["DRUGS_0", 4])
+)
