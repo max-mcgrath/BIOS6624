@@ -1,6 +1,7 @@
 library(tidyr)
 library(dplyr)
 library(magrittr)
+library(table1)
 
 dataRaw <- read.csv("DataRaw/hiv_6624_final.csv")
 
@@ -42,11 +43,60 @@ fullData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
            HS = as.numeric(.data$EDUC_0 == 3 | .data$EDUC_0 == 4),
            GREAT_HS = as.numeric(.data$EDUC_0 > 4)) %>%
     mutate(SMOKE = as.numeric(.data$SMOKE_0 == 3)) %>%
+    mutate(ADH_2 = as.numeric(.data$ADH_2 == 1 | .data$ADH_2 == 2)) %>%
     select(-LOG_VLOAD_2, -LEU3N_2, -MENT_2, -PHYS_2,
            -EDUC_0, -RACE_0, -NEWID, -SMOKE_0)
 
 # Keep only complete cases
-cleanData <- fullData %>% drop_na()
+cleanData <- fullData %>% drop_na() %>%
+    filter(.data$BMI_0 != -1,
+           .data$BMI_0 <= 50)
+
+# Data for Table 1 (cleaned, but doesn't split variables into dummy columns)
+tableOneData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
+    drop_na() %>%
+    filter(.data$BMI_0 != -1,
+           .data$BMI_0 <= 50) %>%
+    mutate(LOG_VLOAD_DIFF = LOG_VLOAD_2 - LOG_VLOAD_0,
+           LEU3N_DIFF = LEU3N_2 - LEU3N_0,
+           MENT_DIFF = MENT_2 - MENT_0,
+           PHYS_DIFF = PHYS_2 - PHYS_0) %>%
+    mutate(RACE_0 = as.factor(case_when(.data$RACE_0 == 1 ~ "White",
+                              .data$RACE_0 == 2 ~ "Hispanic",
+                              .data$RACE_0 == 3 ~ "Black",
+                              .data$RACE_0 == 4 ~ "Hispanic",
+                              .data$RACE_0 == 8 ~ "Hispanic",
+                              TRUE ~ "Other")),
+           EDUC_0 = as.factor(case_when(.data$EDUC_0 <= 2 ~ "Less than HS",
+                              .data$EDUC_0 == 3 | .data$EDUC_0 == 4 ~ "HS",
+                              TRUE ~ "Greater than HS")),
+           SMOKE_0 = as.factor(case_when(.data$SMOKE_0 == 3 ~ "Active Smoker",
+                               TRUE ~ "Non-Smoker")),
+           ADH_2 = as.factor(case_when(.data$ADH_2 == 1 | .data$ADH_2 == 2 ~ 
+                                           "Greater than 95% Adherent",
+                                       TRUE ~ "Less than 95% Adherent")),
+           VLOAD_0 = exp(LOG_VLOAD_0),
+           VLOAD_2 = exp(LOG_VLOAD_2),
+           DRUGS_0 = factor(.data$DRUGS_0,
+                               levels = c(0,1),
+                               labels = c("No Hard Drug Use at Baseline",
+                                          "Hard Drug Use at Baseline")))
+
+# Citation: Code borrowed (and modified) from Emily Cooper
+label(tableOneData$AGE_0) <- "Age at baseline (years)"
+label(tableOneData$BMI_0) <- "BMI at baseline"
+label(tableOneData$RACE_0) <- "Race/Ethnicity at baseline"
+label(tableOneData$SMOKE_0) <- "Smoking status at baseline"
+label(tableOneData$EDUC_0) <- "Education at baseline"
+label(tableOneData$ADH_2) <- "Adherence to medication at 2-years"
+label(tableOneData$LEU3N_DIFF) <- "Change in # of CD4+ cells"
+label(tableOneData$LOG_VLOAD_DIFF) <- "Change in standardized viral load (log10 copies/ml)"
+label(tableOneData$MENT_DIFF) <- "Change in SF36 MCS score"
+label(tableOneData$PHYS_DIFF) <- "Change in SF36 PCS score"
+label(tableOneData$LEU3N_0) <- "Baseline # of CD4+ cells"
+label(tableOneData$LOG_VLOAD_0) <- "Baseline standardized viral load (log10 copies/ml)"
+label(tableOneData$MENT_0) <- "Baseline SF36 MCS score"
+label(tableOneData$PHYS_0) <- "Baseline SF36 PCS score"
 
 # Create outcome specific data
 vloadData <- cleanData %>% 
