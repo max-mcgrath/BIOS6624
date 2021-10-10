@@ -1,8 +1,17 @@
 ---
 title: "Project 1 Report"
-author: "Max McGrath"
-date: "10/9/2021"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
 output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
 ---
 
 ```{r setup, include=FALSE}
@@ -13,6 +22,8 @@ setwd("..")
 source("Code/1_prepData.R")
 source("Code/6_BA_AnalyzeChains.R")
 ```
+
+\newpage
 
 ## Introduction
 
@@ -74,14 +85,14 @@ were added to those models to control for factors that are likely correlated
 with both drug use and the outcomes. Those confounding variables include
 age, body mass index, smoking status, education, race/ethnicity. All confounding 
 values were those measured at baseline, except adherence which used second year
-values. Those models will be reffered to as multivariable models. Lastly, for each
+values. These models will be reffered to as multivariable models. Lastly, for each
 outcome, the univariable and multivariable models were run without hard drug
 use as a predictor to quantify the impact of removing hard drug use as a 
-predictor. We will refer to those models as univariable without drug use and
+predictor. We will refer to these models as univariable without drug use and
 multivariable without drug use, respectively.
 
 For the Bayesian model, all priors were non-informative to reflect a lack of
-a priori knowledge surrounding the associations between predictors and outcomes.
+*a priori* knowledge surrounding the associations between predictors and outcomes.
 Specifically, coefficient priors were Gaussian with a mean of 0 and a
 variance of 100,000 and error priors were gamma distributions with shape and
 rate parameters both equal to 0.001.
@@ -105,29 +116,37 @@ rate parameters both equal to 0.001.
 
 ```{r, echo = FALSE}
 # Create Table 1
-table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
+kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
            AGE_0 + BMI_0 + RACE_0 + EDUC_0 + SMOKE_0 + ADH_2 +
            LOG_VLOAD_0 + LEU3N_0 + MENT_0 + PHYS_0 | DRUGS_0, 
        data = tableOneData, render.categorical="FREQ (PCTnoNA%)",
-       caption = "Data Summary")
+       caption = "Data Summary"),
+       caption = "Data Summary") %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
 ```{r, echo = FALSE}
-kable(fullBayesianSummary, booktabs=TRUE, caption = "Bayesian Summary", 
-      digits = 2) %>%
+kable(fullBayesianSummary[, 2:7], booktabs=TRUE, 
+      caption = "Bayesian Analysis Summary", 
+      digits = 2, col.names = c("Model", "Penalized DIC", "Estimate", 
+                                "HPD Lower", "HPD Upper", 
+                                "Posterior Probability")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>%
+    add_header_above(c(" " = 2, "Drug Use Coefficient" = 4)) %>%
     pack_rows("Standardized Viral Load (log10 copies/ml)", 1, 4) %>%
     pack_rows("CD4+ cells", 5, 8) %>%
     pack_rows("SF36 MCS score", 9, 12) %>%
     pack_rows("SF36 PCS score", 13, 16)
 ```
 
-\newpage
 
 ```{r, echo = FALSE}
-kable(fullFreqSummary, booktabs=TRUE, caption = "Frequentist Summary",
-      digits = 2) %>%
-    kable_styling(full_width = T, latex_options = "striped") %>% 
+kable(fullFreqSummary[, 2:7], booktabs=TRUE, 
+      caption = "Frequentist Analysis Summary",
+      digits = 2, col.names = c("Model", "AIC", "Estimate", "Lower CI", 
+                                "Upper CI", "p-value")) %>%
+    kable_styling(latex_options = c("striped", "scale_down")) %>% 
+    add_header_above(c(" " = 2, "Drug Use Coefficient" = 4)) %>%
     pack_rows("Standardized Viral Load (log10 copies/ml)", 1, 4) %>%
     pack_rows("CD4+ cells", 5, 8) %>%
     pack_rows("SF36 MCS score", 9, 12) %>%

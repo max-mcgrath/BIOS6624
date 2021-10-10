@@ -11,8 +11,8 @@ summary(lmVloadUni)
 AIC(lmVloadUni)
 
 lmVloadMultiNoDrugs <- lm(LOG_VLOAD_DIFF ~ . -DRUGS_0, data = vloadData)
-summary(lmVloadNoDrugs)
-AIC(lmVloadNoDrugs)
+summary(lmVloadMultiNoDrugs)
+AIC(lmVloadMultiNoDrugs)
 
 lmVloadMulti <- lm(LOG_VLOAD_DIFF ~ ., data = vloadData)
 summary(lmVloadMulti)
@@ -75,18 +75,43 @@ fullFreqSummary <- data.frame(
               "leu3nUniNoDrugs", "leu3nUni", "leu3nMultiNoDrugs", "leu3nMulti",
               "mentUniNoDrugs", "mentUni", "mentMultiNoDrugs", "mentMulti",
               "physUniNoDrugs", "physUni", "physMultiNoDrugs", "physMulti"),
+    "AIC" = c(AIC(lmVloadUniNoDrugs), AIC(lmVloadUni), AIC(lmVloadMultiNoDrugs), AIC(lmVloadMulti),
+              AIC(lmLeu3nUniNoDrugs), AIC(lmLeu3nUni), AIC(lmLeu3nMultiNoDrugs), AIC(lmLeu3nMulti),
+              AIC(lmMentUniNoDrugs), AIC(lmMentUni), AIC(lmMentMultiNoDrugs), AIC(lmMentMulti),
+              AIC(lmPhysUniNoDrugs), AIC(lmPhysUni), AIC(lmPhysMultiNoDrugs), AIC(lmPhysMulti)),
     "freqDrugsEst" = c(NA, coef(lmVloadUni)[["DRUGS_0"]], NA, coef(lmVloadMulti)[["DRUGS_0"]],
                 NA, coef(lmLeu3nUni)[["DRUGS_0"]], NA, coef(lmLeu3nMulti)[["DRUGS_0"]],
                 NA, coef(lmMentUni)[["DRUGS_0"]], NA, coef(lmMentMulti)[["DRUGS_0"]],
                 NA, coef(lmPhysUni)[["DRUGS_0"]], NA, coef(lmPhysMulti)[["DRUGS_0"]]),
-    "AIC" = c(AIC(lmVloadUniNoDrugs), AIC(lmVloadUni), AIC(lmVloadMultiNoDrugs), AIC(lmVloadMulti),
-            AIC(lmLeu3nUniNoDrugs), AIC(lmLeu3nUni), AIC(lmLeu3nMultiNoDrugs), AIC(lmLeu3nMulti),
-            AIC(lmMentUniNoDrugs), AIC(lmMentUni), AIC(lmMentMultiNoDrugs), AIC(lmMentMulti),
-            AIC(lmPhysUniNoDrugs), AIC(lmPhysUni), AIC(lmPhysMultiNoDrugs), AIC(lmPhysMulti)),
     "pVal" = c(NA, summary(lmVloadUni)$coefficients["DRUGS_0", 4], NA, summary(lmVloadMulti)$coefficients["DRUGS_0", 4],
                NA, summary(lmLeu3nUni)$coefficients["DRUGS_0", 4], NA, summary(lmLeu3nMulti)$coefficients["DRUGS_0", 4],
                NA, summary(lmMentUni)$coefficients["DRUGS_0", 4], NA, summary(lmMentMulti)$coefficients["DRUGS_0", 4],
-               NA, summary(lmPhysUni)$coefficients["DRUGS_0", 4], NA, summary(lmPhysMulti)$coefficients["DRUGS_0", 4])
-)
+               NA, summary(lmPhysUni)$coefficients["DRUGS_0", 4], NA, summary(lmPhysMulti)$coefficients["DRUGS_0", 4]),
+    "lowerCI" = c(NA, confint(lmVloadUni, level = .95)["DRUGS_0", 1], NA, confint(lmVloadMulti, level = .95)["DRUGS_0", 1],
+                  NA, confint(lmLeu3nUni, level = .95)["DRUGS_0", 1], NA, confint(lmLeu3nMulti, level = .95)["DRUGS_0", 1],
+                  NA, confint(lmMentUni, level = .95)["DRUGS_0", 1], NA, confint(lmMentMulti, level = .95)["DRUGS_0", 1],
+                  NA, confint(lmPhysUni, level = .95)["DRUGS_0", 1], NA, confint(lmPhysMulti, level = .95)["DRUGS_0", 1]),
+    "upperCI" = c(NA, confint(lmVloadUni, level = .95)["DRUGS_0", 2], NA, confint(lmVloadMulti, level = .95)["DRUGS_0", 2],
+                  NA, confint(lmLeu3nUni, level = .95)["DRUGS_0", 2], NA, confint(lmLeu3nMulti, level = .95)["DRUGS_0", 2],
+                  NA, confint(lmMentUni, level = .95)["DRUGS_0", 2], NA, confint(lmMentMulti, level = .95)["DRUGS_0", 2],
+                  NA, confint(lmPhysUni, level = .95)["DRUGS_0", 2], NA, confint(lmPhysMulti, level = .95)["DRUGS_0", 2])
+)  %>%
+    mutate("modelType" = case_when(.data$model == "vloadUniNoDrugs" ~ "Univariable w/o Drug Use",
+                                   .data$model == "vloadUni" ~ "Univariable",
+                                   .data$model == "vloadMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                                   .data$model == "vloadMulti" ~ "Multivariable",
+                                   .data$model == "leu3nUniNoDrugs" ~ "Univariable w/o Drug Use",
+                                   .data$model == "leu3nUni" ~ "Univariable",
+                                   .data$model == "leu3nMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                                   .data$model == "leu3nMulti" ~ "Multivariable",
+                                   .data$model == "mentUniNoDrugs" ~ "Univariable w/o Drug Use",
+                                   .data$model == "mentUni" ~ "Univariable",
+                                   .data$model == "mentMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                                   .data$model == "mentMulti" ~ "Multivariable",
+                                   .data$model == "physUniNoDrugs" ~ "Univariable w/o Drug Use",
+                                   .data$model == "physUni" ~ "Univariable",
+                                   .data$model == "physMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                                   .data$model == "physMulti" ~ "Multivariable")) %>%
+    select(model, modelType, AIC, freqDrugsEst, lowerCI, upperCI, pVal)
 
 saveRDS(fullFreqSummary, "DataProcessed/fullFreqSummary.rda")

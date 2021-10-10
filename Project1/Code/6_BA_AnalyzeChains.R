@@ -54,7 +54,7 @@ fullFreqSummary <- readRDS("DataProcessed/fullFreqSummary.rda")
 
 # Means, credible intervals, posterior probabilities ---------------------------
 postProbLog <- function(x) {
-    inBounds <- sum(x < log(1.1) & x > log(.9))
+    inBounds <- sum(x < log10(1.1) & x > log10(.9))
     1 - (inBounds / length(x))
 }
 
@@ -227,12 +227,30 @@ drugsCoeff <- bind_rows(filter(vloadChainsSummary, param == "DRUGS_0"),
                        filter(leu3nChainsSummary, param == "DRUGS_0"),
                        filter(mentChainsSummary, param == "DRUGS_0"),
                        filter(physChainsSummary, param == "DRUGS_0")) %>%
-    select(-param)
+    select(-param, -lowerQuant, -upperQuant)
 
 fullBayesianSummary <- deviances %>%
-    left_join(drugsCoeff, by = "model")
+    left_join(drugsCoeff, by = "model") %>%
+    select(-DIC) %>%
+    mutate("modelType" = case_when(.data$model == "vloadUniNoDrugs" ~ "Univariable w/o Drug Use",
+                               .data$model == "vloadUni" ~ "Univariable",
+                               .data$model == "vloadMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                               .data$model == "vloadMulti" ~ "Multivariable",
+                               .data$model == "leu3nUniNoDrugs" ~ "Univariable w/o Drug Use",
+                               .data$model == "leu3nUni" ~ "Univariable",
+                               .data$model == "leu3nMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                               .data$model == "leu3nMulti" ~ "Multivariable",
+                               .data$model == "mentUniNoDrugs" ~ "Univariable w/o Drug Use",
+                               .data$model == "mentUni" ~ "Univariable",
+                               .data$model == "mentMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                               .data$model == "mentMulti" ~ "Multivariable",
+                               .data$model == "physUniNoDrugs" ~ "Univariable w/o Drug Use",
+                               .data$model == "physUni" ~ "Univariable",
+                               .data$model == "physMultiNoDrugs" ~ "Multivariable w/o Drug Use",
+                               .data$model == "physMulti" ~ "Multivariable")) %>%
+    select(model, modelType, penDIC, bayesDrugsEst, hpdLower, hpdUpper, postProb)
 
-fullSummary <- fullBayesianSummary %>%
-    full_join(fullFreqSummary, by = "model") %>%
-    mutate(across(!model, round, 2)) %>%
-    select(model, bayesDrugsEst, freqDrugsEst, DIC, AIC, postProb, pVal, hpdLower, hpdUpper)
+# fullSummary <- fullBayesianSummary %>%
+#     full_join(fullFreqSummary, by = "model") %>%
+#     mutate(across(!model, round, 2)) %>%
+#     select(model, bayesDrugsEst, freqDrugsEst, AIC, postProb, pVal, hpdLower, hpdUpper)
