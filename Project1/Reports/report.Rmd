@@ -1,0 +1,135 @@
+---
+title: "Project 1 Report"
+author: "Max McGrath"
+date: "10/9/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.kable.NA = '')
+library(kableExtra)
+setwd("..")
+source("Code/1_prepData.R")
+source("Code/6_BA_AnalyzeChains.R")
+```
+
+## Introduction
+
+We received data of 3935 observations for 715 patients with HIV who began 
+receiving highly active antiretroviral treatment (HAART). The data includes 
+baseline values for each individual prior to starting treatment, then up 
+to 8 years of longitudinal measurements for the patients as they received
+HAART treatment. Each observation includes laboratory and quality of life
+measures, as well as demographic and other health information. Most relevant to
+this analysis, each observation indicates whether patients used
+illicit drugs via injection or opiates via any method of
+administration, which will be referred to as "hard drug use" or just "drug use" 
+throughout this analysis.
+
+The goal of this analysis is to identify whether HAART deferentially impacts
+patients who report using drugs prior to receiving treatment relative to those
+who did not report using drugs at baseline.
+The efficacy of HAART will be evaluated using four treatment outcomes: (1) viral
+load, (2) CD4+ T cell counts, (3) aggregate physical quality of life score, and 
+(4) aggregate mental quality of life score. We will test the hypothesis that
+patients who report using illicit drugs prior to beginning treatment have worse
+health outcomes after two years of treatment than those who did not report
+using hard drugs at baseline.
+
+## Methods
+
+Patients were only included in this analysis if they had no missing values
+for any of the four treatment outcomes, the indicator of whether they used hard 
+drugs at baseline, or any of the baseline covariates described below. Values
+that were deemed implausible were also removed.
+
+Data was first summarized for relevant covariates and outcomes 
+at both baseline and after
+two years of treatment. Treatment outcomes were then analyzed using linear
+models in both a frequentist context (multivariable least squares regression) 
+and using Bayesian linear regression. For each framework four models per 
+outcome were used (a total of sixteen models), where differences in each outcome
+from baseline to two years are used as the response for the respective models.
+
+Hard drug use at baseline is the primary variable of interest, so each model
+was defined to better understand the relationship between hard drug use and 
+each respective outcome. For each outcome, an initial model was estimated using
+only baseline outcome values as a predictor. Then, hard drug use was added as
+a variable to those models. Next, models using only baseline outcome values and 
+confounders as variables were estimated, as they are likely
+correlated with drug use and the outcomes. Those confounding variables include
+age, body mass index, smoking status, education, race/ethnicity. All confounding 
+values were those measured at baseline, except adherence which used second year
+values. Last, models were estimated with drug use added as a predictor alongside
+baseline values and confounding values to evaluate the relationship between
+the responses 
+
+Hard drug use at baseline is the primary variable of interest, so each model
+was defined to better understand the relationship between hard drug use and 
+each respective outcome. First, models with only hard drug use and baseline
+outcome values were estimated for each outcome. We will refer to those models
+as univariable models. Next, confounding variables
+were added to those models to control for factors that are likely correlated
+with both drug use and the outcomes. Those confounding variables include
+age, body mass index, smoking status, education, race/ethnicity. All confounding 
+values were those measured at baseline, except adherence which used second year
+values. Those models will be reffered to as multivariable models. Lastly, for each
+outcome, the univariable and multivariable models were run without hard drug
+use as a predictor to quantify the impact of removing hard drug use as a 
+predictor. We will refer to those models as univariable without drug use and
+multivariable without drug use, respectively.
+
+For the Bayesian model, all priors were non-informative to reflect a lack of
+a priori knowledge surrounding the associations between predictors and outcomes.
+Specifically, coefficient priors were Gaussian with a mean of 0 and a
+variance of 100,000 and error priors were gamma distributions with shape and
+rate parameters both equal to 0.001.
+
+<!-- For the Bayesian linear models, credible intervals for the coefficients  -->
+<!-- corresponding with drug use will be used to assess the direction and significance -->
+<!-- of the correlation between drug use and each treatment outcome. For the -->
+<!-- frequentist linear models, coefficient point estimates and t-test p-values will -->
+<!-- be used to evaluate the same relationship. Concordance or lack thereof between -->
+<!-- the two paradigms as well as any limitations to the study will be discussed. -->
+
+## Results
+
+## Conclusions
+
+\newpage
+
+## Reproducibility
+
+\newpage
+
+```{r, echo = FALSE}
+# Create Table 1
+table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
+           AGE_0 + BMI_0 + RACE_0 + EDUC_0 + SMOKE_0 + ADH_2 +
+           LOG_VLOAD_0 + LEU3N_0 + MENT_0 + PHYS_0 | DRUGS_0, 
+       data = tableOneData, render.categorical="FREQ (PCTnoNA%)",
+       caption = "Data Summary")
+```
+
+```{r, echo = FALSE}
+kable(fullBayesianSummary, booktabs=TRUE, caption = "Bayesian Summary", 
+      digits = 2) %>%
+    kable_styling(latex_options = c("striped", "scale_down")) %>%
+    pack_rows("Standardized Viral Load (log10 copies/ml)", 1, 4) %>%
+    pack_rows("CD4+ cells", 5, 8) %>%
+    pack_rows("SF36 MCS score", 9, 12) %>%
+    pack_rows("SF36 PCS score", 13, 16)
+```
+
+\newpage
+
+```{r, echo = FALSE}
+kable(fullFreqSummary, booktabs=TRUE, caption = "Frequentist Summary",
+      digits = 2) %>%
+    kable_styling(full_width = T, latex_options = "striped") %>% 
+    pack_rows("Standardized Viral Load (log10 copies/ml)", 1, 4) %>%
+    pack_rows("CD4+ cells", 5, 8) %>%
+    pack_rows("SF36 MCS score", 9, 12) %>%
+    pack_rows("SF36 PCS score", 13, 16)
+```
