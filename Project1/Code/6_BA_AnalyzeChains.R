@@ -48,7 +48,7 @@ vloadChains <- bind_rows(
 
 vloadChainsSummary <- vloadChains %>%
     group_by(model, param) %>%
-    summarize(bayesEst = mean(value),
+    summarize(bayesDrugsEst = mean(value),
               hpdLower = hpd(value, alpha = 0.05)[1],
               hpdUpper = hpd(value, alpha = 0.05)[2],
               lowerQuant = quantile(value, .05),
@@ -73,7 +73,7 @@ leu3nChains <- bind_rows(
 
 leu3nChainsSummary <- leu3nChains %>%
     group_by(model, param) %>%
-    summarize(bayesEst = mean(value),
+    summarize(bayesDrugsEst = mean(value),
               hpdLower = hpd(value, alpha = 0.05)[1],
               hpdUpper = hpd(value, alpha = 0.05)[2],
               lowerQuant = quantile(value, .05),
@@ -98,7 +98,7 @@ mentChains <- bind_rows(
 
 mentChainsSummary <- mentChains %>%
     group_by(model, param) %>%
-    summarize(bayesEst = mean(value),
+    summarize(bayesDrugsEst = mean(value),
               hpdLower = hpd(value, alpha = 0.05)[1],
               hpdUpper = hpd(value, alpha = 0.05)[2],
               lowerQuant = quantile(value, .05),
@@ -123,7 +123,7 @@ physChains <- bind_rows(
 
 physChainsSummary <- physChains %>%
     group_by(model, param) %>%
-    summarize(bayesEst = mean(value),
+    summarize(bayesDrugsEst = mean(value),
               hpdLower = hpd(value, alpha = 0.05)[1],
               hpdUpper = hpd(value, alpha = 0.05)[2],
               lowerQuant = quantile(value, .05),
@@ -183,4 +183,4 @@ fullBayesianSummary <- deviances %>%
 fullSummary <- fullBayesianSummary %>%
     full_join(fullFreqSummary, by = "model") %>%
     mutate(across(!model, round, 2)) %>%
-    select(model, bayesEst, freqEst, AIC, DIC, postProb, pVal, hpdLower, hpdUpper)
+    select(model, bayesDrugsEst, freqDrugsEst, DIC, AIC, postProb, pVal, hpdLower, hpdUpper)

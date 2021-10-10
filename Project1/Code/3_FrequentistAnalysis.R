@@ -75,7 +75,7 @@ fullFreqSummary <- data.frame(
               "leu3nUniNoDrugs", "leu3nUni", "leu3nMultiNoDrugs", "leu3nMulti",
               "mentUniNoDrugs", "mentUni", "mentMultiNoDrugs", "mentMulti",
               "physUniNoDrugs", "physUni", "physMultiNoDrugs", "physMulti"),
-    "freqEst" = c(NA, coef(lmVloadUni)[["DRUGS_0"]], NA, coef(lmVloadMulti)[["DRUGS_0"]],
+    "freqDrugsEst" = c(NA, coef(lmVloadUni)[["DRUGS_0"]], NA, coef(lmVloadMulti)[["DRUGS_0"]],
                 NA, coef(lmLeu3nUni)[["DRUGS_0"]], NA, coef(lmLeu3nMulti)[["DRUGS_0"]],
                 NA, coef(lmMentUni)[["DRUGS_0"]], NA, coef(lmMentMulti)[["DRUGS_0"]],
                 NA, coef(lmPhysUni)[["DRUGS_0"]], NA, coef(lmPhysMulti)[["DRUGS_0"]]),
