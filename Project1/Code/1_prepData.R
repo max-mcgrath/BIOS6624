@@ -118,3 +118,9 @@ physData <- cleanData %>%
     select(-LOG_VLOAD_0, -LOG_VLOAD_DIFF, 
            -LEU3N_0, -LEU3N_DIFF,
            -MENT_0, -MENT_DIFF)
+
+# Save data
+saveRDS(vloadData, "DataProcessed/vloadData.rda")
+saveRDS(leu3nData, "DataProcessed/leu3nData.rda")
+saveRDS(mentData, "DataProcessed/mentData.rda")
+saveRDS(physData, "DataProcessed/physData.rda")

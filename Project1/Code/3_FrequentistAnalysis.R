@@ -88,3 +88,5 @@ fullFreqSummary <- data.frame(
                NA, summary(lmMentUni)$coefficients["DRUGS_0", 4], NA, summary(lmMentMulti)$coefficients["DRUGS_0", 4],
                NA, summary(lmPhysUni)$coefficients["DRUGS_0", 4], NA, summary(lmPhysMulti)$coefficients["DRUGS_0", 4])
 )
+
+saveRDS(fullFreqSummary, "DataProcessed/fullFreqSummary.rda")

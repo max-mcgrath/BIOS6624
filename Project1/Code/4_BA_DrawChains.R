@@ -368,3 +368,46 @@ colnames(physMultiNoDrugsDF) <- c(colnames(physMultiNoDrugsMM), "sigma")
 physMultiDF <- bind_rows(as.data.frame(physMultiChains[[1]]), 
                                 as.data.frame(physMultiChains[[2]]))
 colnames(physMultiDF) <- c(colnames(physMultiMM), "sigma")
+
+# Save chains ------------------------------------------------------------------
+# Save DICs
+saveRDS(vloadUniNoDrugsDIC, "DataProcessed/vloadUniNoDrugsDIC.rda")
+saveRDS(vloadUniDIC, "DataProcessed/vloadUniDIC.rda")
+saveRDS(vloadMultiNoDrugsDIC, "DataProcessed/vloadMultiNoDrugsDIC.rda")
+saveRDS(vloadMultiDIC, "DataProcessed/vloadMultiDIC.rda")
+
+saveRDS(leu3nUniNoDrugsDIC, "DataProcessed/leu3nUniNoDrugsDIC.rda")
+saveRDS(leu3nUniDIC, "DataProcessed/leu3nUniDIC.rda")
+saveRDS(leu3nMultiNoDrugsDIC, "DataProcessed/leu3nMultiNoDrugsDIC.rda")
+saveRDS(leu3nMultiDIC, "DataProcessed/leu3nMultiDIC.rda")
+
+saveRDS(mentUniNoDrugsDIC, "DataProcessed/mentUniNoDrugsDIC.rda")
+saveRDS(mentUniDIC, "DataProcessed/mentUniDIC.rda")
+saveRDS(mentMultiNoDrugsDIC, "DataProcessed/mentMultiNoDrugsDIC.rda")
+saveRDS(mentMultiDIC, "DataProcessed/mentMultiDIC.rda")
+
+saveRDS(physUniNoDrugsDIC, "DataProcessed/physUniNoDrugsDIC.rda")
+saveRDS(physUniDIC, "DataProcessed/physUniDIC.rda")
+saveRDS(physMultiNoDrugsDIC, "DataProcessed/physMultiNoDrugsDIC.rda")
+saveRDS(physMultiDIC, "DataProcessed/physMultiDIC.rda")
+
+# Save chain data frames
+saveRDS(vloadUniNoDrugsDF, "DataProcessed/vloadUniNoDrugsDF.rda")
+saveRDS(vloadUniDF, "DataProcessed/vloadUniDF.rda")
+saveRDS(vloadMultiNoDrugsDF, "DataProcessed/vloadMultiNoDrugsDF.rda")
+saveRDS(vloadMultiDF, "DataProcessed/vloadMultiDF.rda")
+
+saveRDS(leu3nUniNoDrugsDF, "DataProcessed/leu3nUniNoDrugsDF.rda")
+saveRDS(leu3nUniDF, "DataProcessed/leu3nUniDF.rda")
+saveRDS(leu3nMultiNoDrugsDF, "DataProcessed/leu3nMultiNoDrugsDF.rda")
+saveRDS(leu3nMultiDF, "DataProcessed/leu3nMultiDF.rda")
+
+saveRDS(mentUniNoDrugsDF, "DataProcessed/mentUniNoDrugsDF.rda")
+saveRDS(mentUniDF, "DataProcessed/mentUniDF.rda")
+saveRDS(mentMultiNoDrugsDF, "DataProcessed/mentMultiNoDrugsDF.rda")
+saveRDS(mentMultiDF, "DataProcessed/mentMultiDF.rda")
+
+saveRDS(physUniNoDrugsDF, "DataProcessed/physUniNoDrugsDF.rda")
+saveRDS(physUniDF, "DataProcessed/physUniDF.rda")
+saveRDS(physMultiNoDrugsDF, "DataProcessed/physMultiNoDrugsDF.rda")
+saveRDS(physMultiDF, "DataProcessed/physMultiDF.rda")

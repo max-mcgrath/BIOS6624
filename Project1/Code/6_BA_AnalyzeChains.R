@@ -1,4 +1,56 @@
-source("Code/4_BA_DrawChains.R")
+# source("Code/4_BA_DrawChains.R")
+
+# Read data from previous scripts ----------------------------------------------
+# Read cleaned data
+vloadData <- readRDS("DataProcessed/vloadData.rda")
+leu3nData <- readRDS("DataProcessed/leu3nData.rda")
+mentData <- readRDS("DataProcessed/mentData.rda")
+physData <- readRDS("DataProcessed/physData.rda")
+
+# Read DICs
+vloadUniNoDrugsDIC <- readRDS("DataProcessed/vloadUniNoDrugsDIC.rda")
+vloadUniDIC <- readRDS("DataProcessed/vloadUniDIC.rda")
+vloadMultiNoDrugsDIC <- readRDS("DataProcessed/vloadMultiNoDrugsDIC.rda")
+vloadMultiDIC<- readRDS("DataProcessed/vloadMultiDIC.rda")
+
+leu3nUniNoDrugsDIC <- readRDS("DataProcessed/leu3nUniNoDrugsDIC.rda")
+leu3nUniDIC <- readRDS("DataProcessed/leu3nUniDIC.rda")
+leu3nMultiNoDrugsDIC <- readRDS("DataProcessed/leu3nMultiNoDrugsDIC.rda")
+leu3nMultiDIC<- readRDS("DataProcessed/leu3nMultiDIC.rda")
+
+mentUniNoDrugsDIC <- readRDS("DataProcessed/mentUniNoDrugsDIC.rda")
+mentUniDIC <- readRDS("DataProcessed/mentUniDIC.rda")
+mentMultiNoDrugsDIC <- readRDS("DataProcessed/mentMultiNoDrugsDIC.rda")
+mentMultiDIC<- readRDS("DataProcessed/mentMultiDIC.rda")
+
+physUniNoDrugsDIC <- readRDS("DataProcessed/physUniNoDrugsDIC.rda")
+physUniDIC <- readRDS("DataProcessed/physUniDIC.rda")
+physMultiNoDrugsDIC <- readRDS("DataProcessed/physMultiNoDrugsDIC.rda")
+physMultiDIC<- readRDS("DataProcessed/physMultiDIC.rda")
+
+# Read chains
+vloadUniNoDrugsDF <- readRDS("DataProcessed/vloadUniNoDrugsDF.rda")
+vloadUniDF <- readRDS("DataProcessed/vloadUniDF.rda")
+vloadMultiNoDrugsDF <- readRDS("DataProcessed/vloadMultiNoDrugsDF.rda")
+vloadMultiDF <- readRDS("DataProcessed/vloadMultiDF.rda")
+
+leu3nUniNoDrugsDF <- readRDS("DataProcessed/leu3nUniNoDrugsDF.rda")
+leu3nUniDF <- readRDS("DataProcessed/leu3nUniDF.rda")
+leu3nMultiNoDrugsDF <- readRDS("DataProcessed/leu3nMultiNoDrugsDF.rda")
+leu3nMultiDF <- readRDS("DataProcessed/leu3nMultiDF.rda")
+
+mentUniNoDrugsDF <- readRDS("DataProcessed/mentUniNoDrugsDF.rda")
+mentUniDF <- readRDS("DataProcessed/mentUniDF.rda")
+mentMultiNoDrugsDF <- readRDS("DataProcessed/mentMultiNoDrugsDF.rda")
+mentMultiDF <- readRDS("DataProcessed/mentMultiDF.rda")
+
+physUniNoDrugsDF <- readRDS("DataProcessed/physUniNoDrugsDF.rda")
+physUniDF <- readRDS("DataProcessed/physUniDF.rda")
+physMultiNoDrugsDF <- readRDS("DataProcessed/physMultiNoDrugsDF.rda")
+physMultiDF <- readRDS("DataProcessed/physMultiDF.rda")
+
+# Read frequentist summary
+fullFreqSummary <- readRDS("DataProcessed/fullFreqSummary.rda")
 
 # Means, credible intervals, posterior probabilities ---------------------------
 postProbLog <- function(x) {
