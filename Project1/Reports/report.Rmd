@@ -53,7 +53,8 @@ using hard drugs at baseline.
 Patients were only included in this analysis if they had no missing values
 for any of the four treatment outcomes, the indicator of whether they used hard 
 drugs at baseline, or any of the baseline covariates described below. Values
-that were deemed implausible were also removed.
+that were deemed implausible were also removed. Viral load was also log base
+10 transformed to account for the long-tailed distribution of those values.
 
 Data was first summarized for relevant covariates and outcomes 
 at both baseline and after
@@ -95,14 +96,21 @@ For the Bayesian model, all priors were non-informative to reflect a lack of
 *a priori* knowledge surrounding the associations between predictors and outcomes.
 Specifically, coefficient priors were Gaussian with a mean of 0 and a
 variance of 100,000 and error priors were gamma distributions with shape and
-rate parameters both equal to 0.001.
+rate parameters both equal to 0.001. For each Bayesian model, two Monte Carlo Markov 
+Chains were run for 25,000 iterations of Gibbs sampling to draw independent
+values from each coefficients posterior density in order to estimate those 
+densities. The convergence and mixing of the chains was evaluated using 
+trace plots, autocorrelation function plots, and by visually examining plots of
+the posterior density estimates, all to ensure that the chains accurately
+reflect the underlying parameters' distributions.
 
-<!-- For the Bayesian linear models, credible intervals for the coefficients  -->
-<!-- corresponding with drug use will be used to assess the direction and significance -->
-<!-- of the correlation between drug use and each treatment outcome. For the -->
-<!-- frequentist linear models, coefficient point estimates and t-test p-values will -->
-<!-- be used to evaluate the same relationship. Concordance or lack thereof between -->
-<!-- the two paradigms as well as any limitations to the study will be discussed. -->
+For the Bayesian linear models, parameter estimates, highest posterior density
+intervals, and posterior probabilities were all calculated and evaluated to
+evaluate the impact of hard drug use upon HAART treatment. Those statistics'
+frequentist counterparts, least-squares coefficient estimates, confidence
+intervals, and t-test p-values were also used to evaluate the same relationship.
+Concordance or lack thereof between the two paradigms as well as any limitations
+to this analysis are also discussed.
 
 ## Results
 
