@@ -155,10 +155,9 @@ vloadUniNoDrugsMod <- jags.model("Code/linMod.jags",
                                  n.adapt = 1000, n.chains = 2,
                                  inits = list(.RNG.name = "base::Wichmann-Hill",
                                               .RNG.seed = 123))
-vloadUniNoDrugsChainsT <- coda.samples(vloadUniNoDrugsMod, 
+vloadUniNoDrugsChains <- coda.samples(vloadUniNoDrugsMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
-identical(vloadUniNoDrugsChains, vloadUniNoDrugsChainsT)
 vloadUniNoDrugsDIC <- dic.samples(vloadUniNoDrugsMod, 
                                   n.iter = iter, type = "pD")
 
