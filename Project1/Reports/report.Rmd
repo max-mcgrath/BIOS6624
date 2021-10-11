@@ -62,8 +62,9 @@ at both baseline and after
 two years of treatment. Treatment outcomes were then analyzed using linear
 models in both a frequentist context (multivariable least squares regression) 
 and using Bayesian linear regression. For each framework four models per 
-outcome were used (a total of sixteen models), where differences in each outcome
-from baseline to two years are used as the response for the respective models.
+outcome were used (a total of sixteen models per framework), where differences 
+in each outcome (year two values minus baseline) are used as the response for the 
+respective models.
 
 Hard drug use at baseline is the primary variable of interest, so each model
 was defined to better understand the relationship between hard drug use and 
@@ -114,10 +115,6 @@ densities given the observed data and selected priors. Summaries of the
 data used in this analysis are found in Table 1, and a missingness summary
 for relevant baseline and year two values is found in Table 2.
 
-<!-- Examples of those plots from this analysis are provided in Figure 1, but for  -->
-<!-- brevity's sake not all examined plots are included. From Table 1 and Figures ... -->
-<!-- we see that ... -->
-
 Below we describe the results of the Bayesian modeling and contrast those results
 with those of the frequentist modeling, with full results available in the
 Appendix in Tables 3 and 4, respectively.
@@ -143,12 +140,12 @@ data does not support an association between drug use and change in viral load
 after two years of HAART. These results are further supported by the 
 frequentist modeling.
 
-### CD4+ Cells
+### CD4+ T Cell Count
 
-For the univariate model with CD4+ cell count as the outcome, 
+For the univariate model with CD4+ T cell count as the outcome, 
 the drug use coefficient for drug use was estimated
 to be -170.989 (95% HPD: -232.818, -112.506), suggesting that on average
-drug users have -170.989 lower difference in CD4+ cells than non-drug users 
+drug users have -170.989 lower difference in CD4+ T cells than non-drug users 
 after 2 years of
 HAART. The DIC for the univariate model was 28.993 lower than the model without
 drug use as a variable, indicating the inclusion of drug use notably improved
@@ -201,7 +198,9 @@ implying there may be a negative effect of hard drug use on HAART. We also see
 weak evidence that drug users see reduced changes in physical quality of life
 score after 2 years of HAART relative to non-drug users. We do not, however,
 note any significant difference in viral load or mental quality of life score
-between individuals who use hard drugs and those who do not.
+between individuals who use hard drugs and those who do not. As such, we do
+conclude that drug use is associated with worse health outcomes after two years
+of HAART.
 
 ### Limitations and Discussion
 
