@@ -113,7 +113,9 @@ autocorrelation function plots, and estimated posterior distribution plots, it
 is clear that the chains are an accurate estimate of the posterior 
 densities given the observed data and selected priors. Summaries of the
 data used in this analysis are found in Table 1, and a missingness summary
-for relevant baseline and year two values is found in Table 2.
+for relevant baseline and year two values is found in Table 2. Box plots for 
+outcomes for those who reported using drugs and those who did not
+are provided in Figure 1.
 
 Below we describe the results of the Bayesian modeling and contrast those results
 with those of the frequentist modeling, with full results available in the
@@ -274,7 +276,8 @@ kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
 kable(missingSummary, booktabs = TRUE, caption = "Missingess Summary",
       digits = 2, col.names = c("Variable", "N Missing", "% Missing", "N Missing", "% Missing")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>%
-    add_header_above(c(" " = 1, "Baseline" = 2, "Year Two" = 2))
+    add_header_above(c(" " = 1, "Baseline" = 2, "Year Two" = 2)) %>%
+    add_footnote("Note that this table does not account for dropout. 209 patients were \npresent in year one that were not present in year two")
 ```
 
 ```{r, echo = FALSE}
@@ -303,4 +306,8 @@ kable(fullFreqSummary[, 2:7], booktabs=TRUE,
     pack_rows("CD4+ cells", 5, 8) %>%
     pack_rows("SF36 MCS score", 9, 12) %>%
     pack_rows("SF36 PCS score", 13, 16)
+```
+
+```{r, fig.cap = "Difference in outcomes for those who reported using drugs at baseline at those who did not.", echo = FALSE} 
+boxplot
 ```

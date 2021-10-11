@@ -1,5 +1,6 @@
 library(table1)
 library(naniar)
+library(ggplot2)
 source("Code/1_prepData.R")
 
 # Create Table One
@@ -11,6 +12,7 @@ table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
 # Examine missingness
 yearZeroMissing <- yearZero %>%
     select(-NEWID) %>%
+    mutate(BMI_0 = ifelse(BMI_0 > 70.1 | BMI_0 == -1, NA, BMI_0)) %>%
     miss_var_summary() %>%
     mutate(variable = case_when(.data$variable == "LOG_VLOAD_0" ~ "Log Viral Load",
                                 .data$variable == "LEU3N_0" ~ "CD4+ Cell Count",
@@ -37,3 +39,18 @@ yearTwoMissing <- yearTwo %>%
     select(variable, nMissing2 = n_miss, pctMissing2 = pct_miss)
 
 missingSummary <- full_join(yearZeroMissing, yearTwoMissing)
+
+# Create boxplot of data
+boxplotData <- cleanData %>%
+    select(LOG_VLOAD_DIFF, LEU3N_DIFF, PHYS_DIFF, MENT_DIFF, DRUGS_0) %>%
+    pivot_longer(cols = !DRUGS_0, names_to = "outcome") %>%
+    mutate(DRUGS_0 = case_when(.data$DRUGS_0 == 0 ~ "No Drug Use at Baseline",
+                               .data$DRUGS_0 == 1 ~ "Drug Use at Baseline")) %>%
+    mutate(outcome = case_when(.data$outcome == "LEU3N_DIFF" ~ "Difference in CD4+ T Cell",
+                               .data$outcome == "LOG_VLOAD_DIFF" ~ "Difference in Log Viral Load",
+                               .data$outcome == "PHYS_DIFF" ~ "Difference in SF36 PCS Score",
+                               .data$outcome == "MENT_DIFF" ~ "Difference in SF36 MCS Score"))
+
+(boxplot <- ggplot(boxplotData, aes(y=value, fill = DRUGS_0)) +
+    geom_boxplot() +
+        facet_wrap( ~ outcome, ncol = 2, nrow = 2, scales = "free"))
