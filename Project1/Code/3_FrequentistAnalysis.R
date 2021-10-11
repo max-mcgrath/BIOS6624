@@ -67,7 +67,7 @@ AIC(lmPhysMultiNoDrugs)
 
 lmPhysMulti <- lm(PHYS_DIFF ~ ., data = physData)
 summary(lmPhysMulti)
-AIC(lmPhysMulti)
+ AIC(lmPhysMulti)
 
 # Create table summarizing results ---------------------------------------------
 fullFreqSummary <- data.frame(

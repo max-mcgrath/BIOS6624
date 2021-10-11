@@ -106,7 +106,7 @@ to this analysis are also discussed.
 ## Results
 
 Following the removal of incomplete observations, a total sample size of 463
-patients remain, 36 who used hard drugs at baseline and 427 who did not. After,0
+patients remain, 36 who used hard drugs at baseline and 427 who did not. After
 running the Markov Chains as described above and examining trace plots, 
 autocorrelation function plots, and estimated posterior distribution plots, it
 is clear that the chains are an accurate estimate of the posterior 
@@ -197,13 +197,13 @@ negatively associated.
 
 From the above results, we see strong evidence that differences in CD4+ cell
 counts after two years of HAART are smaller in individuals that use hard drugs,
-implying there is a negative effect of hard drug use on HAART. We also see
+implying there may be a negative effect of hard drug use on HAART. We also see
 weak evidence that drug users see reduced changes in physical quality of life
 score after 2 years of HAART relative to non-drug users. We do not, however,
 note any significant difference in viral load or mental quality of life score
 between individuals who use hard drugs and those who do not.
 
-### Limitations
+### Limitations and Discussion
 
 The greatest limitation of this study is the small sample of drug users relative
 to non-users. When considering this difference it must be noted that if it is 
@@ -222,8 +222,9 @@ in the study.
 
 Given these factors, the above findings should be 
 considered with greater leniency, where even weak effects should be considered
-indicative that a meaningful correlation may exist. Given this consideration
-coupled with this study's results, further research that aims to expand the
+indicative that a meaningful correlation may exist. As such, our results are 
+indicative of a meaningful correlation between drug use and worse health outcomes
+are 2 years of HAART. Further research that aims to expand the
 quantity of drug using patients should be pursued. This could be accomplished
 through more active recruiting and provision of HAART treatment to drug using
 individuals and through refinement of data collection methods to foster
@@ -238,7 +239,7 @@ The code used to generate this analysis is available on GitHub
 at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project1
 . The `Background` folder contains information pertinent to understanding the
 analysis but unnecessary for reproducing it. The `Code` folder contains six
-files: `1_prepData.R`, `2_-_EDA.R`, `3_FrequentistAnalysis.R`, 
+files: `1_prepData.R`, `2_EDA.R`, `3_FrequentistAnalysis.R`, 
 `4_BA_DrawChains.R`, `5_BA_AssessChains.R` and `6_BA_AnalyzeChains.R`. 
 These R scripts are dependent upon a data file 
 `Data/hiv_6624.csv` which is not available on GitHub, but may be 
