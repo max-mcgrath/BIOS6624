@@ -111,6 +111,7 @@ autocorrelation function plots, and estimated posterior distribution plots, it
 is clear that the chains are an accurate estimate of the posterior 
 densities given the observed data and selected priors.
 
+<!-- The missingness is described in table ??? -->
 <!-- Examples of those plots from this analysis are provided in Figure 1, but for  -->
 <!-- brevity's sake not all examined plots are included. From Table 1 and Figures ... -->
 <!-- we see that ... -->
@@ -126,7 +127,8 @@ posterior density) of 0.038 (95% HPD: -0.355, 0.429)
 was calculated. Since viral load was log base 10
 transformed, we back-transform this estimate to arrive at the value 1.091, 
 implying that drug use is, on average,
-associated with 1.091 times higher HIV copies in a mL of blood. For the 
+associated with 1.091 times higher difference in HIV copies in a mL of blood after
+two years of HAART, relative to non-drug users. For the 
 univariable model, the DIC was estimated to be 1438.458, while the same model
 without drug use had a DIC of 1437.448. The posterior probability of the drug
 use coefficient corresponding with a 10% change of the sample mean of viral 
@@ -134,11 +136,11 @@ load was calculated to be 0.828.
 
 For the multivariate model, the same coefficient is estimated to be -0.166
 (95% HPD: -0.566, 0.227), which implies that drug use is, on average,
-associated with 0.682 times lower HIV copies in an mL of blood following two 
+associated with 0.682 times lower difference in HIV copies in an mL of blood following two 
 years of HAART. For this model, the DIC was estimated to be 1410.898, while the
 same model without drug use as a predictor had a DIC of 1410.525. The
 posterior probability of the drug use coefficient corresponding to a 10% change
-was 0.875.
+was 0.8753.
 
 ### CD4+ Cells
 
@@ -153,42 +155,53 @@ indicating a 10% change in CD4+ counts was approximately 1.
 
 Those results remained consistent for the multivariable model, both with and
 without drug use as a predictor, indicating that the results were robust to the
-inclusion of potential confounders.
+inclusion of potential confounders. The results are also consistent with the
+frequentist analysis.
 
 ### Mental Quality of Life Score
 
 For the univariate model with mental quality of life score as the outcome,
-the coefficient for drug use was estimated to be -0.135, but the 95% HPD
-(-3.526, 3.250) is practically centered at 0. This, coupled with the low
-posterior probability of a 10% change in mental quality of life score from
-drug use (0.008) and the slight increase in DIC when including drug use as a coefficient,
-are all indicative that the data does not support an association between drug
-use and a change in mental quality of life score after two years of HAART.
+the coefficient for drug use was estimated to be -0.136, but the 95% HPD
+(-3.526, 3.250) is practically centered at 0. This, coupled with the only
+slight decrease in DIC when including drug use as a coefficient, indicate that
+the data does not support an association between drug use and differing 
+changes in mental quality of life score between drug users and non-users after
+two years of HAART.
 
 This result is consistent with both the multivariable model and the frequentist
 analysis.
 
 ### Physical Quality of Life Score
 
-For the univariate model wiht physical quality of life score as the outcome,
+For the univariate model with physical quality of life score as the outcome,
 the coefficient for drug use was estimated to be -4.074 (95% HPD: -6.691, -1.312)
 with a posterior probability of drug use corresponding with an average 10% change
-in physical quality of life score of 0.221. The DIC with the inclusion of drug
+in physical quality of life score of 0.9988. The DIC with the inclusion of drug
 use as a variable is slightly lower than that of the model without it. 
 
 These results are somewhat consistent in the multivariable model, although the
 HPD moves to include 0 (-5.433, 0.050) and the posterior probability of a 10%
-change drops to 0.045, both indicating some level of confounding between the
+change drops to 0.985, both indicating some level of confounding between the
 additional variables and drug uses relationship with physical quality of life.
 
-The results are mostly consistent with those from the frequentist analysis,
-however in the frequentist the p-values suggest weak evidence that drug use
-and physical quality of life score may be correlated. As such, there does
-appear to be some association, but it is highly unlikely to correspond
-with a 10% change in average physical quality of life score between users and
-non-users 2 years after starting HAART.
+The results are consistent with those from the frequentist analysis,
+with similar values for coefficient estimates, AIC, and confidence intervals
+as their analogous Bayesian statistics. In both cases, after controlling for
+potential confounders, there remains weak evidence that drug use
+and change in physical quality of life score after 2 years of HAART are 
+negatively associated.
 
-## Conclusions and Limitations
+## Conclusions
+
+From the above results, we see strong evidence that differences in CD4+ cell
+counts after two years of HAART are smaller in individuals that use hard drugs,
+implying there is a negative effect of hard drug use on HAART. We also see
+weak evidence that drug users see reduced changes in physical quality of life
+score after 2 years of HAART relative to non-drug users. We do not, however,
+note any significant difference in viral load or mental quality of life score
+between individuals who use hard drugs and those who do not.
+
+### Limitations
 
 The greatest limitation of this study is the small sample of drug users relative
 to non-users. When considering this difference it must be noted that if it is 
@@ -201,7 +214,9 @@ be disinclined to report their drug use, leading to the presence of drug users
 in the non-drug using study arm, thereby diminishing the measured effect.
 Further, it would be foreseeable that dropout rate among drug users would be 
 higher than among non-users due to both diminished health (and death) and to
-socioeconomic factors. 
+socioeconomic factors, which would both bias our results, as those with the
+worst health out comes may drop out, and reduce the sample size of drug users
+in the study.
 
 Given these factors, the above findings should be 
 considered with greater leniency, where even weak effects should be considered
@@ -256,7 +271,7 @@ kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
 ```{r, echo = FALSE}
 kable(fullBayesianSummary[, 2:7], booktabs=TRUE, 
       caption = "Bayesian Analysis Summary", 
-      digits = 3, col.names = c("Model", "Penalized DIC", "Estimate", 
+      digits = 4, col.names = c("Model", "Penalized DIC", "Estimate", 
                                 "HPD Lower", "HPD Upper", 
                                 "Posterior Probability")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>%
@@ -271,7 +286,7 @@ kable(fullBayesianSummary[, 2:7], booktabs=TRUE,
 ```{r, echo = FALSE}
 kable(fullFreqSummary[, 2:7], booktabs=TRUE, 
       caption = "Frequentist Analysis Summary",
-      digits = 3, col.names = c("Model", "AIC", "Estimate", "Lower CI", 
+      digits = 4, col.names = c("Model", "AIC", "Estimate", "Lower CI", 
                                 "Upper CI", "p-value")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>% 
     add_header_above(c(" " = 2, "Drug Use Coefficient" = 4)) %>%

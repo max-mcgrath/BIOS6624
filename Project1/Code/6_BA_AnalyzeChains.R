@@ -74,12 +74,20 @@ hpd <- function(x, alpha = 0.05){
 }
 
 # Store epsilons for calculation of posterior probabilities
-leu3nMean <- mean(leu3nData$LEU3N_0)
-leu3nEps <- abs(mean(leu3nData$LEU3N_0))*.1
-mentMean <- mean(mentData$MENT_0)
-mentEps <- abs(mean(mentData$MENT_0))*.1
-physMean <- abs(mean(physData$PHYS_0))
-physEps <- abs(mean(physData$PHYS_0))*.1
+# leu3nMean <- mean(leu3nData$LEU3N_0)
+# leu3nEps <- abs(mean(leu3nData$LEU3N_0))*.1
+# mentMean <- mean(mentData$MENT_0)
+# mentEps <- abs(mean(mentData$MENT_0))*.1
+# physMean <- abs(mean(physData$PHYS_0))
+# physEps <- abs(mean(physData$PHYS_0))*.1
+vloadMean <- mean(vloadData$LOG_VLOAD_DIFF)
+vloadEps <- abs(mean(vloadData$LOG_VLOAD_DIFF))*.1
+leu3nMean <- mean(leu3nData$LEU3N_DIFF)
+leu3nEps <- abs(mean(leu3nData$LEU3N_DIFF))*.1
+mentMean <- mean(mentData$MENT_DIFF)
+mentEps <- abs(mean(mentData$MENT_DIFF))*.1
+physMean <- abs(mean(physData$PHYS_DIFF))
+physEps <- abs(mean(physData$PHYS_DIFF))*.1
 
 # Summarize VLOAD chains
 vloadChains <- bind_rows(
