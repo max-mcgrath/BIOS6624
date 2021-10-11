@@ -261,6 +261,12 @@ sessionInfo()
 
 \newpage
 
+## Appendix
+
+```{r, fig.cap = "Difference in outcomes for those who reported using drugs at baseline at those who did not.", echo = FALSE} 
+boxplot
+```
+
 ```{r, echo = FALSE}
 # Create Table 1
 kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
@@ -308,6 +314,3 @@ kable(fullFreqSummary[, 2:7], booktabs=TRUE,
     pack_rows("SF36 PCS score", 13, 16)
 ```
 
-```{r, fig.cap = "Difference in outcomes for those who reported using drugs at baseline at those who did not.", echo = FALSE} 
-boxplot
-```
