@@ -2,6 +2,9 @@ library(tidyr)
 library(dplyr)
 library(magrittr)
 library(table1)
+library(readr)
+library(rjags)
+library(mcmcse)
 
 dataRaw <- read.csv("DataRaw/hiv_6624_final.csv")
 
@@ -56,7 +59,7 @@ cleanData <- fullData %>% drop_na() %>%
 tableOneData <- full_join(yearZero, yearTwo, by = "NEWID") %>%
     drop_na() %>%
     filter(.data$BMI_0 != -1,
-           .data$BMI_0 <= 50) %>%
+           .data$BMI_0 <= 70.1) %>%
     mutate(LOG_VLOAD_DIFF = LOG_VLOAD_2 - LOG_VLOAD_0,
            LEU3N_DIFF = LEU3N_2 - LEU3N_0,
            MENT_DIFF = MENT_2 - MENT_0,

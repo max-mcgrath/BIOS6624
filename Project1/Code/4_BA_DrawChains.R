@@ -147,22 +147,26 @@ physMultiDat <- list(y = physDiff, X = physMultiMM, N = N,
 
 
 # Run Chains -------------------------------------------------------------------
-set.seed(123)
 iter <- 25000
 
 # VLOAD
 vloadUniNoDrugsMod <- jags.model("Code/linMod.jags", 
                                  data = vloadUniNoDrugsDat, 
-                                 n.adapt = 1000, n.chains = 2)
-vloadUniNoDrugsChains <- coda.samples(vloadUniNoDrugsMod, 
+                                 n.adapt = 1000, n.chains = 2,
+                                 inits = list(.RNG.name = "base::Wichmann-Hill",
+                                              .RNG.seed = 123))
+vloadUniNoDrugsChainsT <- coda.samples(vloadUniNoDrugsMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
+identical(vloadUniNoDrugsChains, vloadUniNoDrugsChainsT)
 vloadUniNoDrugsDIC <- dic.samples(vloadUniNoDrugsMod, 
                                   n.iter = iter, type = "pD")
 
 vloadUniMod <- jags.model("Code/linMod.jags", 
                                  data = vloadUniDat, 
-                                 n.adapt = 1000, n.chains = 2)
+                                 n.adapt = 1000, n.chains = 2,
+                          inits = list(.RNG.name = "base::Wichmann-Hill",
+                                       .RNG.seed = 123))
 vloadUniChains <- coda.samples(vloadUniMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
@@ -171,7 +175,9 @@ vloadUniDIC <- dic.samples(vloadUniMod,
 
 vloadMultiNoDrugsMod <- jags.model("Code/linMod.jags", 
                                  data = vloadMultiNoDrugsDat, 
-                                 n.adapt = 1000, n.chains = 2)
+                                 n.adapt = 1000, n.chains = 2,
+                                 inits = list(.RNG.name = "base::Wichmann-Hill",
+                                              .RNG.seed = 123))
 vloadMultiNoDrugsChains <- coda.samples(vloadMultiNoDrugsMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
@@ -180,7 +186,9 @@ vloadMultiNoDrugsDIC <- dic.samples(vloadMultiNoDrugsMod,
 
 vloadMultiMod <- jags.model("Code/linMod.jags", 
                                  data = vloadMultiDat, 
-                                 n.adapt = 1000, n.chains = 2)
+                                 n.adapt = 1000, n.chains = 2,
+                            inits = list(.RNG.name = "base::Wichmann-Hill",
+                                         .RNG.seed = 123))
 vloadMultiChains <- coda.samples(vloadMultiMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
@@ -191,7 +199,9 @@ vloadMultiDIC <- dic.samples(vloadMultiMod,
 # LEU3N
 leu3nUniNoDrugsMod <- jags.model("Code/linMod.jags", 
                                  data = leu3nUniNoDrugsDat, 
-                                 n.adapt = 1000, n.chains = 2)
+                                 n.adapt = 1000, n.chains = 2,
+                                 inits = list(.RNG.name = "base::Wichmann-Hill",
+                                              .RNG.seed = 123))
 leu3nUniNoDrugsChains <- coda.samples(leu3nUniNoDrugsMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
@@ -200,7 +210,9 @@ leu3nUniNoDrugsDIC <- dic.samples(leu3nUniNoDrugsMod,
 
 leu3nUniMod <- jags.model("Code/linMod.jags", 
                           data = leu3nUniDat, 
-                          n.adapt = 1000, n.chains = 2)
+                          n.adapt = 1000, n.chains = 2,
+                          inits = list(.RNG.name = "base::Wichmann-Hill",
+                                       .RNG.seed = 123))
 leu3nUniChains <- coda.samples(leu3nUniMod, 
                                variable.names = c("beta", "sigma2"),
                                n.iter = iter)
@@ -209,7 +221,9 @@ leu3nUniDIC <- dic.samples(leu3nUniMod,
 
 leu3nMultiNoDrugsMod <- jags.model("Code/linMod.jags", 
                                    data = leu3nMultiNoDrugsDat, 
-                                   n.adapt = 1000, n.chains = 2)
+                                   n.adapt = 1000, n.chains = 2,
+                                   inits = list(.RNG.name = "base::Wichmann-Hill",
+                                                .RNG.seed = 123))
 leu3nMultiNoDrugsChains <- coda.samples(leu3nMultiNoDrugsMod, 
                                         variable.names = c("beta", "sigma2"),
                                         n.iter = iter)
@@ -218,7 +232,9 @@ leu3nMultiNoDrugsDIC <- dic.samples(leu3nMultiNoDrugsMod,
 
 leu3nMultiMod <- jags.model("Code/linMod.jags", 
                             data = leu3nMultiDat, 
-                            n.adapt = 1000, n.chains = 2)
+                            n.adapt = 1000, n.chains = 2,
+                            inits = list(.RNG.name = "base::Wichmann-Hill",
+                                         .RNG.seed = 123))
 leu3nMultiChains <- coda.samples(leu3nMultiMod, 
                                  variable.names = c("beta", "sigma2"),
                                  n.iter = iter)
@@ -228,7 +244,9 @@ leu3nMultiDIC <- dic.samples(leu3nMultiMod,
 # MENT
 mentUniNoDrugsMod <- jags.model("Code/linMod.jags", 
                                  data = mentUniNoDrugsDat, 
-                                 n.adapt = 1000, n.chains = 2)
+                                 n.adapt = 1000, n.chains = 2,
+                                inits = list(.RNG.name = "base::Wichmann-Hill",
+                                             .RNG.seed = 123))
 mentUniNoDrugsChains <- coda.samples(mentUniNoDrugsMod, 
                                       variable.names = c("beta", "sigma2"),
                                       n.iter = iter)
@@ -237,7 +255,9 @@ mentUniNoDrugsDIC <- dic.samples(mentUniNoDrugsMod,
 
 mentUniMod <- jags.model("Code/linMod.jags", 
                           data = mentUniDat, 
-                          n.adapt = 1000, n.chains = 2)
+                          n.adapt = 1000, n.chains = 2,
+                         inits = list(.RNG.name = "base::Wichmann-Hill",
+                                      .RNG.seed = 123))
 mentUniChains <- coda.samples(mentUniMod, 
                                variable.names = c("beta", "sigma2"),
                                n.iter = iter)
@@ -246,7 +266,9 @@ mentUniDIC <- dic.samples(mentUniMod,
 
 mentMultiNoDrugsMod <- jags.model("Code/linMod.jags", 
                                    data = mentMultiNoDrugsDat, 
-                                   n.adapt = 1000, n.chains = 2)
+                                   n.adapt = 1000, n.chains = 2,
+                                  inits = list(.RNG.name = "base::Wichmann-Hill",
+                                               .RNG.seed = 123))
 mentMultiNoDrugsChains <- coda.samples(mentMultiNoDrugsMod, 
                                         variable.names = c("beta", "sigma2"),
                                         n.iter = iter)
@@ -255,7 +277,9 @@ mentMultiNoDrugsDIC <- dic.samples(mentMultiNoDrugsMod,
 
 mentMultiMod <- jags.model("Code/linMod.jags", 
                             data = mentMultiDat, 
-                            n.adapt = 1000, n.chains = 2)
+                            n.adapt = 1000, n.chains = 2,
+                           inits = list(.RNG.name = "base::Wichmann-Hill",
+                                        .RNG.seed = 123))
 mentMultiChains <- coda.samples(mentMultiMod, 
                                  variable.names = c("beta", "sigma2"),
                                  n.iter = iter)
@@ -265,7 +289,9 @@ mentMultiDIC <- dic.samples(mentMultiMod,
 # PHYS
 physUniNoDrugsMod <- jags.model("Code/linMod.jags", 
                                 data = physUniNoDrugsDat, 
-                                n.adapt = 1000, n.chains = 2)
+                                n.adapt = 1000, n.chains = 2,
+                                inits = list(.RNG.name = "base::Wichmann-Hill",
+                                             .RNG.seed = 123))
 physUniNoDrugsChains <- coda.samples(physUniNoDrugsMod, 
                                      variable.names = c("beta", "sigma2"),
                                      n.iter = iter)
@@ -274,7 +300,9 @@ physUniNoDrugsDIC <- dic.samples(physUniNoDrugsMod,
 
 physUniMod <- jags.model("Code/linMod.jags", 
                          data = physUniDat, 
-                         n.adapt = 1000, n.chains = 2)
+                         n.adapt = 1000, n.chains = 2,
+                         inits = list(.RNG.name = "base::Wichmann-Hill",
+                                      .RNG.seed = 123))
 physUniChains <- coda.samples(physUniMod, 
                               variable.names = c("beta", "sigma2"),
                               n.iter = iter)
@@ -283,7 +311,9 @@ physUniDIC <- dic.samples(physUniMod,
 
 physMultiNoDrugsMod <- jags.model("Code/linMod.jags", 
                                   data = physMultiNoDrugsDat, 
-                                  n.adapt = 1000, n.chains = 2)
+                                  n.adapt = 1000, n.chains = 2,
+                                  inits = list(.RNG.name = "base::Wichmann-Hill",
+                                               .RNG.seed = 123))
 physMultiNoDrugsChains <- coda.samples(physMultiNoDrugsMod, 
                                        variable.names = c("beta", "sigma2"),
                                        n.iter = iter)
@@ -292,7 +322,9 @@ physMultiNoDrugsDIC <- dic.samples(physMultiNoDrugsMod,
 
 physMultiMod <- jags.model("Code/linMod.jags", 
                            data = physMultiDat, 
-                           n.adapt = 1000, n.chains = 2)
+                           n.adapt = 1000, n.chains = 2,
+                           inits = list(.RNG.name = "base::Wichmann-Hill",
+                                        .RNG.seed = 123))
 physMultiChains <- coda.samples(physMultiMod, 
                                 variable.names = c("beta", "sigma2"),
                                 n.iter = iter)

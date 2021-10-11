@@ -31,7 +31,7 @@ We received data of 3935 observations for 715 patients with HIV who began
 receiving highly active antiretroviral treatment (HAART). The data includes 
 baseline values for each individual prior to starting treatment, then up 
 to 8 years of longitudinal measurements for the patients as they received
-HAART treatment. Each observation includes laboratory and quality of life
+HAART. Each observation includes laboratory and quality of life
 measures, as well as demographic and other health information. Most relevant to
 this analysis, each observation indicates whether patients used
 illicit drugs via injection or opiates via any method of
@@ -66,19 +66,6 @@ from baseline to two years are used as the response for the respective models.
 
 Hard drug use at baseline is the primary variable of interest, so each model
 was defined to better understand the relationship between hard drug use and 
-each respective outcome. For each outcome, an initial model was estimated using
-only baseline outcome values as a predictor. Then, hard drug use was added as
-a variable to those models. Next, models using only baseline outcome values and 
-confounders as variables were estimated, as they are likely
-correlated with drug use and the outcomes. Those confounding variables include
-age, body mass index, smoking status, education, race/ethnicity. All confounding 
-values were those measured at baseline, except adherence which used second year
-values. Last, models were estimated with drug use added as a predictor alongside
-baseline values and confounding values to evaluate the relationship between
-the responses 
-
-Hard drug use at baseline is the primary variable of interest, so each model
-was defined to better understand the relationship between hard drug use and 
 each respective outcome. First, models with only hard drug use and baseline
 outcome values were estimated for each outcome. We will refer to those models
 as univariable models. Next, confounding variables
@@ -86,7 +73,7 @@ were added to those models to control for factors that are likely correlated
 with both drug use and the outcomes. Those confounding variables include
 age, body mass index, smoking status, education, race/ethnicity. All confounding 
 values were those measured at baseline, except adherence which used second year
-values. These models will be reffered to as multivariable models. Lastly, for each
+values. These models will be refered to as multivariable models. Lastly, for each
 outcome, the univariable and multivariable models were run without hard drug
 use as a predictor to quantify the impact of removing hard drug use as a 
 predictor. We will refer to these models as univariable without drug use and
@@ -98,15 +85,18 @@ Specifically, coefficient priors were Gaussian with a mean of 0 and a
 variance of 100,000 and error priors were gamma distributions with shape and
 rate parameters both equal to 0.001. For each Bayesian model, two Monte Carlo Markov 
 Chains were run for 25,000 iterations of Gibbs sampling to draw independent
-values from each coefficients posterior density in order to estimate those 
+values from each coefficient's posterior density to estimate those 
 densities. The convergence and mixing of the chains was evaluated using 
 trace plots, autocorrelation function plots, and by visually examining plots of
 the posterior density estimates, all to ensure that the chains accurately
-reflect the underlying parameters' distributions.
+reflect the underlying parameters' distributions. After the chains were examined,
+each respective pair was combined.
 
-For the Bayesian linear models, parameter estimates, highest posterior density
-intervals, and posterior probabilities were all calculated and evaluated to
-evaluate the impact of hard drug use upon HAART treatment. Those statistics'
+For the Bayesian linear models, parameter estimates, 95% highest posterior density
+intervals (HPD), penalized deviance information criteria (DIC), and posterior 
+probabilities of coefficients corresponding to a 10% or greater difference from
+the sample mean outcome values were all calculated and evaluated to
+evaluate the impact of hard drug use upon HAART. Those statistics'
 frequentist counterparts, least-squares coefficient estimates, confidence
 intervals, and t-test p-values were also used to evaluate the same relationship.
 Concordance or lack thereof between the two paradigms as well as any limitations
@@ -114,11 +104,141 @@ to this analysis are also discussed.
 
 ## Results
 
-## Conclusions
+Following the removal of incomplete observations, a total sample size of 463
+patients remain, 36 who used hard drugs at baseline and 427 who did not. After,
+running the Markov Chains as described above and examining trace plots, 
+autocorrelation function plots, and estimated posterior distribution plots, it
+is clear that the chains are an accurate estimate of the posterior 
+densities given the observed data and selected priors.
+
+<!-- Examples of those plots from this analysis are provided in Figure 1, but for  -->
+<!-- brevity's sake not all examined plots are included. From Table 1 and Figures ... -->
+<!-- we see that ... -->
+
+Below we describe the results of the Bayesian modeling and contrast those results
+with those of the frequentist modeling, with full results available in the
+Appendix in Tables 2 and 3, respectively.
+
+### Viral Load
+
+For the univariate model, a coefficient estimate for drug use (the mean of the
+posterior density) of 0.038 (95% HPD: -0.355, 0.429) 
+was calculated. Since viral load was log base 10
+transformed, we back-transform this estimate to arrive at the value 1.091, 
+implying that drug use is, on average,
+associated with 1.091 times higher HIV copies in a mL of blood. For the 
+univariable model, the DIC was estimated to be 1438.458, while the same model
+without drug use had a DIC of 1437.448. The posterior probability of the drug
+use coefficient corresponding with a 10% change of the sample mean of viral 
+load was calculated to be 0.828.
+
+For the multivariate model, the same coefficient is estimated to be -0.166
+(95% HPD: -0.566, 0.227), which implies that drug use is, on average,
+associated with 0.682 times lower HIV copies in an mL of blood following two 
+years of HAART. For this model, the DIC was estimated to be 1410.898, while the
+same model without drug use as a predictor had a DIC of 1410.525. The
+posterior probability of the drug use coefficient corresponding to a 10% change
+was 0.875.
+
+### CD4+ Cells
+
+For the univariate model with CD4+ cell count as the outcome, 
+the drug use coefficient for drug use was estimated
+to be -170.989 (95% HPD: -232.818, -112.506), suggesting that on average
+drug users have -170.989 lower CD4+ cells than non-drug users after 2 years of
+HAART. The DIC for the univariate model was 28.993 lower than the model without
+drug use as a variable, indicating the inclusion of drug use notably improved
+the fit of the model. The posterior probability for the CD4+ coefficient
+indicating a 10% change in CD4+ counts was approximately 1.
+
+Those results remained consistent for the multivariable model, both with and
+without drug use as a predictor, indicating that the results were robust to the
+inclusion of potential confounders.
+
+### Mental Quality of Life Score
+
+For the univariate model with mental quality of life score as the outcome,
+the coefficient for drug use was estimated to be -0.135, but the 95% HPD
+(-3.526, 3.250) is practically centered at 0. This, coupled with the low
+posterior probability of a 10% change in mental quality of life score from
+drug use (0.008) and the slight increase in DIC when including drug use as a coefficient,
+are all indicative that the data does not support an association between drug
+use and a change in mental quality of life score after two years of HAART.
+
+This result is consistent with both the multivariable model and the frequentist
+analysis.
+
+### Physical Quality of Life Score
+
+For the univariate model wiht physical quality of life score as the outcome,
+the coefficient for drug use was estimated to be -4.074 (95% HPD: -6.691, -1.312)
+with a posterior probability of drug use corresponding with an average 10% change
+in physical quality of life score of 0.221. The DIC with the inclusion of drug
+use as a variable is slightly lower than that of the model without it. 
+
+These results are somewhat consistent in the multivariable model, although the
+HPD moves to include 0 (-5.433, 0.050) and the posterior probability of a 10%
+change drops to 0.045, both indicating some level of confounding between the
+additional variables and drug uses relationship with physical quality of life.
+
+The results are mostly consistent with those from the frequentist analysis,
+however in the frequentist the p-values suggest weak evidence that drug use
+and physical quality of life score may be correlated. As such, there does
+appear to be some association, but it is highly unlikely to correspond
+with a 10% change in average physical quality of life score between users and
+non-users 2 years after starting HAART.
+
+## Conclusions and Limitations
+
+The greatest limitation of this study is the small sample of drug users relative
+to non-users. When considering this difference it must be noted that if it is 
+the case that hard drug use negatively impacts
+the efficacy of HAART, there are several factors which would likely bias the
+above results. First, the use of hard drugs was self-reported by individuals
+being treated. Given the gravity of the social stigma surrounding drug usage
+(particularly the drugs being studied), it is foreseeable that some users would
+be disinclined to report their drug use, leading to the presence of drug users
+in the non-drug using study arm, thereby diminishing the measured effect.
+Further, it would be foreseeable that dropout rate among drug users would be 
+higher than among non-users due to both diminished health (and death) and to
+socioeconomic factors. 
+
+Given these factors, the above findings should be 
+considered with greater leniency, where even weak effects should be considered
+indicative that a meaningful correlation may exist. Given this consideration
+coupled with this study's results, further research that aims to expand the
+quantity of drug using patients should be pursued. This could be accomplished
+through more active recruiting and provision of HAART treatment to drug using
+individuals and through refinement of data collection methods to foster
+a more welcoming environment in which individuals may feel more inclined to
+self-report their drug use.
 
 \newpage
 
 ## Reproducibility
+
+The code used to generate this analysis is available on GitHub 
+at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project1
+. The `Background` folder contains information pertinent to understanding the
+analysis but unnecessary for reproducing it. The `Code` folder contains six
+files: `1_prepData.R`, `2_-_EDA.R`, `3_FrequentistAnalysis.R`, 
+`4_BA_DrawChains.R`, `5_BA_AssessChains.R` and `6_BA_AnalyzeChains.R`. 
+These R scripts are dependent upon a data file 
+`Data/hiv_6624.csv` which is not available on GitHub, but may be 
+requested
+by emailing `max.mcgrath@ucdenver.edu`. To run the complete analysis, each
+script should be run in the order of the number preceding its filename. The
+last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
+be used to generate this report (note that it also depends on the aforementioned
+data and scripts).
+
+The complete details of the `R` version, package versions, and
+machine details for the instance which generated this report are provided below.
+
+```{r, echo = FALSE}
+sessionInfo()
+```
+
 
 \newpage
 
@@ -136,7 +256,7 @@ kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
 ```{r, echo = FALSE}
 kable(fullBayesianSummary[, 2:7], booktabs=TRUE, 
       caption = "Bayesian Analysis Summary", 
-      digits = 2, col.names = c("Model", "Penalized DIC", "Estimate", 
+      digits = 3, col.names = c("Model", "Penalized DIC", "Estimate", 
                                 "HPD Lower", "HPD Upper", 
                                 "Posterior Probability")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>%
@@ -151,7 +271,7 @@ kable(fullBayesianSummary[, 2:7], booktabs=TRUE,
 ```{r, echo = FALSE}
 kable(fullFreqSummary[, 2:7], booktabs=TRUE, 
       caption = "Frequentist Analysis Summary",
-      digits = 2, col.names = c("Model", "AIC", "Estimate", "Lower CI", 
+      digits = 3, col.names = c("Model", "AIC", "Estimate", "Lower CI", 
                                 "Upper CI", "p-value")) %>%
     kable_styling(latex_options = c("striped", "scale_down")) %>% 
     add_header_above(c(" " = 2, "Drug Use Coefficient" = 4)) %>%
