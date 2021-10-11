@@ -20,6 +20,7 @@ options(knitr.kable.NA = '')
 library(kableExtra)
 setwd("..")
 source("Code/1_prepData.R")
+source("Code/2_EDA.R")
 source("Code/6_BA_AnalyzeChains.R")
 ```
 
@@ -105,20 +106,21 @@ to this analysis are also discussed.
 ## Results
 
 Following the removal of incomplete observations, a total sample size of 463
-patients remain, 36 who used hard drugs at baseline and 427 who did not. After,
+patients remain, 36 who used hard drugs at baseline and 427 who did not. After,0
 running the Markov Chains as described above and examining trace plots, 
 autocorrelation function plots, and estimated posterior distribution plots, it
 is clear that the chains are an accurate estimate of the posterior 
-densities given the observed data and selected priors.
+densities given the observed data and selected priors. Summaries of the
+data used in this analysis are found in Table 1, and a missingness summary
+for relevant baseline and year two values is found in Table 2.
 
-<!-- The missingness is described in table ??? -->
 <!-- Examples of those plots from this analysis are provided in Figure 1, but for  -->
 <!-- brevity's sake not all examined plots are included. From Table 1 and Figures ... -->
 <!-- we see that ... -->
 
 Below we describe the results of the Bayesian modeling and contrast those results
 with those of the frequentist modeling, with full results available in the
-Appendix in Tables 2 and 3, respectively.
+Appendix in Tables 3 and 4, respectively.
 
 ### Viral Load
 
@@ -134,20 +136,20 @@ without drug use had a DIC of 1437.448. The posterior probability of the drug
 use coefficient corresponding with a 10% change of the sample mean of viral 
 load was calculated to be 0.828.
 
-For the multivariate model, the same coefficient is estimated to be -0.166
-(95% HPD: -0.566, 0.227), which implies that drug use is, on average,
-associated with 0.682 times lower difference in HIV copies in an mL of blood following two 
-years of HAART. For this model, the DIC was estimated to be 1410.898, while the
-same model without drug use as a predictor had a DIC of 1410.525. The
-posterior probability of the drug use coefficient corresponding to a 10% change
-was 0.8753.
+In both the univariate and multivariable models, HPDs included 0, the DIC
+changed very little when drug use was removed from the model, and posterior
+probabilities were insufficient to indicate significance, all indicating the
+data does not support an association between drug use and change in viral load 
+after two years of HAART. These results are further supported by the 
+frequentist modeling.
 
 ### CD4+ Cells
 
 For the univariate model with CD4+ cell count as the outcome, 
 the drug use coefficient for drug use was estimated
 to be -170.989 (95% HPD: -232.818, -112.506), suggesting that on average
-drug users have -170.989 lower CD4+ cells than non-drug users after 2 years of
+drug users have -170.989 lower difference in CD4+ cells than non-drug users 
+after 2 years of
 HAART. The DIC for the univariate model was 28.993 lower than the model without
 drug use as a variable, indicating the inclusion of drug use notably improved
 the fit of the model. The posterior probability for the CD4+ coefficient
@@ -266,6 +268,13 @@ kable(table1(~ LOG_VLOAD_DIFF + LEU3N_DIFF + MENT_DIFF + PHYS_DIFF +
        caption = "Data Summary"),
        caption = "Data Summary") %>%
     kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+```{r, echo = FALSE}
+kable(missingSummary, booktabs = TRUE, caption = "Missingess Summary",
+      digits = 2, col.names = c("Variable", "N Missing", "% Missing", "N Missing", "% Missing")) %>%
+    kable_styling(latex_options = c("striped", "scale_down")) %>%
+    add_header_above(c(" " = 1, "Baseline" = 2, "Year Two" = 2))
 ```
 
 ```{r, echo = FALSE}
