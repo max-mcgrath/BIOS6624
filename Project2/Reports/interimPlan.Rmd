@@ -64,7 +64,7 @@ be used in the sample size estimation. The estimate will also account for
 multiple comparisons. Both aims use the same sample, so the estimate will be
 based on the aim requiring a larger sample size and will therefore be sufficient
 for both aims. The estimate will then be used to either support Dr. Bettcher's
-proposed sample size (137 subjects with aMCI and 55 healthy controls) or to 
+proposed sample size or to 
 suggest modifications to that sample size.
 
 ## Budget
