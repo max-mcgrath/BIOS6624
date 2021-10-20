@@ -1,0 +1,113 @@
+---
+title: "Interim Data Analysis Plan"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.kable.NA = '')
+library(kableExtra)
+```
+
+\newpage
+
+## Introduction
+
+This report will assist in preparing a grant application by developing
+an analysis plan, sample size estimation, and a budget with justification 
+for a study
+by Dr. Brianne Bettcher seeking to understand the relationship between 
+inflammation, Alzheimer's disease (AD), and cognitive decline. This report
+will contribute to Aims 1 and 2 of the grant.
+
+## Aim 1 Analysis
+
+For the first aim, we will use linear regression models to analyze the associations, 
+with changes in memory and cortical thickness in one year as the 
+outcomes and cytokines and chemokines as predictors. We will also
+adjust for age and sex as potential confounders, and potentially other potential
+confounders if the need arises. We will use coefficient estimates and t-tests to
+evaluate each variable as a predictor, along with some kind of multiple testing
+correction to account for the number of t-tests performed.
+
+## Aim 2 Analysis
+
+For both parts of the second aim, we will use linear models to 
+analyze the relevant predictive power and associations. For the first part, we will
+use amyloid deposition and cortical thickness as the outcomes with inflammatory
+markers as predictors. For part the second, we will use change in memory and cortical
+thickness in one year as outcomes and amyloid deposition, inflammatory markers,
+and cytokines and chemokines as variables of interest. In both cases, we will
+adjust for sex and age as potential confounders, and use coefficient estimates
+and t-tests to evaluate significance and associations. As with Aim 1, we will
+use multiple testing correction to account for the number of t-tests performed. 
+
+## Sample Size Estimation
+
+We will estimate the necessary sample size to achieve 80% power based on 
+preliminary estimates of correlations between 0.25 and 0.4 between
+inflammatory markers and cognition and a chosen significance level of 0.05. 
+Several potential standard deviation estimates for aCMI change per year have
+also been provided. Those estimates will be evaluated, and at least one will
+be used in the sample size estimation. The estimate will also account for
+multiple comparisons. Both aims use the same sample, so the estimate will be
+based on the aim requiring a larger sample size and will therefore be sufficient
+for both aims. The estimate will then be used to either support Dr. Bettcher's
+proposed sample size (137 subjects with aMCI and 55 healthy controls) or to 
+suggest modifications to that sample size.
+
+## Budget
+
+Lastly, a budget with justification will be developed for the project using a 
+maximum budget of $500,000 per year for four years. Tables 1 and 2 will be 
+filled in
+based on estimated effort levels by all listed personnel and their provided
+salary estimates (note that the tables will eventually be combined into a single
+table).
+
+\newpage
+
+```{r, include = FALSE}
+position <- c("PhD Statistician", "MS Statistician", "Data Manager",
+              "Research Assitant", "Totals")
+baseSalary <- c(115000, 80000, 65000, 43000, NA)
+salaryWithBenefits <- c(115000*1.28, 80000*1.28, 65000*1.28, 43000, NA)
+yearOneEffort <- c("-", "-", "-", "-", NA)
+yearOneCost <- c("-", "-", "-", "-", "-")
+yearTwoEffort <- c("-", "-", "-", "-", NA)
+yearTwoCost <- c("-", "-", "-", "-", "-")
+yearThreeEffort <- c("-", "-", "-", "-", NA)
+yearThreeCost <- c("-", "-", "-", "-", "-")
+yearFourEffort <- c("-", "-", "-", "-", NA)
+yearFourCost <- c("-", "-", "-", "-", "-")
+totals <- c("-", "-", "-", "-", "-")
+budgetDF1 <- data.frame(position, baseSalary, salaryWithBenefits, yearOneEffort,
+                        yearOneCost, yearTwoEffort, yearTwoCost)
+budgetDF2 <- data.frame(position, yearThreeEffort, yearThreeCost, 
+                        yearFourEffort, yearFourCost, totals)
+```
+
+```{r, echo = FALSE}
+kable(budgetDF1, booktabs = TRUE, caption = "Budget Justification",
+      col.names = c("Position", "Base Salary", "Salary w/ Benefits", 
+                    "Y1 Effort", "Y1 Cost", "Y2 Effort", "Y2 Cost")) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
+```{r, echo = FALSE}
+kable(budgetDF2, booktabs = TRUE, caption = "Budget Justification cont'd",
+      col.names = c("Position", "Y3 Effort", "Y3 Cost", "Y4 Effort", "Y4 Cost",
+                    "Totals")) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
+
