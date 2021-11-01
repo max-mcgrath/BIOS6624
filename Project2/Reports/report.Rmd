@@ -39,11 +39,11 @@ For the first aim, we will use linear regression models to analyze the associati
 with changes in memory and cortical thickness in one year as the 
 outcomes and baseline cytokines and chemokines as predictors for the first part 
 and changes
-in episodic memory and cortical thickness in one year as outcomes and changes
-in cytokines and chemokines in one year as predictors for the second part. 
+in cytokines and chemokines in one year as predictors for the second part. In
+both models we will control for age and sex as confounders.
 
 We have also been given a large number of potentially confounding factors such
-as age, sex, inflammation, cardiovascular risk, health history, and APOE 
+as inflammation, cardiovascular risk, health history, and APOE 
 genotype. Given the number of potential confounders coupled with the foreseeable
 collinearities between confounders, we will use elastic net regressions with
 potential confounders as predictors and each aforementioned outcome as
@@ -59,7 +59,7 @@ account for the number of t-tests performed.
 For both parts of the second aim, we will use linear models to 
 analyze the relevant predictive power and associations. For the first part, we will
 use amyloid deposition and cortical thickness as the outcomes with inflammatory
-markers as predictors. For part the second, we will use change in memory and cortical
+markers as predictors. For the second part, we will use changes in memory and cortical
 thickness in one year as outcomes and amyloid deposition, inflammatory markers,
 and cytokines and chemokines as variables of interest. We will also include an
 interaction term between amyloid deposition and inflammatory markers to test the
@@ -67,7 +67,8 @@ hypothesis that inflammatory markers differentially impact the outcomes dependin
 on amyloid deposition, where amyloid deposition is treated as a dichotomous variable
 (high/low levels).
 
-As with Aim 1, we will use elastic net regression to identify a set of
+As with Aim 1, we will control for age and sex and use elastic net regression to
+expand the set of
 confounders to include in the above linear models. We will then use coefficient 
 estimates and t-tests to
 evaluate each variable as a predictor, using a Bonferroni corrected p-value to
@@ -78,7 +79,7 @@ account for the number of t-tests performed.
 Using change in recall on a episodic memory list-learning test (CVLT) as the 
 primary outcome of interest, to achieve 80% power with a Bonferroni corrected 
 p-value of 0.0083 (based on a desired type 1 error rate of 0.05 and tests for 
-6 cytokines and chemokines of interest) assuming
+6 cytokines and chemokines of interest), assuming
 a difference in correlation of 0.4, a sample size of 276 (138 with high amyloid deposition
 and 138 with low deposition) is estimated to be necessary. Then, accounting
 for 10% one-year dropout, a total sample size of 304 is estimated to be sufficient
@@ -90,7 +91,8 @@ sample size estimate leads to an estimated power of just under 1 for Aim 1 based
 on a simplification of the linear models to a correlation z-test. As such, a
 sample size of 304 is estimated to be sufficient for both aims with allowance
 for 10% attrition. This is notably higher than Dr. Bettcher's initial estimate of 194
-subjects, so more enrollment is necessary.
+subjects, so more enrollment is necessary. Note that this is an anti-conservative
+estimate, as we plan to add confounders to each model which may reduce power.
 
 ## Budget
 
@@ -98,9 +100,13 @@ Tables 1 and 2 provide a budget estimate and budget justification for the statis
 and data managers involved in the 5-year project. The budget will fund one PhD
 statistician and one MS statistician who will be involved with study design,
 implementation, data collection, analysis, and regular meeting attendance
-throughout the duration of the grant. It
-will also fund a data manager who will primarily be tasked with the creation
-of a REDCap data set and data management in the first two years of the grant,
+throughout the duration of the grant. The PhD statistician will primarily be
+responsible for assembling the rest of the statistical personnel and supervising
+and guiding their work, while the MS statistician will be primarily responsible
+for analysis and manuscripts.
+The budget will also fund a data manager who will primarily be tasked with the creation
+of a REDCap data set, data management, and data documentation
+in the first two years of the grant,
 with some data set maintenance in the latter years. Lastly, the budget will
 fund a student researcher who will assist with data management and analysis.
 
@@ -108,10 +114,10 @@ Estimated personnel salaries are provided in Table 1, and yearly personnel effor
 estimates along with associated costs are provided in Tables 1 and 2. 
 The total statistical budget for the grant is $92,670 for the first year,
 $70,770 for the second,
-$37,490 for the third,
-$92,860 for the fourth,
+$52,350 for the third,
+$88,700 for the fourth,
 and $92,860 for the fifth year. The total budget of the 5-year duration of the
-grant is $386,650.
+grant is $397,350.
 
 \newpage
 
@@ -138,7 +144,7 @@ yearTwoCost <- c(salaryWithBenefits[1]*yearTwoEffort[1],
                  salaryWithBenefits[2]*yearTwoEffort[2] + 
                  salaryWithBenefits[3]*yearTwoEffort[3] + 
                  salaryWithBenefits[4]*yearTwoEffort[4])
-yearThreeEffort <- c(.05, .15, .1, .15, NA)
+yearThreeEffort <- c(.15, .15, .05, .25, NA)
 yearThreeCost <- c(salaryWithBenefits[1]*yearThreeEffort[1], 
                  salaryWithBenefits[2]*yearThreeEffort[2], 
                  salaryWithBenefits[3]*yearThreeEffort[3], 
@@ -147,7 +153,7 @@ yearThreeCost <- c(salaryWithBenefits[1]*yearThreeEffort[1],
                  salaryWithBenefits[2]*yearThreeEffort[2] + 
                  salaryWithBenefits[3]*yearThreeEffort[3] + 
                  salaryWithBenefits[4]*yearThreeEffort[4])
-yearFourEffort <- c(.15, .4, .1, .5, NA)
+yearFourEffort <- c(.15, .4, .05, .5, NA)
 yearFourCost <- c(salaryWithBenefits[1]*yearFourEffort[1], 
                  salaryWithBenefits[2]*yearFourEffort[2], 
                  salaryWithBenefits[3]*yearFourEffort[3], 
