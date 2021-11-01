@@ -1,0 +1,231 @@
+---
+title: "Project 2 Report"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(knitr.kable.NA = '')
+library(kableExtra)
+library(xtable)
+library(stringr)
+```
+
+\newpage
+
+## Introduction
+
+This report will assist in preparing a grant application by developing
+an analysis plan, sample size estimation, and a budget with justification 
+for a study
+by Dr. Brianne Bettcher seeking to understand the relationship between 
+inflammation, Alzheimer's disease (AD), and cognitive decline. This report
+will contribute to Aims 1 and 2 of the grant.
+
+## Aim 1 Analysis
+
+For the first aim, we will use linear regression models to analyze the associations, 
+with changes in memory and cortical thickness in one year as the 
+outcomes and baseline cytokines and chemokines as predictors for the first part 
+and changes
+in episodic memory and cortical thickness in one year as outcomes and changes
+in cytokines and chemokines in one year as predictors for the second part. 
+
+We have also been given a large number of potentially confounding factors such
+as age, sex, inflammation, cardiovascular risk, health history, and APOE 
+genotype. Given the number of potential confounders coupled with the foreseeable
+collinearities between confounders, we will use elastic net regressions with
+potential confounders as predictors and each aforementioned outcome as
+responses to identify a final set of confounders which will be included in the
+above linear regression models.
+
+We will then use coefficient estimates and t-tests to
+evaluate each variable as a predictor, using a Bonferroni corrected p-value to
+account for the number of t-tests performed.
+
+## Aim 2 Analysis
+
+For both parts of the second aim, we will use linear models to 
+analyze the relevant predictive power and associations. For the first part, we will
+use amyloid deposition and cortical thickness as the outcomes with inflammatory
+markers as predictors. For part the second, we will use change in memory and cortical
+thickness in one year as outcomes and amyloid deposition, inflammatory markers,
+and cytokines and chemokines as variables of interest. We will also include an
+interaction term between amyloid deposition and inflammatory markers to test the
+hypothesis that inflammatory markers differentially impact the outcomes depending
+on amyloid deposition, where amyloid deposition is treated as a dichotomous variable
+(high/low levels).
+
+As with Aim 1, we will use elastic net regression to identify a set of
+confounders to include in the above linear models. We will then use coefficient 
+estimates and t-tests to
+evaluate each variable as a predictor, using a Bonferroni corrected p-value to
+account for the number of t-tests performed.
+
+## Sample Size Estimation
+
+Using change in recall on a episodic memory list-learning test (CVLT) as the 
+primary outcome of interest, to achieve 80% power with a Bonferroni corrected 
+p-value of 0.0083 (based on a desired type 1 error rate of 0.05 and tests for 
+6 cytokines and chemokines of interest) assuming
+a difference in correlation of 0.4, a sample size of 276 (138 with high amyloid deposition
+and 138 with low deposition) is estimated to be necessary. Then, accounting
+for 10% one-year dropout, a total sample size of 304 is estimated to be sufficient
+to achieve 80% power. 
+
+This estimate was powered for the second part of Aim 2, where the linear model
+described above was simplified to a two independent correlation z-test. This
+sample size estimate leads to an estimated power of just under 1 for Aim 1 based
+on a simplification of the linear models to a correlation z-test. As such, a
+sample size of 304 is estimated to be sufficient for both aims with allowance
+for 10% attrition. This is notably higher than Dr. Bettcher's initial estimate of 194
+subjects, so more enrollment is necessary.
+
+## Budget
+
+Tables 1 and 2 provide a budget estimate and budget justification for the statisticians
+and data managers involved in the 5-year project. The budget will fund one PhD
+statistician and one MS statistician who will be involved with study design,
+implementation, data collection, analysis, and regular meeting attendance
+throughout the duration of the grant. It
+will also fund a data manager who will primarily be tasked with the creation
+of a REDCap data set and data management in the first two years of the grant,
+with some data set maintenance in the latter years. Lastly, the budget will
+fund a student researcher who will assist with data management and analysis.
+
+Estimated personnel salaries are provided in Table 1, and yearly personnel effort
+estimates along with associated costs are provided in Tables 1 and 2. 
+The total statistical budget for the grant is $92,670 for the first year,
+$70,770 for the second,
+$37,490 for the third,
+$92,860 for the fourth,
+and $92,860 for the fifth year. The total budget of the 5-year duration of the
+grant is $386,650.
+
+\newpage
+
+```{r, include = FALSE}
+position <- c("PhD Statistician", "MS Statistician", "Data Manager",
+              "Research Assistant", "Totals")
+baseSalary <- c(115000, 80000, 65000, 43000, NA)
+salaryWithBenefits <- c(115000*1.28, 80000*1.28, 65000*1.28, 43000, NA)
+yearOneEffort <- c(.1, .25, .5, .25, NA)
+yearOneCost <- c(salaryWithBenefits[1]*yearOneEffort[1], 
+                 salaryWithBenefits[2]*yearOneEffort[2], 
+                 salaryWithBenefits[3]*yearOneEffort[3], 
+                 salaryWithBenefits[4]*yearOneEffort[4], 
+                 salaryWithBenefits[1]*yearOneEffort[1] + 
+                 salaryWithBenefits[2]*yearOneEffort[2] +  
+                 salaryWithBenefits[3]*yearOneEffort[3] +  
+                 salaryWithBenefits[4]*yearOneEffort[4])
+yearTwoEffort <- c(.05, .15, .5, .15, NA)
+yearTwoCost <- c(salaryWithBenefits[1]*yearTwoEffort[1], 
+                 salaryWithBenefits[2]*yearTwoEffort[2], 
+                 salaryWithBenefits[3]*yearTwoEffort[3], 
+                 salaryWithBenefits[4]*yearTwoEffort[4], 
+                 salaryWithBenefits[1]*yearTwoEffort[1] +
+                 salaryWithBenefits[2]*yearTwoEffort[2] + 
+                 salaryWithBenefits[3]*yearTwoEffort[3] + 
+                 salaryWithBenefits[4]*yearTwoEffort[4])
+yearThreeEffort <- c(.05, .15, .1, .15, NA)
+yearThreeCost <- c(salaryWithBenefits[1]*yearThreeEffort[1], 
+                 salaryWithBenefits[2]*yearThreeEffort[2], 
+                 salaryWithBenefits[3]*yearThreeEffort[3], 
+                 salaryWithBenefits[4]*yearThreeEffort[4], 
+                 salaryWithBenefits[1]*yearThreeEffort[1] + 
+                 salaryWithBenefits[2]*yearThreeEffort[2] + 
+                 salaryWithBenefits[3]*yearThreeEffort[3] + 
+                 salaryWithBenefits[4]*yearThreeEffort[4])
+yearFourEffort <- c(.15, .4, .1, .5, NA)
+yearFourCost <- c(salaryWithBenefits[1]*yearFourEffort[1], 
+                 salaryWithBenefits[2]*yearFourEffort[2], 
+                 salaryWithBenefits[3]*yearFourEffort[3], 
+                 salaryWithBenefits[4]*yearFourEffort[4], 
+                 salaryWithBenefits[1]*yearFourEffort[1] + 
+                 salaryWithBenefits[2]*yearFourEffort[2] + 
+                 salaryWithBenefits[3]*yearFourEffort[3] + 
+                 salaryWithBenefits[4]*yearFourEffort[4])
+yearFiveEffort <- c(.15, .4, .1, .5, NA)
+yearFiveCost <- c(salaryWithBenefits[1]*yearFiveEffort[1], 
+                 salaryWithBenefits[2]*yearFiveEffort[2], 
+                 salaryWithBenefits[3]*yearFiveEffort[3], 
+                 salaryWithBenefits[4]*yearFiveEffort[4], 
+                 salaryWithBenefits[1]*yearFiveEffort[1] + 
+                 salaryWithBenefits[2]*yearFiveEffort[2] + 
+                 salaryWithBenefits[3]*yearFiveEffort[3] + 
+                 salaryWithBenefits[4]*yearFiveEffort[4])
+totals <- c(yearOneCost[1] + yearTwoCost[1] + yearThreeCost[1] + yearFourCost[1] + yearFiveCost[1], 
+            yearOneCost[2] + yearTwoCost[2] + yearThreeCost[2] + yearFourCost[2] + yearFiveCost[2], 
+            yearOneCost[3] + yearTwoCost[3] + yearThreeCost[3] + yearFourCost[3] + yearFiveCost[3],
+            yearOneCost[4] + yearTwoCost[4] + yearThreeCost[4] + yearFourCost[4] + yearFiveCost[4],
+            yearOneCost[1] + yearTwoCost[1] + yearThreeCost[1] + yearFourCost[1] + yearFiveCost[1] +
+            yearOneCost[2] + yearTwoCost[2] + yearThreeCost[2] + yearFourCost[2] + yearFiveCost[2] + 
+            yearOneCost[3] + yearTwoCost[3] + yearThreeCost[3] + yearFourCost[3] + yearFiveCost[3] +
+            yearOneCost[4] + yearTwoCost[4] + yearThreeCost[4] + yearFourCost[4] + yearFiveCost[4])
+
+# Format percentages and dollar amounts
+yearOneCost <- paste0("$", format(yearOneCost, big.mark=",", flag="-"))
+yearTwoCost <- paste0("$", format(yearTwoCost, big.mark=",", flag="-"))
+yearThreeCost <- paste0("$", format(yearThreeCost, big.mark=",", flag="-"))
+yearFourCost <- paste0("$", format(yearFourCost, big.mark=",", flag="-"))
+yearFiveCost <- paste0("$", format(yearFiveCost, big.mark=",", flag="-"))
+baseSalary <- paste0("$", format(baseSalary, big.mark=",", flag="-"))
+salaryWithBenefits <- paste0("$", format(salaryWithBenefits, big.mark=",", flag="-"))
+totals <- paste0("$", format(totals, big.mark=",", flag="-"))
+
+yearOneCost <- str_replace(yearOneCost, " ", "")
+yearTwoCost <- str_replace(yearTwoCost, " ", "")
+yearThreeCost <- str_replace(yearThreeCost, " ", "")
+yearFourCost <- str_replace(yearFourCost, " ", "")
+yearFiveCost <- str_replace(yearFiveCost, " ", "")
+baseSalary <- str_replace(baseSalary, " ", "")
+salaryWithBenefits <- str_replace(salaryWithBenefits, " ", "")
+totals <- str_replace(totals, " ", "")
+
+yearOneEffort <- paste0(yearOneEffort*100, "%")
+yearTwoEffort <- paste0(yearTwoEffort*100, "%")
+yearThreeEffort <- paste0(yearThreeEffort*100, "%")
+yearFourEffort <- paste0(yearFourEffort*100, "%")
+yearFiveEffort <- paste0(yearFiveEffort*100, "%")
+
+# Reset NAs
+baseSalary[5] <- NA
+salaryWithBenefits[5] <- NA
+yearOneEffort[5] <- NA
+yearTwoEffort[5] <- NA
+yearThreeEffort[5] <- NA
+yearFourEffort[5] <- NA
+yearFiveEffort[5] <- NA
+
+
+# Create data frame of budget data
+budgetDF1 <- data.frame(position, baseSalary, salaryWithBenefits, yearOneEffort,
+                        yearOneCost, yearTwoEffort, yearTwoCost)
+budgetDF2 <- data.frame(position, yearThreeEffort, yearThreeCost, 
+                        yearFourEffort, yearFourCost, yearFiveEffort,
+                        yearFiveCost, totals)
+```
+
+```{r, echo = FALSE}
+kable(budgetDF1, booktabs = TRUE, caption = "Budget Justification",
+      col.names = c("Position", "Base Salary", "Salary w/ Benefits", 
+                    "Y1 Effort", "Y1 Cost", "Y2 Effort", "Y2 Cost")) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
+```{r, echo = FALSE}
+kable(budgetDF2, booktabs = TRUE, caption = "Budget Justification cont'd",
+      col.names = c("Position", "Y3 Effort", "Y3 Cost", "Y4 Effort", "Y4 Cost",
+                    "Y5 Effort", "Y5 Cost", "Totals")) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
