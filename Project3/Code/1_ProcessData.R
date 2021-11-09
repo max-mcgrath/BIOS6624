@@ -12,7 +12,9 @@ cleanData <- rawData %>%
     filter(.data$PERIOD == 1) %>%
     filter(!(.data$PREVSTRK == 1)) %>%
     # Reorder columns, only keep those which are needed
-    select(RANDID, SEX, TIME, PERIOD, TIMESTRK, stroke10yr, timestroke10yr)
+    select(RANDID, SEX, TIME, PERIOD, TIMESTRK, stroke10yr, timestroke10yr,
+           AGE, SYSBP, BPMEDS, DIABETES, CURSMOKE, ANYCHD) %>%
+    drop_na()
 
 # Check sample size values by M/F and event/censored
 nEventM <- length(cleanData$stroke10yr[cleanData$SEX == 1 & 
