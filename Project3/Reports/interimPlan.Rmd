@@ -51,10 +51,27 @@ treated as continuous variables with the rest treated as dichotomous. 60
 observations which had missing values for at least one of the potential risk
 factors were also removed.
 
-After preparing the data, there are 2434 subjects with sex listed as female with
+After preparing the data, there are 2434 subjects with sex listed as female
 including 221 who had an event and 2213 who are censored, and there are 1908 
-with sex listed as male with 256 who had an event and 1652 who are censored.
+subjects with sex listed as male with 256 who had an event and 1652 who are 
+censored.
 
+The first part of the analysis will provide summaries of both outcomes and 
+potential risk factors stratified by sex. Next, estimated Kaplan-Meier survival
+curves will be fit to crudely estimate event probability after beginning 
+observation. Then, to fully quantify each risk factors impact on stroke 
+occurrence, a Cox proportional hazards
+regression will be fit for each sex with the number of days after beginning 
+observation that a stroke occurred and the last observation time in days as the 
+outcome and the potential risk factors described above as variables of interest.
+Log-rank tests will then be used to evaluate the significance of each 
+potential risk factor, and coefficient estimates will be used to quantify
+the relationship between potential risk factors and stroke occurrence. 
+
+Lastly, we will provide summary statistics of the changes in potential risk 
+factors from the first observation to the last and discuss the potential
+impact of using a more complex, time-varying covariate analysis rather than
+simply evaluating relationships between baseline values and stroke occurence.
 
 
 
