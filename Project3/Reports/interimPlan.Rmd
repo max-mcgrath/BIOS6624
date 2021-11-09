@@ -1,0 +1,39 @@
+---
+title: "Interim Data Analysis Plan"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+\newpage
+
+## Introduction
+
+We received data of 11,627 observations from 4,434 individuals with up to 
+three observations per individual. Each observation tracks patients'
+cardiovascular outcomes including angina pectoris, myocardial infarction, 
+heart failure, cerobrovascular disease, and, most relevant to this study,
+whether the patient has had a stroke since the last observation and, if so, the
+timing of that stroke. Each observation also includes measured cardiovascular 
+risk factors such as blood pressure, health behaviors, and medication use.
+
+The goal of this study will be to use this data to identify clinically 
+significant risk factors that are associated with higher risk of stroke 10 years
+after the start of observation. The study will be stratified by sex, meaning
+males and females will be treated as two separate populations with potentially
+differing risk factors.
+
+## Data cleaning
