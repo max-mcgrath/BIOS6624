@@ -23,10 +23,10 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 
 We received data of 11,627 observations from 4,434 individuals with up to 
-three observations per individual. Each observation tracks patients'
+three observations per individual. Each observation tracks subjects'
 cardiovascular outcomes including angina pectoris, myocardial infarction, 
 heart failure, cerobrovascular disease, and, most relevant to this study,
-whether the patient has had a stroke since the last observation and, if so, the
+whether the subject has had a stroke since the last observation and, if so, the
 timing of that stroke. Each observation also includes measured cardiovascular 
 risk factors such as blood pressure, health behaviors, and medication use.
 
@@ -37,3 +37,20 @@ males and females will be treated as two separate populations with potentially
 differing risk factors.
 
 ## Data cleaning
+
+First, 32 subjects who have had a stroke prior to the start of observation were 
+removed from the data set. Next, for each subject, a record of whether they
+had a stroke in the first 10 years of observation was created along with the
+timing of that stroke (which we will refer to as event time). If they did not 
+have an event in those years, they were classified as right censored. For the
+analysis, there are 2472 subjects with sex listed as female with with 229 who
+had an event and 2243 who are censored, and there are 1930 with sex listed as
+male with 261 who had an event and 1669 who are censored.
+
+## Data Analysis
+
+
+
+
+
+
