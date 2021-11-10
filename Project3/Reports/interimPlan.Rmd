@@ -68,7 +68,7 @@ observation that a stroke occurred or the last observation time in days as the
 outcome and the potential risk factors described above as variables of interest.
 Coefficient estimates from these models will then be used to quantify
 the relationship between potential risk factors and stroke occurrence, with
-log-rank tests quantifying these relationships' statistical significance.
+Wald tests quantifying these relationships' statistical significance.
 
 Lastly, we will provide summary statistics of the changes in potential risk 
 factors from the first observation to the last and discuss the potential
