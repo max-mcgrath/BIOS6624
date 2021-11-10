@@ -23,15 +23,15 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Introduction
 
 We received data of 11,627 observations from 4,434 individuals with up to 
-three observations per individual. Each observation tracks subjects'
-cardiovascular outcomes including angina pectoris, myocardial infarction, 
-heart failure, cerobrovascular disease, and, most relevant to this study,
-whether the subject has had a stroke since the last observation and, if so, the
-timing of that stroke. Each observation also includes measured cardiovascular 
-risk factors such as blood pressure, health behaviors, and medication use.
+three observations per individual tracking subjects'
+cardiovascular outcomes for up to 24 years. Most relevant to this study, each
+observation records whether the subject has had a stroke since the last observation 
+and, if so, the timing of that stroke. Each observation also includes measured 
+cardiovascular risk factors such as blood pressure, health behaviors, and 
+medication use.
 
 The goal of this study will be to use this data to identify clinically 
-significant risk factors that are associated with higher risk of stroke 10 years
+significant risk factors that are associated with greater risk of stroke 10 years
 after the start of observation. The study will be stratified by sex, meaning
 males and females will be treated as two separate populations with potentially
 differing risk factors.
@@ -41,14 +41,15 @@ differing risk factors.
 First, 32 subjects who have had a stroke prior to the start of observation were 
 removed from the data set. Next, for each subject, a record of whether they
 had a stroke in the first 10 years of observation was created along with the
-timing of that stroke (which we will refer to as event time). If they did not 
+timing of that stroke (which we will refer to as events and event times, 
+respectively). If they did not 
 have an event in those years, they were classified as right censored. Based on 
 the findings of Wolf (1990) as well as data availability, age, systolic
 blood pressure (SBP), antihypertensive therapy, diabetes mellitus, cigarette 
-smoking,  and cardiovascular disease will be included in the analysis
+smoking, and cardiovascular disease will be included in the analysis
 as potential risk factors (all measured at baseline). Age and SBP will be 
 treated as continuous variables with the rest treated as dichotomous. 60 
-observations which had missing values for at least one of the potential risk
+observations which had missing values for at least one of these potential risk
 factors were also removed.
 
 After preparing the data, there are 2434 subjects with sex listed as female
@@ -56,22 +57,27 @@ including 221 who had an event and 2213 who are censored, and there are 1908
 subjects with sex listed as male with 256 who had an event and 1652 who are 
 censored.
 
-The first part of the analysis will provide summaries of both outcomes and 
-potential risk factors stratified by sex. Next, estimated Kaplan-Meier survival
-curves will be fit to crudely estimate event probability after beginning 
-observation. Then, to fully quantify each risk factors impact on stroke 
+The first part of the analysis will provide summaries for outcomes and 
+potential risk factors, both overall and stratified by sex and whether the 
+subject had an event or was censored. Next, estimated Kaplan-Meier survival
+curves will be fit to crudely estimate event probability over time. Then, to 
+fully quantify each risk factor's relationship with stroke 
 occurrence, a Cox proportional hazards
 regression will be fit for each sex with the number of days after beginning 
-observation that a stroke occurred and the last observation time in days as the 
+observation that a stroke occurred or the last observation time in days as the 
 outcome and the potential risk factors described above as variables of interest.
-Log-rank tests will then be used to evaluate the significance of each 
-potential risk factor, and coefficient estimates will be used to quantify
-the relationship between potential risk factors and stroke occurrence. 
+Coefficient estimates from these models will then be used to quantify
+the relationship between potential risk factors and stroke occurrence, with
+log-rank tests quantifying these relationships' statistical significance.
 
 Lastly, we will provide summary statistics of the changes in potential risk 
 factors from the first observation to the last and discuss the potential
 impact of using a more complex, time-varying covariate analysis rather than
-simply evaluating relationships between baseline values and stroke occurence.
+simply evaluating relationships between baseline values and stroke occurrence.
+As a part of this discussion, the proportional hazards assumption for Cox
+proportional hazards models will be evaluated in the context of this study to
+identify whether the relationship between covariates and stroke risk varies
+with time thereby altering the interpretation of this study's results.
 
 
 

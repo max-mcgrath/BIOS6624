@@ -25,3 +25,6 @@ nCensoredM <- length(cleanData$stroke10yr[cleanData$SEX == 1 &
                                            cleanData$stroke10yr == 0])
 nCensoredF <- length(cleanData$stroke10yr[cleanData$SEX == 2 & 
                                            cleanData$stroke10yr == 0])
+
+# Look at data where time of death is less than stroke time
+dataRaw[(dataRaw$PERIOD == 1 & dataRaw$TIMESTRK > dataRaw$TIMEDTH), ]
