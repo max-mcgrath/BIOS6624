@@ -1,4 +1,4 @@
-source("Code/3_ModelSelectionM.R")
+source("Code/4_ModelSelection.R")
 
 # Calculate average covariate values
 sysbpMean <- mean(cleanDataM$SYSBP)

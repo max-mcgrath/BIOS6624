@@ -1,4 +1,5 @@
 #### Citation: Code taken from Emily Cooper (and modified) #####
+library(dplyr)
 
 # Read in raw data
 dta <- read.csv("DataRaw/frmgham2.csv") 
@@ -24,7 +25,18 @@ dta <- subset(dta, is.na(dta$BPMEDS)==F & is.na(dta$TOTCHOL)==F &
                   is.na(dta$BMI)==F)
 dta <- subset(dta, dta$PERIOD==1)
 
-# Some exploratory stuff
+# Create quantiles for continuous predictors
+dta <- dta %>%
+    mutate(AGE_QUANT = cut(AGE, breaks = quantile(dta$AGE), 
+                           labels = c("first", "second", "third", "fourth")),
+           SYSBP_QUANT = cut(SYSBP, breaks = quantile(dta$SYSBP), 
+                             labels = c("first", "second", "third", "fourth")),
+           BMI_QUANT = cut(BMI, breaks = quantile(dta$BMI), 
+                             labels = c("first", "second", "third", "fourth")),
+           TOTCHOL_QUANT = cut(TOTCHOL, breaks = quantile(dta$TOTCHOL), 
+                           labels = c("first", "second", "third", "fourth")))
+
+# Create final clean data sets stratified by SEX
 cleanDataM <- subset(dta, dta$SEX == 1)
 cleanDataF <- subset(dta, dta$SEX == 2)
 
