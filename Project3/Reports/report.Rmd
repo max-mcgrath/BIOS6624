@@ -1,0 +1,110 @@
+---
+title: "Project 3 Report"
+author: |
+    | Analyst: Max McGrath
+    | Investigator: Nichole Carlson
+    | Report generated: `r format(Sys.Date(), '%m/%d/%Y')`
+header-includes:
+    - \usepackage{setspace}\doublespacing
+    - \usepackage{titling}
+output: pdf_document
+indent: true
+mainfont: Times New Roman
+fontsize: 12pt
+geometry: margin=1in
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(kableExtra)
+options(knitr.kable.NA = '')
+library(kableExtra)
+setwd("..")
+source("Code/5_ProbabilitiesM.R")
+source("Code/6_ProbabilitiesF.R")
+```
+
+\newpage
+
+## Introduction
+
+We received data of 11,627 observations from 4,434 individuals with up to 
+three observations per individual tracking subjects'
+cardiovascular outcomes for up to 24 years. Most relevant to this study, each
+observation records whether the subject has had a stroke since the last observation 
+and, if so, the timing of that stroke. Each observation also includes measured 
+cardiovascular risk factors such as blood pressure, health behaviors, and 
+medication use.
+
+The goal of this study will be to use this data to identify clinically 
+significant risk factors that are associated with greater risk of stroke 10 years
+after the start of observation. The study will be stratified by sex, meaning
+males and females will be treated as two separate populations with potentially
+differing risk factors.
+
+## Data Preperation and Methods
+
+First, 32 subjects who have had a stroke prior to the start of observation were 
+removed from the data set. Next, for each subject, a record of whether they
+had a stroke in the first 10 years of observation was created along with the
+timing of that stroke (which we will refer to as events and event times, 
+respectively). If they did not 
+have an event in those years, they were classified as right censored. Based on 
+the findings of Wolf (1990) as well as data availability, age, systolic
+blood pressure (mmHg) (SBP), use of anti-hypertensive medication, diabetes mellitus, 
+cigarette smoking, past cardiovascular disease, BMI, and serum total cholesterol
+(mg/dL) were included in the analysis
+as potential risk factors (all measured at baseline). Age, SBP, cholesterol, and
+BMI will be treated as continuous variables with the rest treated as 
+dichotomous.
+
+After preparing the data, there are 2378 subjects with sex listed as female
+including 57 who had an event and 2321 who are censored, and there are 1897 
+subjects with sex listed as male with 48 who had an event and 1849 who are 
+censored.
+
+The first part of the analysis provides summaries for outcomes and 
+potential risk factors, both overall and stratified by sex and whether the 
+subject had an event or was censored. Next, estimated Kaplan-Meier survival
+curves were fit to crudely estimate event probability over time. Then, to 
+fully quantify each risk factor's relationship with stroke 
+occurrence, a Cox proportional hazards
+regression was fit for each sex with the number of days after beginning 
+observation that a stroke occurred or the last observation time in days as the 
+outcome and the potential risk factors described above as variables of interest.
+The risk factors were then narrowed using backwards selection with statistical
+significance as the criteria for whether it was kept in the model. After
+predictor selection, a final Cox hazard model was fit for each sex.
+Coefficient estimates from these models are then used to quantify
+the relationship between potential risk factors and stroke occurrence, with
+Wald tests quantifying these relationships' statistical significance.
+
+Lastly, we provide summary statistics of the changes in potential risk 
+factors from the first observation to the last and discuss the potential
+impact of using a more complex, time-varying covariate analysis rather than
+simply evaluating relationships between baseline values and stroke occurrence.
+As a part of this discussion, the proportional hazards assumption for Cox
+proportional hazards models will be evaluated in the context of this study to
+identify whether the relationship between covariates and stroke risk varies
+with time thereby altering the interpretation of this study's results.
+
+## Results
+
+## Conclusions
+
+## Reproducible research information
+
+## Works Cited
+
+## Appendix
+
+```{r, echo=FALSE}
+kable(survProbDF, booktabs = TRUE,
+      caption = "Probability of Stroke at 10 Years stratified by baseline age in years and sex",
+      col.names = c("55", "60", "65", "70", "75", "80", "85",
+                    "55", "60", "65", "70", "75", "80", "85"),
+      row.names = TRUE) %>%
+    kable_styling(latex_options = c("striped", "scale_down")) %>% 
+    add_header_above(c(" " = 1, "Male" = 7, "Female" = 7))
+```
+

@@ -40,6 +40,6 @@ dta <- dta %>%
 cleanDataM <- subset(dta, dta$SEX == 1)
 cleanDataF <- subset(dta, dta$SEX == 2)
 
+# Calculate sample sizes
 sum(cleanDataM$stroke10yr)
 sum(cleanDataF$stroke10yr)
-sum(cleanDataF$CVD)

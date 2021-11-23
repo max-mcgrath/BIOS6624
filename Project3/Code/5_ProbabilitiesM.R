@@ -7,6 +7,7 @@ cursmokeMean <- mean(cleanDataM$CURSMOKE)
 cholMean <- mean(cleanDataM$TOTCHOL)
 bmiMean <- mean(cleanDataM$BMI)
 diabetesMean <- mean(cleanDataM$DIABETES)
+cvdMean <- mean(cleanDataM$DIABETES)
 
 # Calculate continuous covariate means
 sysbpQuants <- quantile(cleanDataM$SYSBP)
@@ -18,100 +19,234 @@ cvdMean <- mean(cleanDataM$CVD)
 # Create data frame to store survival probabilities
 survProbDFM <- data.frame(
     age = c(55, 60, 65, 70, 75, 80, 85),
-    means = rep(NA, 7),
-    sysbpQuant1 = rep(NA, 7),
-    sysbpQuant2 = rep(NA, 7),
-    sysbpQuant3 = rep(NA, 7),
-    sysbpQuant4 = rep(NA, 7),
-    diabetesYes = rep(NA, 7),
-    diabetesNo = rep(NA, 7),
+    average = rep(NA, 7),
     cursmokeYes = rep(NA, 7),
-    cursmokeNo = rep(NA, 7)
+    bpmedsYes = rep(NA, 7),
+    bpmedsNo = rep(NA, 7),
+    diabetesYes = rep(NA, 7),
+    cvdYes = rep(NA, 7),
+    smokeYesDiabYes = rep(NA, 7),
+    smokeYesCVDYes = rep(NA, 7),
+    smokeYesBpmedsYes = rep(NA, 7),
+    smokeYesBpmedsNo = rep(NA, 7),
+    allConditions = rep(NA, 7)
 )
 
+survProbPlotsM <- list()
+
 # All averages
-meanNewData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                          SYSBP = rep(sysbpMean, 7),
-                          CURSMOKE = rep(cursmokeMean, 7),
-                          DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = meanNewData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$means <- tail(survfit(coxModelM, newdata = meanNewData)$surv)[5, ]
-
-# SYSBP at each quantile
-# Quantile 1
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                          SYSBP = rep(sysbpQuants[1], 7),
-                          CURSMOKE = rep(cursmokeMean, 7),
-                          DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$sysbpQuant1 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# Quantile 2
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                      SYSBP = rep(sysbpQuants[2], 7),
-                      CURSMOKE = rep(cursmokeMean, 7),
-                      DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$sysbpQuant2 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# Quantile 3
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                      SYSBP = rep(sysbpQuants[3], 7),
-                      CURSMOKE = rep(cursmokeMean, 7),
-                      DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$sysbpQuant3 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# Quantile 4
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                      SYSBP = rep(sysbpQuants[4], 7),
-                      CURSMOKE = rep(cursmokeMean, 7),
-                      DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$sysbpQuant4 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# DIABETES no/yes
-# No
 newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
                           SYSBP = rep(sysbpMean, 7),
                           CURSMOKE = rep(cursmokeMean, 7),
-                          DIABETES = 0)
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$diabetesNo <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+                          DIABETES = rep(diabetesMean, 7),
+                          BPMEDS = rep(bpmedsMean, 7),
+                          CVD = rep(cvdMean, 7))
+survProbPlotsM[[1]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$average <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
 
-# Yes
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                      SYSBP = rep(sysbpMean, 7),
-                      CURSMOKE = rep(cursmokeMean, 7),
-                      DIABETES = 1)
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$diabetesYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# CURSMOKE no/yes
-# No
-newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
-                      SYSBP = rep(sysbpMean, 7),
-                      CURSMOKE = 0,
-                      DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
-survProbDFM$cursmokeNo <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
-
-# Yes
+# Current Smoker
 newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
                       SYSBP = rep(sysbpMean, 7),
                       CURSMOKE = 1,
-                      DIABETES = rep(diabetesMean, 7))
-ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
-           censor = FALSE, conf.int = TRUE)
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = rep(bpmedsMean, 7),
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[2]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
 survProbDFM$cursmokeYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+
+# BPMEDS Yes
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = rep(cursmokeMean, 7),
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = 1,
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[3]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$bpmedsYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+
+# BPMEDS No
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = rep(cursmokeMean, 7),
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = 0,
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[4]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$bpmedsNo <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+
+# CVD Yes
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = rep(cursmokeMean, 7),
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = rep(bpmedsMean, 7),
+                      CVD = 1)
+survProbPlotsM[[5]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$cvdYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+
+# DIABETES Yes
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = rep(cursmokeMean, 7),
+                      DIABETES = 1,
+                      BPMEDS = rep(bpmedsMean, 7),
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[6]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$diabetesYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+
+# Smoking and Diabetes
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = 1,
+                      DIABETES = 1,
+                      BPMEDS = rep(bpmedsMean, 7),
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[7]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$smokeYesDiabYes <- tail(survfit(coxModelM, 
+                                            newdata = newData)$surv)[5, ]
+
+# Smoking and CVD
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = 1,
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = rep(bpmedsMean, 7),
+                      CVD = 1)
+survProbPlotsM[[8]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$smokeYesCVDYes <- tail(survfit(coxModelM, 
+                                           newdata = newData)$surv)[5, ]
+
+# Smoking and bpmeds yes
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = 1,
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = 1,
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[9]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$smokeYesBpmedsYes <- tail(survfit(coxModelM, 
+                                              newdata = newData)$surv)[5, ]
+
+# Smoking and bpmeds no
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = 1,
+                      DIABETES = rep(diabetesMean, 7),
+                      BPMEDS = 0,
+                      CVD = rep(cvdMean, 7))
+survProbPlotsM[[10]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                  data = cleanDataM, censor = FALSE,
+                                  conf.int = FALSE)
+survProbDFM$smokeYesBpmedsNo <- tail(survfit(coxModelM, 
+                                              newdata = newData)$surv)[5, ]
+
+# All conditions
+newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+                      SYSBP = rep(sysbpMean, 7),
+                      CURSMOKE = 1,
+                      DIABETES = 1,
+                      BPMEDS = 1,
+                      CVD = 1)
+survProbPlotsM[[11]] <- ggsurvplot(survfit(coxModelM, newdata = newData),
+                                   data = cleanDataM, censor = FALSE,
+                                   conf.int = FALSE)
+survProbDFM$allConditions <- tail(survfit(coxModelM, 
+                                             newdata = newData)$surv)[5, ]
+
+
+# # Old code w/ sysbp stratified by quantiles, may be of interest later
+# # SYSBP at each quantile
+# # Quantile 1
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                           SYSBP = rep(sysbpQuants[1], 7),
+#                           CURSMOKE = rep(cursmokeMean, 7),
+#                           DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$sysbpQuant1 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # Quantile 2
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpQuants[2], 7),
+#                       CURSMOKE = rep(cursmokeMean, 7),
+#                       DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$sysbpQuant2 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # Quantile 3
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpQuants[3], 7),
+#                       CURSMOKE = rep(cursmokeMean, 7),
+#                       DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$sysbpQuant3 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # Quantile 4
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpQuants[4], 7),
+#                       CURSMOKE = rep(cursmokeMean, 7),
+#                       DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$sysbpQuant4 <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # DIABETES no/yes
+# # No
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                           SYSBP = rep(sysbpMean, 7),
+#                           CURSMOKE = rep(cursmokeMean, 7),
+#                           DIABETES = 0)
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$diabetesNo <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # Yes
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpMean, 7),
+#                       CURSMOKE = rep(cursmokeMean, 7),
+#                       DIABETES = 1)
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$diabetesYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # CURSMOKE no/yes
+# # No
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpMean, 7),
+#                       CURSMOKE = 0,
+#                       DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$cursmokeNo <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
+# 
+# # Yes
+# newData <- data.frame(AGE = c(55, 60, 65, 70, 75, 80, 85),
+#                       SYSBP = rep(sysbpMean, 7),
+#                       CURSMOKE = 1,
+#                       DIABETES = rep(diabetesMean, 7))
+# ggsurvplot(survfit(coxModelM, newdata = newData), data = cleanDataM, 
+#            censor = FALSE, conf.int = TRUE)
+# survProbDFM$cursmokeYes <- tail(survfit(coxModelM, newdata = newData)$surv)[5, ]
 
 # # Old code with all covariates of interest, may be useful later
 # # With Smoking
