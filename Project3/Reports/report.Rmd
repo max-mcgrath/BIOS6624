@@ -17,9 +17,10 @@ geometry: margin=1in
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(kableExtra)
+library(gridExtra)
 options(knitr.kable.NA = '')
-library(kableExtra)
 setwd("..")
+source("Code/3_KM.R")
 source("Code/5_ProbabilitiesM.R")
 source("Code/6_ProbabilitiesF.R")
 ```
@@ -96,11 +97,51 @@ with time thereby altering the interpretation of this study's results.
 
 ## Works Cited
 
+\newpage
+
 ## Appendix
+
+```{r, echo=FALSE, fig.cap="Kaplan-Meier Survival Curves for Male Sex", fig.height=6.7}
+arrange_ggsurvplots(kmPlotsM[2:9],
+                    print = TRUE,
+                    ncol = 2,
+                    nrow = 4,
+                    surv.plot.height = NULL,
+                    risk.table.height = NULL,
+                    ncensor.plot.height = NULL,
+                    common.legend = FALSE)
+```
+
+\newpage
+
+```{r, echo=FALSE, fig.cap="Kaplan-Meier Survival Curves for Female Sex", fig.height=6.7}
+arrange_ggsurvplots(kmPlotsF[2:9],
+                    print = TRUE,
+                    ncol = 2,
+                    nrow = 4,
+                    surv.plot.height = NULL,
+                    risk.table.height = NULL,
+                    ncensor.plot.height = NULL,
+                    common.legend = FALSE)
+```
+
+\newpage
+
+```{r, echo=FALSE}
+kable(cphSummaryDF, booktabs = TRUE,
+      caption = "Model coefficients (stratified by sex)",
+      col.names = c("Variable", "Hazard Ratio", "95% CI", "p-value",
+                    "Hazard Ratio", "95% CI", "p-value"),
+      row.names = FALSE) %>%
+    kable_styling(latex_options = c("striped", "scale_down")) %>% 
+    add_header_above(c(" " = 1, "Male" = 3, "Female" = 3))
+```
+
 
 ```{r, echo=FALSE}
 kable(survProbDF, booktabs = TRUE,
-      caption = "Probability of Stroke at 10 Years stratified by baseline age in years and sex",
+      caption = paste0("Probability of Stroke at 10 Years stratified by ", 
+                       "baseline age in years and sex"),
       col.names = c("55", "60", "65", "70", "75", "80", "85",
                     "55", "60", "65", "70", "75", "80", "85"),
       row.names = TRUE) %>%

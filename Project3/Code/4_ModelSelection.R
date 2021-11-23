@@ -50,3 +50,19 @@ summary(coxModelM_3)
 
 # Store final model
 coxModelM <- coxModelM_3
+
+# Create summary DF for both CPH's
+cphSummaryDF <- data.frame(
+    variable = c("Age", "BPD", "Treated Hypertension", "Diabetic", 
+                 "Current Smoker", "History of CVD"),
+    RFM = round(summary(coxModelM)$coefficients[, 2], 2),
+    CIM = paste0("(", round(summary(coxModelM)$conf.int[, 3], 2), ", ",
+                round(summary(coxModelM)$conf.int[, 4], 2), ")"),
+    pValM = round(summary(coxModelM)$coefficients[, 5], 3),
+    RFF = round(summary(coxModelF)$coefficients[, 2], 2),
+    CIF = paste0("(", round(summary(coxModelF)$conf.int[, 3], 2), ", ",
+                 round(summary(coxModelF)$conf.int[, 4], 2), ")"),
+    pValF = round(summary(coxModelF)$coefficients[, 5], 3)
+) %>%
+    mutate(across(.cols = c(pValM, pValF), function(x) { 
+        ifelse(x == 0, "<0.001", x)}))
