@@ -1,3 +1,15 @@
+## Project 3
+
+This project is analysis of the Framingham Study cohort that aims to identify
+statistically significant risk factors associated with greater risk of stroke
+after 10 years among the studied cohort. Additionally, the study aims to 
+determine 10-year probabilities of strokes for different risk profiles using 
+the significant risk factors and to identify whether their is meaningful change 
+in risk factors over the first 10 years of the study to determine whether a 
+longitudinal analysis approach is warranted. This study is stratified by sex, 
+meaning males and females are treated as two separate populations with 
+potentially differing risk factors.
+
 The `Background` folder contains information pertinent to understanding the
 analysis but unnecessary for reproducing it. The `Code` folder contains six
 files: `1_ProcessData.R`, `2_EDA.R`, `3_KM.R`, 
