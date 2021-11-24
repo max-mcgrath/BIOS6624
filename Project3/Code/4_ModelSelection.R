@@ -89,7 +89,7 @@ coxModelM <- coxModelM_5
 
 # Create summary DF for both CPH's
 cphSummaryDF <- data.frame(
-    variable = c("Age", "BPD", "Diabetic", "Current Smoker"),
+    variable = c("Age", "SBP", "Diabetic", "Current Smoker"),
     RFM = round(summary(coxModelM)$coefficients[, 2], 2),
     CIM = paste0("(", round(summary(coxModelM)$conf.int[, 3], 2), ", ",
                 round(summary(coxModelM)$conf.int[, 4], 2), ")"),
