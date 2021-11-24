@@ -1,22 +1,32 @@
 source("Code/1_ProcessData.R")
 
+library(table1)
+
+# Create Table 1 Data
+tableOneData <- dta %>%
+    mutate(across(.cols = c(BPMEDS, DIABETES, CURSMOKE, CVD),
+                  function (x) { factor(x, levels = c(0, 1),
+                                        labels = c("No", "Yes"))})) %>%
+    mutate(stroke10yr = factor(.data$stroke10yr, levels = c(0, 1), 
+                               labels = c("Censored", "Stroke"))) %>%
+    mutate(SEX = factor(.data$SEX, levels = c(1, 2), 
+                               labels = c("Male", "Female")))
+
+# Add appropriate labels
+label(tableOneData$AGE) <- "Age (years)"
+label(tableOneData$SYSBP) <- "SBP (mmHg)"
+label(tableOneData$BPMEDS) <- "Use of anti-hypertensive medication"
+label(tableOneData$DIABETES) <- "Diabetes"
+label(tableOneData$CURSMOKE) <- "Smoking status"
+label(tableOneData$TOTCHOL) <- "Total cholesterol (mg/dL)"
+label(tableOneData$CVD) <- "History of CVD"
+label(tableOneData$timestrk10yr) <- "Time to censoring or stroke (days)"
+
 # Create Table 1
-tableOneContinousOverall <- cleanData %>%
-    group_by(SEX) %>%
-    summarise(across(c(AGE, SYSBP), list("overallMean" = mean, 
-                                         "overallSD" = sd)))
-
-tableOneContinousByResponse <- cleanData %>%
-    group_by(SEX, stroke10yr) %>%
-    summarise(across(c(AGE, SYSBP), list("mean" = mean, 
-                                         "SD" = sd)))
-
-tableOneDichOverall <- cleanData %>%
-    group_by(SEX) %>%
-    summarise(across(c(BPMEDS, DIABETES, CURSMOKE, ANYCHD),
-                     list(nEvent = function(x) { sum(x == 1) },
-                          nCensored = function(x) { sum(x == 0) },
-                          eventPct = function(x) { sum(x == 1) / sum(.data$stroke10yr == 1) * 100},
-                          censoredPct = function(x) { sum(x == 0) / sum(.data$stroke10yr == 0) * 100})))
-              
-                     
+tableOne <- table1(~ timestrk10yr + AGE + BMI + SYSBP + BPMEDS + TOTCHOL + 
+                       DIABETES + CURSMOKE + CVD | 
+                       tableOneData$SEX * tableOneData$stroke10yr, 
+       data = tableOneData, 
+       overall = FALSE, 
+       render.categorical="FREQ (PCTnoNA%)",
+       caption = "Data summary")

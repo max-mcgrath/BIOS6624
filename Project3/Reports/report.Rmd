@@ -20,6 +20,7 @@ library(kableExtra)
 library(gridExtra)
 options(knitr.kable.NA = '')
 setwd("..")
+source("Code/2_EDA.R")
 source("Code/3_KM.R")
 source("Code/5_ProbabilitiesM.R")
 source("Code/6_ProbabilitiesF.R")
@@ -126,6 +127,12 @@ arrange_ggsurvplots(kmPlotsF[2:9],
 ```
 
 \newpage
+
+```{r, echo = FALSE}
+t1kable(tableOne, booktabs = TRUE) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
+
 
 ```{r, echo=FALSE}
 kable(cphSummaryDF, booktabs = TRUE,
