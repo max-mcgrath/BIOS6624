@@ -140,7 +140,7 @@ p-values $\leq.001$ for both age and SBP in each sex's respective models.
 
 Table 3 provides the probabilities of stroke within 10 years for a variety 
 of risk profiles as estimated by the Cox proportional models. 
-For both males and females, the average probability of stroke
+The average probability of stroke
 within ten years is 2% at 55 and 15% at 85 for males and 2% at 55 and 16% at 85 
 for females. For females, the probability of stroke at each age remains constant
 for each risk profile, as none of the reported risk profiles are significantly 
@@ -177,12 +177,12 @@ all risk profiles for a fixed age, and for males those who are current smokers,
 those who are diabetic, or those who are both are associated with increased 
 10-year probabilities of stroke, the latter the most of any risk profile. 
 
-From the comparison of the first and second period, the across the board 
+From the comparison of the first and second period, the across-the-board 
 increase in SBP coupled with SBP's significant association with stroke hazard is
 indicative that a longitudinal approach may be preferable for fully assessing
 stroke hazard, although the proportional hazards assumption for this analysis 
 was met indicating a non-longitudinal approach may have been sufficient. 
-Such an analysis would also account for observed changes in
+A longitudinal analysis would also account for observed changes in
 smoking habits, anti-hypertension medication use, and diabetic status.
 
 ## Limitations
