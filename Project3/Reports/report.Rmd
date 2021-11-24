@@ -24,6 +24,7 @@ source("Code/2_EDA.R")
 source("Code/3_KM.R")
 source("Code/5_ProbabilitiesM.R")
 source("Code/6_ProbabilitiesF.R")
+source("Code/7_TimeAnalysis.R")
 ```
 
 \newpage
@@ -34,73 +35,216 @@ We received data of 11,627 observations from 4,434 individuals with up to
 three observations per individual tracking subjects'
 cardiovascular outcomes for up to 24 years. Most relevant to this study, each
 observation records whether the subject has had a stroke since the last observation 
-and, if so, the timing of that stroke. Each observation also includes measured 
-cardiovascular risk factors such as blood pressure, health behaviors, and 
-medication use.
+and, if so, the timing of that stroke. Each observation also measures four continuous 
+cardiovascular risk factors: (1) age, (2) systolic blood pressure (SBP), (3) cholesterol 
+levels, and (4) BMI, and four dichotomous variables: (5) smoking status, (6)
+diabetic status, (7) history of cardiovascular disease (CVD), and (8) use of
+anti-hypertension medication.
 
-The goal of this study will be to use this data to identify clinically 
+The aim of this study will be to use this data to identify statistically 
 significant risk factors that are associated with greater risk of stroke 10 years
-after the start of observation. The study will be stratified by sex, meaning
-males and females will be treated as two separate populations with potentially
-differing risk factors.
+after the start of observation by testing the hypotheses that each of the eight
+previously listed risk factors are associated with 10-year risk of stroke.
+The second aim is to determine 10-year probabilities of 
+strokes for different risk profiles using the significant risk factors. 
+The last aim of this analysis is to
+identify whether their is meaningful change in risk factors over the first 10
+years of the study to determine whether a longitudinal analysis approach is
+warranted. This study is stratified by sex, meaning
+males and females are treated as two separate populations with potentially
+differing risk factors. 
 
-## Data Preperation and Methods
+## Methods
 
-First, 32 subjects who have had a stroke prior to the start of observation were 
+First, subjects who have had a stroke prior to the start of observation were 
 removed from the data set. Next, for each subject, a record of whether they
 had a stroke in the first 10 years of observation was created along with the
 timing of that stroke (which we will refer to as events and event times, 
 respectively). If they did not 
 have an event in those years, they were classified as right censored. Based on 
-the findings of Wolf (1990) as well as data availability, age, systolic
-blood pressure (mmHg) (SBP), use of anti-hypertensive medication, diabetes mellitus, 
-cigarette smoking, past cardiovascular disease, BMI, and serum total cholesterol
-(mg/dL) were included in the analysis
+the findings of Wolf et al. (1990) as well as data availability, age, systolic
+blood pressure (mmHg) (SBP), use of anti-hypertensive medication, diabetes 
+mellitus, cigarette smoking, past cardiovascular disease (CVD), BMI, and serum 
+total cholesterol (mg/dL) were included in the analysis
 as potential risk factors (all measured at baseline). Age, SBP, cholesterol, and
 BMI will be treated as continuous variables with the rest treated as 
-dichotomous.
+dichotomous. Only observations with no missing values for any of the potential
+risk factors were used.
 
-After preparing the data, there are 2378 subjects with sex listed as female
-including 57 who had an event and 2321 who are censored, and there are 1897 
-subjects with sex listed as male with 48 who had an event and 1849 who are 
-censored.
-
-The first part of the analysis provides summaries for outcomes and 
-potential risk factors, both overall and stratified by sex and whether the 
+The first part of the analysis provides descriptive statistics for
+potential risk factors, stratified by sex and whether the 
 subject had an event or was censored. Next, estimated Kaplan-Meier survival
-curves were fit to crudely estimate event probability over time. Then, to 
+curves were fit to crudely estimate event probability over time. For 
+continuous risk factors, the K-M curves were fit according to the risk factor
+quantiles. Then, to 
 fully quantify each risk factor's relationship with stroke 
-occurrence, a Cox proportional hazards
+occurrence, a Cox proportional hazards (CPH)
 regression was fit for each sex with the number of days after beginning 
 observation that a stroke occurred or the last observation time in days as the 
 outcome and the potential risk factors described above as variables of interest.
 The risk factors were then narrowed using backwards selection with statistical
-significance as the criteria for whether it was kept in the model. After
-predictor selection, a final Cox hazard model was fit for each sex.
-Coefficient estimates from these models are then used to quantify
-the relationship between potential risk factors and stroke occurrence, with
-Wald tests quantifying these relationships' statistical significance.
+significance (alpha $<0.05$) as the criteria for whether each factor was kept in 
+the model. 
+After predictor selection, a final CPH model was fit for each sex.
+Coefficient estimates from these models were then used to quantify
+the relationship between risk factors and stroke occurrence, with
+Wald tests quantifying these relationships' statistical significance. 10-year
+stroke probabilities were then calculated for a predefined set of risk profiles.
 
 Lastly, we provide summary statistics of the changes in potential risk 
-factors from the first observation to the last and discuss the potential
+factors from the first observation to the second and discuss the potential
 impact of using a more complex, time-varying covariate analysis rather than
 simply evaluating relationships between baseline values and stroke occurrence.
 As a part of this discussion, the proportional hazards assumption for Cox
-proportional hazards models will be evaluated in the context of this study to
+proportional hazards models was evaluated in the context of this study to
 identify whether the relationship between covariates and stroke risk varies
 with time thereby altering the interpretation of this study's results.
 
 ## Results
 
+After preparing the data, there were 2378 subjects with sex listed as female
+including 57 who had an event and 2321 who are censored, and there were 1897 
+subjects with sex listed as male with 48 who had an event and 1849 who are 
+censored.
+
+From Table 1, the majority of individuals observed did not have
+strokes within 10 years of observation (2.5% of males and 2.4% of 
+females had strokes). Among
+those who did have strokes, generally they are older, have higher SBP, are
+more likely to use anti-hypertensive medication, are more likely to have
+diabetes, and are more likely to have a history of CVD. From the Kaplan-Meier 
+survival curves shown in Figures 1 and 2, age, SBP, and
+all dichotomous measures appear to be associated with greater incidence of
+strokes in males, and all continuous measures and all dichotomous measures except
+current smoking status appear to be associated with greater incidence of strokes
+in females. Both the descriptive statistics and Kaplan-Meier curves lend 
+credence to the selection of the initial set of potential risk factors to 
+consider.
+
+Following backwards model selection, age, SBP, diabetes, and smoking status
+remained as significant predictors of stroke incidence in males, while only
+age and SBP remained as significant predictors of stroke incidence in females.
+For males, having diabetes at baseline was associated with an estimated hazard 
+of stroke within 10 years of observation of 4.79 (95% CI: (2.1, 10.99)) times 
+that of those who did not have diabetes at baseline holding age, 
+BPD, and smoking status constant (p-value $< 0.001$), and being a smoker at 
+baseline was associated with an estimated hazard of having a stroke of 1.92 
+(95% CI: (1.03, 3.56))
+times that of those who were not smokers at baseline, holding age, SBP, and
+diabetic status constant (p-value $= 0.039$). For both males and females,
+the estimated hazard of stroke was 1.07 times greater for each additional year
+of age (95% CI's: (1.03, 1.11) and (1.03, 1.12), respectively), and the 
+estimated hazard of stroke was 1.03 times greater for each additional mmHg of
+blood pressure (95% CI's: (1.02, 1.05) and (1.02, 1.03), respectively) with
+p-values $\leq.001$ for both age and SBP in each sex's respective models.
+
+Table 3 provides the probabilities of stroke within 10 years for a variety 
+of risk profiles as estimated by the Cox proportional models. 
+For both males and females, the average probability of stroke
+within ten years is 2% at 55 and 15% at 85 for males and 2% at 55 and 16% at 85 
+for females. For females, the probability of stroke at each age remains constant
+for each risk profile, as none of the reported risk profiles are significantly 
+associated with stroke probability. For males, being a smoker and having 
+diabetes both  increase the probability of having a stroke within 10 years for 
+all ages, with the conjunction of the two carrying the highest probability of 
+stroke within 10 years of any risk profile at all ages (13% at 55, 61% at 85).
+
+For the longitudinal comparison between the first and second period, Table 4
+provides descriptive statistics of the differences between the two periods. 
+Only 1594 males and 2001 subjects that were present for period one (after
+removing those who had previously had a stroke) were also present for period two.
+For the continuous risk factors, BMI slightly increased for those who were
+censored and decreased for those who had strokes, while cholesterol and SBP
+increased for both censored and those who had a stroke. For dichotomous factors,
+more individuals stopped smoking than started smoking, and similarly more 
+individuals started taking anti-hypertension medication than stopped taking it.
+There was also a small percentage of individuals who were recognized as diabetic
+between the first and second period or who had a history of CVD in the second
+period but not in the first. The proportional hazards assumption of the CPH
+models were also evaluated using Schoenfeld tests, and for both the male and 
+female models there was no evidence of violation of the proportional hazards
+assumption (p-values of 0.35 and 0.95, respectively).
+
 ## Conclusions
 
-## Reproducible research information
+From the CPH models, only age and systolic blood pressure were significantly
+associated with increased hazard of stroke for females, and age, systolic blood
+pressure, smoking status, and diabetic status were significantly associated with
+increased hazard of stroke in males. From the 10-year stroke probabilities
+calculated using these models, the probability of stroke increases with age
+for all risk profiles. For females, the probability of stroke is constant across
+all risk profiles for a fixed age, and for males those who are current smokers,
+those who are diabetic, or those who are both are associated with increased 
+10-year probabilities of stroke, the latter the most of any risk profile. 
 
-## Works Cited
+From the comparison of the first and second period, the across the board 
+increase in SBP coupled with SBP's significant association with stroke hazard is
+indicative that a longitudinal approach may be preferable for fully assessing
+stroke hazard, although the proportional hazards assumption for this analysis 
+was met indicating a non-longitudinal approach may have been sufficient. 
+Such an analysis would also account for observed changes in
+smoking habits, anti-hypertension medication use, and diabetic status.
+
+## Limitations
+
+The range of ages for which risk probabilities (55 - 85 years) were calculated 
+was based upon the methods of Wolf (1990), but it may be problematic to extend
+the inferences of this study to the higher ages in that range. Specifically, at
+baseline the largest ages present in the study were 69 for male and 70 for
+female subjects, with averages of about 50 years for both sexes. Coupled with
+the low incidence of stroke among the studied populations, the studied data
+may not provide helpful insight into higher age ranges. 
+
+Further, several of
+the risk factors that were identified as significant by Wolf et al. were not
+identified as significant in this study, and no factors which Wolf et al. did
+not consider were identified as significant. As such, this study is likely 
+under powered and would be improved by increasing the sample size, particularly
+to capture a greater number of individuals who have strokes in the period of
+observation.
 
 \newpage
 
-## Appendix
+## Reproducibility
+
+The code used to generate this analysis is available on GitHub 
+at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project3
+. The `Background` folder contains information pertinent to understanding the
+analysis but unnecessary for reproducing it. The `Code` folder contains six
+files: `1_ProcessData.R`, `2_EDA.R`, `3_KM.R`, 
+`4_ModelSelection.R`, `5_ProbabilitiesM.R`, `6_ProbabilitiesF.R`, and 
+`7_TimeAnalysis.R`.
+These R scripts are dependent upon a data file 
+`Data/frmgham2.csv` which is not available on GitHub, but may be 
+requested
+by emailing `max.mcgrath@ucdenver.edu`. To run the complete analysis, each
+script should be run in the order of the number prefixing its filename. The
+last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
+be used to generate this report (note that it also depends on the aforementioned
+data and scripts).
+
+The complete details of the `R` version, package versions, and
+machine details for the instance which generated this report are provided below.
+
+```{r, echo = FALSE}
+sessionInfo()
+```
+
+## Works Cited
+
+Wolf, P.A., D'Agostino, R.B., Belanger, A.J., and Kannel, W.B. (1991) Probability
+of Stroke: A Risk Profile From the Framingham Study. *Stroke, 22* (3), 312-318
+
+\newpage
+
+## Appendix 
+
+```{r, echo = FALSE}
+t1kable(tableOne, booktabs = TRUE) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
+```
+
+\newpage
 
 ```{r, echo=FALSE, fig.cap="Kaplan-Meier Survival Curves for Male Sex", fig.height=6.7}
 arrange_ggsurvplots(kmPlotsM[2:9],
@@ -128,12 +272,6 @@ arrange_ggsurvplots(kmPlotsF[2:9],
 
 \newpage
 
-```{r, echo = FALSE}
-t1kable(tableOne, booktabs = TRUE) %>%
-    kable_styling(latex_options = c("striped", "scale_down"))
-```
-
-
 ```{r, echo=FALSE}
 kable(cphSummaryDF, booktabs = TRUE,
       caption = "Model coefficients (stratified by sex)",
@@ -152,7 +290,14 @@ kable(survProbDF, booktabs = TRUE,
       col.names = c("55", "60", "65", "70", "75", "80", "85",
                     "55", "60", "65", "70", "75", "80", "85"),
       row.names = TRUE) %>%
-    kable_styling(latex_options = c("striped", "scale_down")) %>% 
+    kable_styling(latex_options = c("striped", "scale_down")) %>%
+    column_spec(c(1,8), border_right = TRUE) %>%
     add_header_above(c(" " = 1, "Male" = 7, "Female" = 7))
+```
+
+
+```{r, echo=FALSE}
+t1kable(diffTable, booktabs = TRUE) %>%
+    kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
