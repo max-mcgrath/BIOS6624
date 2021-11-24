@@ -14,7 +14,8 @@ dta$timestrk10yr <- ifelse(dta$TIMESTRK>=3650, 3650, dta$TIMESTRK)
 # Create an indicator variable for event (0=censored, 1=stroke)
 dta$stroke10yr <- ifelse(dta$timestrk10yr<3650 & dta$STROKE==1, 1, 0) 
 
-# For subjects where time of death < time of stroke, use the smaller value for event time
+# For subjects where time of death < time of stroke, use the smaller value 
+#   for event time
 dta$timestrk10yr <- pmin(dta$TIMEDTH, dta$timestrk10yr) 
 
 # Create CVD variable

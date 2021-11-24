@@ -81,7 +81,7 @@ kmPlotsF[["SYSBP"]] <- ggsurvplot(kmF3, legend = "right", conf.int = FALSE,
                             legend.labs = paste0(quantile(cleanDataF$SYSBP)[1:4], 
                                                  "-",
                                                  quantile(cleanDataF$SYSBP)[2:5]),
-                            legend.title = "SBP")
+                            legend.title = "mmHg")
 
 kmM3 <- survfit(Surv(time = timestrk10yr, event = stroke10yr) ~ SYSBP_QUANT, 
                 data = cleanDataM)
@@ -97,7 +97,7 @@ kmPlotsM[["SYSBP"]] <- ggsurvplot(kmM3, legend = "right", conf.int = FALSE,
                             legend.labs = paste0(quantile(cleanDataM$SYSBP)[1:4], 
                                                  "-",
                                                  quantile(cleanDataM$SYSBP)[2:5]),
-                            legend.title = "SBP")
+                            legend.title = "mmHg")
 
 # Estimate K-M survival curves w/ BMI
 kmF4 <- survfit(Surv(time = timestrk10yr, event = stroke10yr) ~ BMI_QUANT, 
