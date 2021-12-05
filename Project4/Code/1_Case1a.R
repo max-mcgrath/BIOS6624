@@ -13,8 +13,11 @@ library(RcmdrMisc) # BIC selection
 library(glmnet) # LASSO
 
 # Simulation parameters
-nSim <- 200
+nSim <- 1000
 N <- 250
+
+# Set seed
+set.seed(123)
 
 # Generate data (used for all model selection processes)
 simData <- parallel::mclapply(1:nSim, function(x) {
@@ -37,7 +40,7 @@ simData <- parallel::mclapply(1:nSim, function(x) {
 #     rtn
 # }, mc.cores = 4)
 
-# Loop version
+# P-value
 coefEstsBS <- matrix(0, nrow = nSim, ncol = 20)
 for (i in 1:nSim) {
     initMod <- lm(y ~ ., data = simData[[i]])
@@ -47,18 +50,7 @@ for (i in 1:nSim) {
     coefEstsBS[i, (backSel$indvar %in% backSel$removed)] <- NA
 }
 
-# Calculate true positive rate (for each significant coefficient), false
-#   positive rate, and false discovery rate
-(truePositiveBS <- c(sum(!is.na(coefEstsBS[, 1])) / nSim,
-                     sum(!is.na(coefEstsBS[, 2])) / nSim,
-                     sum(!is.na(coefEstsBS[, 3])) / nSim,
-                     sum(!is.na(coefEstsBS[, 4])) / nSim,
-                     sum(!is.na(coefEstsBS[, 5])) / nSim))
-(falsePostiveBS <- sum(!is.na(coefEstsBS[, 6:20])) / (nSim * 15))
-(falseDiscoveryBS <- sum(!is.na(coefEstsBS[, 6:20])) / sum(!is.na(coefEstsBS)))
-
 # AIC
-# Loop version
 coefEstsAIC <- matrix(0, nrow = nSim, ncol = 20)
 for (i in 1:nSim) {
     allVars <- colnames(simData[[i]])[-1]
@@ -69,19 +61,7 @@ for (i in 1:nSim) {
     coefEstsAIC[i, (allVars %in% backSel$predictors)] <- NA
 }
 
-# Calculate true positive rate (for each significant coefficient), false
-#   positive rate, and false discovery rate
-(truePositiveAIC <- c(sum(!is.na(coefEstsAIC[, 1])) / nSim,
-                     sum(!is.na(coefEstsAIC[, 2])) / nSim,
-                     sum(!is.na(coefEstsAIC[, 3])) / nSim,
-                     sum(!is.na(coefEstsAIC[, 4])) / nSim,
-                     sum(!is.na(coefEstsAIC[, 5])) / nSim))
-(falsePostiveAIC <- sum(!is.na(coefEstsAIC[, 6:20])) / (nSim * 15))
-(falseDiscoveryAIC <- sum(!is.na(coefEstsAIC[, 6:20])) / 
-        sum(!is.na(coefEstsAIC)))
-
 # BIC
-# Loop version
 coefEstsBIC <- matrix(0, nrow = nSim, ncol = 20)
 for (i in 1:nSim) {
     allVars <- colnames(simData[[i]])[-1]
@@ -94,17 +74,7 @@ for (i in 1:nSim) {
     coefEstsBIC[i, !(allVars %in% retainedVars)] <- NA
 }
 
-# Calculate true positive rate (for each significant coefficient), false
-#   positive rate, and false discovery rate
-(truePositiveBIC <- c(sum(!is.na(coefEstsBIC[, 1])) / nSim,
-                      sum(!is.na(coefEstsBIC[, 2])) / nSim,
-                      sum(!is.na(coefEstsBIC[, 3])) / nSim,
-                      sum(!is.na(coefEstsBIC[, 4])) / nSim,
-                      sum(!is.na(coefEstsBIC[, 5])) / nSim))
-(falsePostiveBIC <- sum(!is.na(coefEstsBIC[, 6:20])) / (nSim * 15))
-(falseDiscoveryBIC <- sum(!is.na(coefEstsBIC[, 6:20])) / 
-        sum(!is.na(coefEstsBIC)))
-
+# Penalization -----------------------------------------------------------------
 # LASSO w/ CV
 coefEstsLASSOCV <- matrix(0, nrow = nSim, ncol = 20)
 for (i in 1:nSim) {
@@ -122,14 +92,61 @@ for (i in 1:nSim) {
     coefEstsLASSOCV[i, !(allVars %in% retainedVars)] <- NA
 }
 
-(truePositiveLASSOCV <- c(sum(!is.na(coefEstsLASSOCV[, 1])) / nSim,
-                      sum(!is.na(coefEstsLASSOCV[, 2])) / nSim,
-                      sum(!is.na(coefEstsLASSOCV[, 3])) / nSim,
-                      sum(!is.na(coefEstsLASSOCV[, 4])) / nSim,
-                      sum(!is.na(coefEstsLASSOCV[, 5])) / nSim))
-(falsePostiveLASSOCV <- sum(!is.na(coefEstsLASSOCV[, 6:20])) / (nSim * 15))
-(falseDiscoveryLASSOCV <- sum(!is.na(coefEstsLASSOCV[, 6:20])) / 
-        sum(!is.na(coefEstsLASSOCV)))
-
 # Lasso w/ fixed lambda
-# Elastic net
+coefEstsLASSOFIX <- matrix(0, nrow = nSim, ncol = 20)
+for (i in 1:nSim) {
+    allVars <- colnames(simData[[i]])[-1]
+    x <- model.matrix(~ . - 1, data = simData[[i]][, -1])
+    y <- simData[[i]][, 1]
+    grid <- 10^seq(10, -2, length = 100)
+    modelCV <- glmnet(x = x, y = y, lambda = grid)
+    retainedVars <- rownames(
+        coef(modelCV, .2))[coef(modelCV, .2)[, 1] != 0]
+    coefEstsLASSOFIX[i, (allVars %in% retainedVars)] <- 
+        coef(modelCV, .2)[rownames(coef(modelCV, .2)) != "(Intercept)" &
+                                              coef(modelCV, .2)[, 1] != 0]
+    coefEstsLASSOFIX[i, !(allVars %in% retainedVars)] <- NA
+}
+
+# Elastic net w/ CV
+coefEstsENCV <- matrix(0, nrow = nSim, ncol = 20)
+for (i in 1:nSim) {
+    allVars <- colnames(simData[[i]])[-1]
+    x <- model.matrix(~ . - 1, data = simData[[i]][, -1])
+    y <- simData[[i]][, 1]
+    grid <- 10^seq(10, -2, length = 100)
+    modelCV <- cv.glmnet(x = x, y = y, lambda = grid, nfolds = 5, alpha = .5)
+    retainedVars <- rownames(
+        coef(modelCV, modelCV$lambda.min))[coef(modelCV, 
+                                                modelCV$lambda.min)[, 1] != 0]
+    coefEstsENCV[i, (allVars %in% retainedVars)] <- 
+        coef(modelCV, modelCV$lambda.min)[rownames(coef(modelCV, modelCV$lambda.min)) != "(Intercept)" &
+                                              coef(modelCV, modelCV$lambda.min)[, 1] != 0]
+    coefEstsENCV[i, !(allVars %in% retainedVars)] <- NA
+}
+
+# Elastic net w/ fixed lambda
+coefEstsENFIX <- matrix(0, nrow = nSim, ncol = 20)
+for (i in 1:nSim) {
+    allVars <- colnames(simData[[i]])[-1]
+    x <- model.matrix(~ . - 1, data = simData[[i]][, -1])
+    y <- simData[[i]][, 1]
+    grid <- 10^seq(10, -2, length = 100)
+    modelFIX <- cv.glmnet(x = x, y = y, lambda = grid, nfolds = 5, alpha = .5)
+    retainedVars <- rownames(
+        coef(modelFIX, .2))[coef(modelFIX, .2)[, 1] != 0]
+    coefEstsENFIX[i, (allVars %in% retainedVars)] <- 
+        coef(modelFIX, .2)[rownames(coef(modelFIX, .2)) != "(Intercept)" &
+                                              coef(modelFIX, .2)[, 1] != 0]
+    coefEstsENFIX[i, !(allVars %in% retainedVars)] <- NA
+}
+
+# Write relevant objects to files ----------------------------------------------
+saveRDS(nSim, "DataRaw/nSim.rda")
+saveRDS(coefEstsBS, "DataRaw/coefEstsBS.rda")
+saveRDS(coefEstsAIC, "DataRaw/coefEstsAIC.rda")
+saveRDS(coefEstsBIC, "DataRaw/coefEstsBIC.rda")
+saveRDS(coefEstsLASSOCV, "DataRaw/coefEstsLASSOCV.rda")
+saveRDS(coefEstsLASSOFIX, "DataRaw/coefEstsLASSOFIX.rda")
+saveRDS(coefEstsENCV, "DataRaw/coefEstsENCV.rda")
+saveRDS(coefEstsENFIX, "DataRaw/coefEstsENFIX.rda")
