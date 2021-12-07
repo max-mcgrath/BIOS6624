@@ -9,6 +9,13 @@ coefEstsENCV <- readRDS("DataRaw/coefEstsENCV.rda")
 coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX.rda")
 
 # Calculate true positive rate -------------------------------------------------
+totalTPR <- c(sum(!is.na(coefEstsBS[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsAIC[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsBIC[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsLASSOFIX[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsLASSOCV[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsENFIX[, 1:5])) / (nSim * 5),
+              sum(!is.na(coefEstsENCV[, 1:5])) / (nSim * 5))
 truePositiveBS <- c(sum(!is.na(coefEstsBS[, 1])) / nSim,
                     sum(!is.na(coefEstsBS[, 2])) / nSim,
                     sum(!is.na(coefEstsBS[, 3])) / nSim,
