@@ -1,8 +1,8 @@
 # Read data
 nSim <- readRDS("DataRaw/nSim.rda")
-coefEstsBS <- readRDS("DataRaw/coefEstsBS.rda")
-coefEstsAIC <- readRDS("DataRaw/coefEstsAIC.rda")
-coefEstsBIC <- readRDS("DataRaw/coefEstsBIC.rda")
+coefEstsBS <- readRDS("DataRaw/coefEstsBS1a.rda")
+coefEstsAIC <- readRDS("DataRaw/coefEstsAIC1a.rda")
+coefEstsBIC <- readRDS("DataRaw/coefEstsBIC1a.rda")
 coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV.rda")
 coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX.rda")
 coefEstsENCV <- readRDS("DataRaw/coefEstsENCV.rda")
@@ -74,3 +74,17 @@ falseDiscoveryENCV <- sum(!is.na(coefEstsENCV[, 6:20])) /
     sum(!is.na(coefEstsENCV))
 falseDiscoveryENFIX <- sum(!is.na(coefEstsENFIX[, 6:20])) /
     sum(!is.na(coefEstsENFIX))
+
+# Calculate Type I and II error rates ------------------------------------------
+typeOneBS <- sum(coefEstsBS[, 26:30] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsBS[, 26:30]))
+typeTwoBS <- sum(coefEstsBS[, 31:45] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsBS[, 31:45]))
+typeOneAIC <- sum(coefEstsAIC[, 26:30] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsAIC[, 26:30]))
+typeTwoAIC <- sum(coefEstsAIC[, 31:45] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsAIC[, 31:45]))
+typeOneBIC <- sum(coefEstsBIC[, 26:30] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsBIC[, 26:30]))
+typeTwoBIC <- sum(coefEstsBIC[, 31:45] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsBIC[, 31:45]))
