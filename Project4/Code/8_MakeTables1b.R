@@ -2,17 +2,17 @@ library(dplyr)
 library(janitor)
 
 # Read data
-nSim <- readRDS("DataRaw/nSim1a.rda")
-coefEstsBS <- readRDS("DataRaw/coefEstsBS1a.rda")
-coefEstsAIC <- readRDS("DataRaw/coefEstsAIC1a.rda")
-coefEstsBIC <- readRDS("DataRaw/coefEstsBIC1a.rda")
-coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV1a.rda")
-coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX1a.rda")
-coefEstsENCV <- readRDS("DataRaw/coefEstsENCV1a.rda")
-coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX1a.rda")
+nSim <- readRDS("DataRaw/nSim1b.rda")
+coefEstsBS <- readRDS("DataRaw/coefEstsBS1b.rda")
+coefEstsAIC <- readRDS("DataRaw/coefEstsAIC1b.rda")
+coefEstsBIC <- readRDS("DataRaw/coefEstsBIC1b.rda")
+coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV1b.rda")
+coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX1b.rda")
+coefEstsENCV <- readRDS("DataRaw/coefEstsENCV1b.rda")
+coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX1b.rda")
 
 # Model summary table ----------------------------------------------------------
-modelDF <- data.frame(
+modelDF1b <- data.frame(
     model = c("p-value", "AIC", "BIC", "LASSO w/ fixed lambda",
               "LASSO w/ CV", "EN w/ fixed lambda", "EN w/ CV"),
     averageTPR = c(totalTPR[1], totalTPR[2], totalTPR[3], totalTPR[4], 
@@ -34,13 +34,13 @@ modelDF <- data.frame(
     as.data.frame() %>%
     mutate_all(as.numeric)
 
-modelDF <- cbind("stat" = rownames(modelDF), 
-                 data.frame(modelDF, row.names = NULL))
+modelDF1b <- cbind("stat" = rownames(modelDF1b), 
+                 data.frame(modelDF1b, row.names = NULL))
 
-modelDF$stat <- c("Total TPR", "FPR", "FDR", "Type I Error", "Type 2 Error")
+modelDF1b$stat <- c("Total TPR", "FPR", "FDR", "Type I Error", "Type 2 Error")
 
 # Coefficient summary table ----------------------------------------------------
-coefDF <- data.frame(
+coefDF1b <- data.frame(
     model = c("p-value", "AIC", "BIC", "LASSO",
               "LASSO w/ CV", "EN", "EN w/ CV"),
     biasB1 = c(1/6 - mean(coefEstsBS[, 1], na.rm = TRUE), 
@@ -135,15 +135,15 @@ coefDF <- data.frame(
     as.data.frame() %>%
     mutate_all(as.numeric)
 
-coefDF <- cbind("stat" = rownames(coefDF), 
-                data.frame(coefDF, row.names = NULL))
+coefDF1b <- cbind("stat" = rownames(coefDF1b), 
+                data.frame(coefDF1b, row.names = NULL))
 
-coefDF$stat <- c("Bias", "95\\% CI", "TPR",
+coefDF1b$stat <- c("Bias", "95\\% CI", "TPR",
                  "Bias", "95\\% CI", "TPR",
                  "Bias", "95\\% CI", "TPR",
                  "Bias", "95\\% CI", "TPR",
                  "Bias", "95\\% CI", "TPR")
 
-colnames(modelDF) <- colnames(coefDF)
+colnames(modelDF1b) <- colnames(coefDF1b)
 
 
