@@ -88,3 +88,7 @@ typeOneBIC <- sum(coefEstsBIC[, 26:30] == 1, na.rm = TRUE) /
     sum(!is.na(coefEstsBIC[, 26:30]))
 typeTwoBIC <- sum(coefEstsBIC[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsBIC[, 31:45]))
+typeOneLASSOCV <- sum(coefEstsLASSOCV[, 26:30] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsLASSOCV[, 26:30]))
+typeTwoLASSOCV <- sum(coefEstsLASSOCV[, 31:45] == 1, na.rm = TRUE) / 
+    sum(!is.na(coefEstsLASSOCV[, 31:45]))

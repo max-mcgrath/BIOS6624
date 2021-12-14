@@ -12,6 +12,7 @@ library(parallel) # Multithreading
 library(RcmdrMisc) # BIC selection
 library(glmnet) # LASSO
 library(dplyr)
+library(stringr)
 
 # Simulation parameters
 nSim <- 1000
@@ -167,20 +168,54 @@ for (i in 1:nSim) {
 
 # Penalization -----------------------------------------------------------------
 # LASSO w/ CV
-coefEstsLASSOCV <- matrix(0, nrow = nSim, ncol = 20)
+coefEstsLASSOCV <- matrix(0, nrow = nSim, ncol = 45)
 for (i in 1:nSim) {
-    allVars <- colnames(simData[[i]])[-1]
+    # Run initial model
     x <- model.matrix(~ . - 1, data = simData[[i]][, -1])
     y <- simData[[i]][, 1]
     grid <- 10^seq(10, -2, length = 100)
     modelCV <- cv.glmnet(x = x, y = y, lambda = grid, nfolds = 5)
+    
+    # Get coefficient estimates
+    allVars <- colnames(simData[[i]])[-1]
+    keptCoefs <- numeric(20)
     retainedVars <- rownames(
         coef(modelCV, modelCV$lambda.min))[coef(modelCV, 
                                                 modelCV$lambda.min)[, 1] != 0]
-    coefEstsLASSOCV[i, (allVars %in% retainedVars)] <- 
+    keptCoefs[(allVars %in% retainedVars)] <- 
         as.matrix(coef(modelCV, modelCV$lambda.min))[rownames(coef(modelCV, modelCV$lambda.min)) != "(Intercept)" &
                                               coef(modelCV, modelCV$lambda.min)[, 1] != 0]
-    coefEstsLASSOCV[i, !(allVars %in% retainedVars)] <- NA
+    keptCoefs[!(allVars %in% retainedVars)] <- NA
+    coefEstsLASSOCV[i, 1:20] <- keptCoefs
+    
+    # Fit OLS model with retained variables
+    formulaString <- paste0("y ~ ", paste0(retainedVars, collapse = " + "))
+    formulaString <- str_replace(formulaString, "\\(Intercept\\) \\+ ", "")
+    formula <- formula(formulaString)
+    olsFit <- lm(formula, data = simData[[i]])
+    
+    # Create indicator for CI coverage
+    coefEstsLASSOCV[i, 21] <- ifelse(is.na(coefEstsLASSOCV[i, 1]), NA,
+                                 between(1/6, confint(olsFit, "V01")[1],
+                                         confint(olsFit, "V01")[2]))
+    coefEstsLASSOCV[i, 22] <- ifelse(is.na(coefEstsLASSOCV[i, 2]), NA,
+                                 between(1/3, confint(olsFit, "V02")[1],
+                                         confint(olsFit, "V02")[2]))
+    coefEstsLASSOCV[i, 23] <- ifelse(is.na(coefEstsLASSOCV[i, 3]), NA,
+                                 between(1/2, confint(olsFit, "V03")[1],
+                                         confint(olsFit, "V03")[2]))
+    coefEstsLASSOCV[i, 24] <- ifelse(is.na(coefEstsLASSOCV[i, 4]), NA,
+                                 between(2/3, confint(olsFit, "V04")[1],
+                                         confint(olsFit, "V04")[2]))
+    coefEstsLASSOCV[i, 25] <- ifelse(is.na(coefEstsLASSOCV[i, 5]), NA,
+                                 between(5/6, confint(olsFit, "V05")[1],
+                                         confint(olsFit, "V05")[2]))
+    
+    # Indicators for which coefficients are significant
+    sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
+    coefEstsLASSOCV[i, 26:45] <- ifelse(is.na(coefEstsLASSOCV[i, 1:20]), NA, 
+                                    as.numeric(allVars %in% sigCoefs))
+    
 }
 
 # Lasso w/ fixed lambda
