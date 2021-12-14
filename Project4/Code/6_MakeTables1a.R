@@ -6,10 +6,10 @@ nSim <- readRDS("DataRaw/nSim.rda")
 coefEstsBS <- readRDS("DataRaw/coefEstsBS1a.rda")
 coefEstsAIC <- readRDS("DataRaw/coefEstsAIC1a.rda")
 coefEstsBIC <- readRDS("DataRaw/coefEstsBIC1a.rda")
-coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV.rda")
-coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX.rda")
-coefEstsENCV <- readRDS("DataRaw/coefEstsENCV.rda")
-coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX.rda")
+coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV1a.rda")
+coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX1a.rda")
+coefEstsENCV <- readRDS("DataRaw/coefEstsENCV1a.rda")
+coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX1a.rda")
 
 # Model summary table ----------------------------------------------------------
 modelDF <- data.frame(
@@ -23,8 +23,10 @@ modelDF <- data.frame(
     FDR = c(falseDiscoveryBS, falseDiscoveryAIC, falseDiscoveryBIC, 
             falseDiscoveryLASSOFIX, falseDiscoveryLASSOCV, falseDiscoveryENFIX,
             falseDiscoveryENCV),
-    type1error = c(typeOneBS, typeOneAIC, typeOneBIC, NA, NA, NA, NA),
-    type2error = c(typeTwoBS, typeTwoAIC, typeTwoBIC, NA, NA, NA, NA)
+    type1error = c(typeOneBS, typeOneAIC, typeOneBIC, typeOneLASSOFIX, 
+                   typeOneLASSOCV, typeOneENFIX, typeOneENCV),
+    type2error = c(typeTwoBS, typeTwoAIC, typeTwoBIC, typeTwoLASSOFIX, 
+                   typeTwoLASSOCV, typeTwoENFIX, typeTwoENCV)
 ) %>%
     mutate(across(where(is.double), .fn = ~ round(.x, 3))) %>%
     t() %>%
@@ -38,24 +40,6 @@ modelDF <- cbind("stat" = rownames(modelDF),
 modelDF$stat <- c("Total TPR", "FPR", "FDR", "Type I Error", "Type 2 Error")
 
 # Coefficient summary table ----------------------------------------------------
-# Calculate quantiles 
-# quantsDF <- rbind(coefEstsBS, coefEstsAIC, coefEstsBIC, coefEstsLASSOFIX,
-#                   coefEstsLASSOCV, coefEstsENFIX, coefEstsENCV) %>%
-#     as.data.frame() %>%
-#     mutate(model = rep(c("BS", "AIC", "BIC", "LASSOFIX", 
-#                          "LASSOCV", "ENFIX", "ENCV"), each = 1000)) %>%
-#     group_by(model) %>%
-#     summarize(across(.cols = c(V1, V2, V3, V4, V5),
-#                      .fns = function(x) {
-#                          paste0("(", round(quantile(x, 0.025, na.rm = TRUE), 3),
-#                                 ", ", 
-#                                 round(quantile(x, 0.975, na.rm = TRUE), 3),
-#                                 ")")
-#                      }))
-# 
-# quantsDF <- quantsDF[match(c("BS", "AIC", "BIC", "LASSOFIX", "LASSOCV", "ENFIX", 
-#                          "ENCV"), quantsDF$model), ]
-
 coefDF <- data.frame(
     model = c("p-value", "AIC", "BIC", "LASSO",
               "LASSO w/ CV", "EN", "EN w/ CV"),
@@ -68,7 +52,11 @@ coefDF <- data.frame(
                1/6 - mean(coefEstsENCV[, 1], na.rm = TRUE)),
     ciB1 = c(mean(coefEstsBS[,21], na.rm = TRUE), 
              mean(coefEstsAIC[,21], na.rm = TRUE), 
-             mean(coefEstsBIC[,21], na.rm = TRUE), NA, NA, NA, NA),
+             mean(coefEstsBIC[,21], na.rm = TRUE), 
+             mean(coefEstsLASSOFIX[,21], na.rm = TRUE), 
+             mean(coefEstsLASSOCV[,21], na.rm = TRUE), 
+             mean(coefEstsENFIX[,21], na.rm = TRUE), 
+             mean(coefEstsENCV[,21], na.rm = TRUE)),
     tprB1 = c(truePositiveBS[1], truePositiveAIC[1], truePositiveBIC[1], 
               truePositiveLASSOFIX[1], truePositiveLASSOCV[1], 
               truePositiveENFIX[1], truePositiveENCV[1]),
@@ -81,7 +69,11 @@ coefDF <- data.frame(
                1/3 - mean(coefEstsENCV[, 2], na.rm = TRUE)),
     ciB2 = c(mean(coefEstsBS[,22], na.rm = TRUE), 
              mean(coefEstsAIC[,22], na.rm = TRUE), 
-             mean(coefEstsBIC[,22], na.rm = TRUE), NA, NA, NA, NA),
+             mean(coefEstsBIC[,22], na.rm = TRUE), 
+             mean(coefEstsLASSOFIX[,22], na.rm = TRUE), 
+             mean(coefEstsLASSOCV[,22], na.rm = TRUE), 
+             mean(coefEstsENFIX[,22], na.rm = TRUE), 
+             mean(coefEstsENCV[,22], na.rm = TRUE)),
     tprB2 = c(truePositiveBS[2], truePositiveAIC[2], truePositiveBIC[2], 
               truePositiveLASSOFIX[2], truePositiveLASSOCV[2], 
               truePositiveENFIX[2], truePositiveENCV[2]),
@@ -94,7 +86,11 @@ coefDF <- data.frame(
                1/2 - mean(coefEstsENCV[, 3], na.rm = TRUE)),
     ciB3 = c(mean(coefEstsBS[,23], na.rm = TRUE), 
              mean(coefEstsAIC[,23], na.rm = TRUE), 
-             mean(coefEstsBIC[,23], na.rm = TRUE), NA, NA, NA, NA),
+             mean(coefEstsBIC[,23], na.rm = TRUE), 
+             mean(coefEstsLASSOFIX[,23], na.rm = TRUE), 
+             mean(coefEstsLASSOCV[,23], na.rm = TRUE), 
+             mean(coefEstsENFIX[,23], na.rm = TRUE), 
+             mean(coefEstsENCV[,23], na.rm = TRUE)),
     tprB3 = c(truePositiveBS[3], truePositiveAIC[3], truePositiveBIC[3], 
               truePositiveLASSOFIX[3], truePositiveLASSOCV[3], 
               truePositiveENFIX[3], truePositiveENCV[3]),
@@ -107,7 +103,11 @@ coefDF <- data.frame(
                2/3 - mean(coefEstsENCV[, 4], na.rm = TRUE)),
     ciB4 = c(mean(coefEstsBS[,24], na.rm = TRUE), 
              mean(coefEstsAIC[,24], na.rm = TRUE), 
-             mean(coefEstsBIC[,24], na.rm = TRUE), NA, NA, NA, NA),
+             mean(coefEstsBIC[,24], na.rm = TRUE), 
+             mean(coefEstsLASSOFIX[,24], na.rm = TRUE), 
+             mean(coefEstsLASSOCV[,24], na.rm = TRUE), 
+             mean(coefEstsENFIX[,24], na.rm = TRUE), 
+             mean(coefEstsENCV[,24], na.rm = TRUE)),
     tprB4 = c(truePositiveBS[3], truePositiveAIC[3], truePositiveBIC[3], 
               truePositiveLASSOFIX[3], truePositiveLASSOCV[3], 
               truePositiveENFIX[3], truePositiveENCV[3]),
@@ -120,7 +120,11 @@ coefDF <- data.frame(
                5/6 - mean(coefEstsENCV[, 5], na.rm = TRUE)),
     ciB5 = c(mean(coefEstsBS[,25], na.rm = TRUE), 
              mean(coefEstsAIC[,25], na.rm = TRUE), 
-             mean(coefEstsBIC[,25], na.rm = TRUE), NA, NA, NA, NA),
+             mean(coefEstsBIC[,25], na.rm = TRUE), 
+             mean(coefEstsLASSOFIX[,25], na.rm = TRUE), 
+             mean(coefEstsLASSOCV[,25], na.rm = TRUE), 
+             mean(coefEstsENFIX[,25], na.rm = TRUE), 
+             mean(coefEstsENCV[,25], na.rm = TRUE)),
     tprB5 = c(truePositiveBS[5], truePositiveAIC[5], truePositiveBIC[5], 
               truePositiveLASSOFIX[5], truePositiveLASSOCV[5], 
               truePositiveENFIX[5], truePositiveENCV[5])
