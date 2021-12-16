@@ -1,14 +1,14 @@
-# Case Scenario 1b -------------------------------------------------------------
+# Case Scenario 2a -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # Read data
-nSim <- readRDS("DataRaw/nSim1b.rda")
-coefEstsBS <- readRDS("DataRaw/coefEstsBS1b.rda")
-coefEstsAIC <- readRDS("DataRaw/coefEstsAIC1b.rda")
-coefEstsBIC <- readRDS("DataRaw/coefEstsBIC1b.rda")
-coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV1b.rda")
-coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX1b.rda")
-coefEstsENCV <- readRDS("DataRaw/coefEstsENCV1b.rda")
-coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX1b.rda")
+nSim <- readRDS("DataRaw/nSim2a.rda")
+coefEstsBS <- readRDS("DataRaw/coefEstsBS2a.rda")
+coefEstsAIC <- readRDS("DataRaw/coefEstsAIC2a.rda")
+coefEstsBIC <- readRDS("DataRaw/coefEstsBIC2a.rda")
+coefEstsLASSOCV <- readRDS("DataRaw/coefEstsLASSOCV2a.rda")
+coefEstsLASSOFIX <- readRDS("DataRaw/coefEstsLASSOFIX2a.rda")
+coefEstsENCV <- readRDS("DataRaw/coefEstsENCV2a.rda")
+coefEstsENFIX <- readRDS("DataRaw/coefEstsENFIX2a.rda")
 
 # Calculate true positive rate -------------------------------------------------
 totalTPR <- c(sum(!is.na(coefEstsBS[, 1:5])) / (nSim * 5),

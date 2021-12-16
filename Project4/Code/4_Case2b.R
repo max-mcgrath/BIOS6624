@@ -1,9 +1,9 @@
-# Case Scenario 1a
+# Case Scenario 2b
 #
 # N=250 subjects with 20 variables in the model. 5 of them would be considered 
 # important with coefficients between 0.5/3 and 2.5/3 in 0.5/3 unit increments 
-# (0.5/3, 1/3, 1.5/3, 2.0/3, and 2.5/3). In case 1a consider all X variables as 
-# independent from one another
+# (0.5/3, 1/3, 1.5/3, 2.0/3, and 2.5/3). In case 1b introduce correlation 
+# coefficient of 0.4 between X's
 #
 # Load libraries
 library(hdrm) # Generating data
@@ -16,15 +16,16 @@ library(stringr)
 
 # Simulation parameters
 nSim <- 1000
-N <- 250
+N <- 500
 
 # Set seed
-set.seed(123)
+set.seed(126)
 
 # Generate data (used for all model selection processes)
 simData <- parallel::mclapply(1:nSim, function(x) {
     dta <- genData(n = N, p = 20, p1 = 5, 
-                   beta = c(.5 / 3, 1 / 3, 1.5 / 3, 2 / 3, 2.5 / 3, rep(0, 15)))
+                   beta = c(.5 / 3, 1 / 3, 1.5 / 3, 2 / 3, 2.5 / 3, rep(0, 15)),
+                   rho = 0.4)
     data.frame(y = dta$y, dta$X)
 }, mc.cores = 4)
 
@@ -131,20 +132,20 @@ for (i in 1:nSim) {
     
     # Create indicator for CI coverage
     coefEstsBIC[i, 21] <- ifelse(is.na(coefEstsBS[i, 1]), NA,
-                                between(1/6, confint(backSel, "V01")[1],
-                                        confint(backSel, "V01")[2]))
+                                 between(1/6, confint(backSel, "V01")[1],
+                                         confint(backSel, "V01")[2]))
     coefEstsBIC[i, 22] <- ifelse(is.na(coefEstsBS[i, 2]), NA,
-                                between(1/3, confint(backSel, "V02")[1],
-                                        confint(backSel, "V02")[2]))
+                                 between(1/3, confint(backSel, "V02")[1],
+                                         confint(backSel, "V02")[2]))
     coefEstsBIC[i, 23] <- ifelse(is.na(coefEstsBS[i, 3]), NA,
-                                between(1/2, confint(backSel, "V03")[1],
-                                        confint(backSel, "V03")[2]))
+                                 between(1/2, confint(backSel, "V03")[1],
+                                         confint(backSel, "V03")[2]))
     coefEstsBIC[i, 24] <- ifelse(is.na(coefEstsBS[i, 4]), NA,
-                                between(2/3, confint(backSel, "V04")[1],
-                                        confint(backSel, "V04")[2]))
+                                 between(2/3, confint(backSel, "V04")[1],
+                                         confint(backSel, "V04")[2]))
     coefEstsBIC[i, 25] <- ifelse(is.na(coefEstsBS[i, 5]), NA,
-                                between(5/6, confint(backSel, "V05")[1],
-                                        confint(backSel, "V05")[2]))
+                                 between(5/6, confint(backSel, "V05")[1],
+                                         confint(backSel, "V05")[2]))
     
     # Indicators for which coefficients are significant
     sigCoefs <- names(which(summary(backSel)$coefficients[, 4] < 0.05))
@@ -171,7 +172,7 @@ for (i in 1:nSim) {
                                                 modelCV$lambda.min)[, 1] != 0]
     keptCoefs[(allVars %in% retainedVars)] <- 
         as.matrix(coef(modelCV, modelCV$lambda.min))[rownames(coef(modelCV, modelCV$lambda.min)) != "(Intercept)" &
-                                              coef(modelCV, modelCV$lambda.min)[, 1] != 0]
+                                                         coef(modelCV, modelCV$lambda.min)[, 1] != 0]
     keptCoefs[!(allVars %in% retainedVars)] <- NA
     coefEstsLASSOCV[i, 1:20] <- keptCoefs
     
@@ -183,25 +184,25 @@ for (i in 1:nSim) {
     
     # Create indicator for CI coverage
     coefEstsLASSOCV[i, 21] <- ifelse(is.na(coefEstsLASSOCV[i, 1]), NA,
-                                 between(1/6, confint(olsFit, "V01")[1],
-                                         confint(olsFit, "V01")[2]))
+                                     between(1/6, confint(olsFit, "V01")[1],
+                                             confint(olsFit, "V01")[2]))
     coefEstsLASSOCV[i, 22] <- ifelse(is.na(coefEstsLASSOCV[i, 2]), NA,
-                                 between(1/3, confint(olsFit, "V02")[1],
-                                         confint(olsFit, "V02")[2]))
+                                     between(1/3, confint(olsFit, "V02")[1],
+                                             confint(olsFit, "V02")[2]))
     coefEstsLASSOCV[i, 23] <- ifelse(is.na(coefEstsLASSOCV[i, 3]), NA,
-                                 between(1/2, confint(olsFit, "V03")[1],
-                                         confint(olsFit, "V03")[2]))
+                                     between(1/2, confint(olsFit, "V03")[1],
+                                             confint(olsFit, "V03")[2]))
     coefEstsLASSOCV[i, 24] <- ifelse(is.na(coefEstsLASSOCV[i, 4]), NA,
-                                 between(2/3, confint(olsFit, "V04")[1],
-                                         confint(olsFit, "V04")[2]))
+                                     between(2/3, confint(olsFit, "V04")[1],
+                                             confint(olsFit, "V04")[2]))
     coefEstsLASSOCV[i, 25] <- ifelse(is.na(coefEstsLASSOCV[i, 5]), NA,
-                                 between(5/6, confint(olsFit, "V05")[1],
-                                         confint(olsFit, "V05")[2]))
+                                     between(5/6, confint(olsFit, "V05")[1],
+                                             confint(olsFit, "V05")[2]))
     
     # Indicators for which coefficients are significant
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsLASSOCV[i, 26:45] <- ifelse(is.na(coefEstsLASSOCV[i, 1:20]), NA, 
-                                    as.numeric(allVars %in% sigCoefs))
+                                        as.numeric(allVars %in% sigCoefs))
     
 }
 
@@ -221,7 +222,7 @@ for (i in 1:nSim) {
         coef(modelCV, .2))[coef(modelCV, .2)[, 1] != 0]
     keptCoefs[(allVars %in% retainedVars)] <- 
         as.matrix(coef(modelCV, .2))[rownames(coef(modelCV, .2)) != "(Intercept)" &
-                                              coef(modelCV, .2)[, 1] != 0]
+                                         coef(modelCV, .2)[, 1] != 0]
     keptCoefs[!(allVars %in% retainedVars)] <- NA
     coefEstsLASSOFIX[i, 1:20] <- keptCoefs
     
@@ -233,25 +234,25 @@ for (i in 1:nSim) {
     
     # Create indicator for CI coverage
     coefEstsLASSOFIX[i, 21] <- ifelse(is.na(coefEstsLASSOFIX[i, 1]), NA,
-                                     between(1/6, confint(olsFit, "V01")[1],
-                                             confint(olsFit, "V01")[2]))
+                                      between(1/6, confint(olsFit, "V01")[1],
+                                              confint(olsFit, "V01")[2]))
     coefEstsLASSOFIX[i, 22] <- ifelse(is.na(coefEstsLASSOFIX[i, 2]), NA,
-                                     between(1/3, confint(olsFit, "V02")[1],
-                                             confint(olsFit, "V02")[2]))
+                                      between(1/3, confint(olsFit, "V02")[1],
+                                              confint(olsFit, "V02")[2]))
     coefEstsLASSOFIX[i, 23] <- ifelse(is.na(coefEstsLASSOFIX[i, 3]), NA,
-                                     between(1/2, confint(olsFit, "V03")[1],
-                                             confint(olsFit, "V03")[2]))
+                                      between(1/2, confint(olsFit, "V03")[1],
+                                              confint(olsFit, "V03")[2]))
     coefEstsLASSOFIX[i, 24] <- ifelse(is.na(coefEstsLASSOFIX[i, 4]), NA,
-                                     between(2/3, confint(olsFit, "V04")[1],
-                                             confint(olsFit, "V04")[2]))
+                                      between(2/3, confint(olsFit, "V04")[1],
+                                              confint(olsFit, "V04")[2]))
     coefEstsLASSOFIX[i, 25] <- ifelse(is.na(coefEstsLASSOFIX[i, 5]), NA,
-                                     between(5/6, confint(olsFit, "V05")[1],
-                                             confint(olsFit, "V05")[2]))
+                                      between(5/6, confint(olsFit, "V05")[1],
+                                              confint(olsFit, "V05")[2]))
     
     # Indicators for which coefficients are significant
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsLASSOFIX[i, 26:45] <- ifelse(is.na(coefEstsLASSOFIX[i, 1:20]), NA, 
-                                        as.numeric(allVars %in% sigCoefs))
+                                         as.numeric(allVars %in% sigCoefs))
     
 }
 
@@ -284,25 +285,25 @@ for (i in 1:nSim) {
     
     # Create indicator for CI coverage
     coefEstsENCV[i, 21] <- ifelse(is.na(coefEstsENCV[i, 1]), NA,
-                                     between(1/6, confint(olsFit, "V01")[1],
-                                             confint(olsFit, "V01")[2]))
+                                  between(1/6, confint(olsFit, "V01")[1],
+                                          confint(olsFit, "V01")[2]))
     coefEstsENCV[i, 22] <- ifelse(is.na(coefEstsENCV[i, 2]), NA,
-                                     between(1/3, confint(olsFit, "V02")[1],
-                                             confint(olsFit, "V02")[2]))
+                                  between(1/3, confint(olsFit, "V02")[1],
+                                          confint(olsFit, "V02")[2]))
     coefEstsENCV[i, 23] <- ifelse(is.na(coefEstsENCV[i, 3]), NA,
-                                     between(1/2, confint(olsFit, "V03")[1],
-                                             confint(olsFit, "V03")[2]))
+                                  between(1/2, confint(olsFit, "V03")[1],
+                                          confint(olsFit, "V03")[2]))
     coefEstsENCV[i, 24] <- ifelse(is.na(coefEstsENCV[i, 4]), NA,
-                                     between(2/3, confint(olsFit, "V04")[1],
-                                             confint(olsFit, "V04")[2]))
+                                  between(2/3, confint(olsFit, "V04")[1],
+                                          confint(olsFit, "V04")[2]))
     coefEstsENCV[i, 25] <- ifelse(is.na(coefEstsENCV[i, 5]), NA,
-                                     between(5/6, confint(olsFit, "V05")[1],
-                                             confint(olsFit, "V05")[2]))
+                                  between(5/6, confint(olsFit, "V05")[1],
+                                          confint(olsFit, "V05")[2]))
     
     # Indicators for which coefficients are significant
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsENCV[i, 26:45] <- ifelse(is.na(coefEstsENCV[i, 1:20]), NA, 
-                                        as.numeric(allVars %in% sigCoefs))
+                                     as.numeric(allVars %in% sigCoefs))
 }
 
 # Elastic net w/ fixed lambda
@@ -333,33 +334,33 @@ for (i in 1:nSim) {
     
     # Create indicator for CI coverage
     coefEstsENFIX[i, 21] <- ifelse(is.na(coefEstsENFIX[i, 1]), NA,
-                                      between(1/6, confint(olsFit, "V01")[1],
-                                              confint(olsFit, "V01")[2]))
+                                   between(1/6, confint(olsFit, "V01")[1],
+                                           confint(olsFit, "V01")[2]))
     coefEstsENFIX[i, 22] <- ifelse(is.na(coefEstsENFIX[i, 2]), NA,
-                                      between(1/3, confint(olsFit, "V02")[1],
-                                              confint(olsFit, "V02")[2]))
+                                   between(1/3, confint(olsFit, "V02")[1],
+                                           confint(olsFit, "V02")[2]))
     coefEstsENFIX[i, 23] <- ifelse(is.na(coefEstsENFIX[i, 3]), NA,
-                                      between(1/2, confint(olsFit, "V03")[1],
-                                              confint(olsFit, "V03")[2]))
+                                   between(1/2, confint(olsFit, "V03")[1],
+                                           confint(olsFit, "V03")[2]))
     coefEstsENFIX[i, 24] <- ifelse(is.na(coefEstsENFIX[i, 4]), NA,
-                                      between(2/3, confint(olsFit, "V04")[1],
-                                              confint(olsFit, "V04")[2]))
+                                   between(2/3, confint(olsFit, "V04")[1],
+                                           confint(olsFit, "V04")[2]))
     coefEstsENFIX[i, 25] <- ifelse(is.na(coefEstsENFIX[i, 5]), NA,
-                                      between(5/6, confint(olsFit, "V05")[1],
-                                              confint(olsFit, "V05")[2]))
+                                   between(5/6, confint(olsFit, "V05")[1],
+                                           confint(olsFit, "V05")[2]))
     
     # Indicators for which coefficients are significant
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsENFIX[i, 26:45] <- ifelse(is.na(coefEstsENFIX[i, 1:20]), NA, 
-                                         as.numeric(allVars %in% sigCoefs))
+                                      as.numeric(allVars %in% sigCoefs))
 }
 
 # Write relevant objects to files ----------------------------------------------
-saveRDS(nSim, "DataRaw/nSim1a.rda")
-saveRDS(coefEstsBS, "DataRaw/coefEstsBS1a.rda")
-saveRDS(coefEstsAIC, "DataRaw/coefEstsAIC1a.rda")
-saveRDS(coefEstsBIC, "DataRaw/coefEstsBIC1a.rda")
-saveRDS(coefEstsLASSOCV, "DataRaw/coefEstsLASSOCV1a.rda")
-saveRDS(coefEstsLASSOFIX, "DataRaw/coefEstsLASSOFIX1a.rda")
-saveRDS(coefEstsENCV, "DataRaw/coefEstsENCV1a.rda")
-saveRDS(coefEstsENFIX, "DataRaw/coefEstsENFIX1a.rda")
+saveRDS(nSim, "DataRaw/nSim2b.rda")
+saveRDS(coefEstsBS, "DataRaw/coefEstsBS2b.rda")
+saveRDS(coefEstsAIC, "DataRaw/coefEstsAIC2b.rda")
+saveRDS(coefEstsBIC, "DataRaw/coefEstsBIC2b.rda")
+saveRDS(coefEstsLASSOCV, "DataRaw/coefEstsLASSOCV2b.rda")
+saveRDS(coefEstsLASSOFIX, "DataRaw/coefEstsLASSOFIX2b.rda")
+saveRDS(coefEstsENCV, "DataRaw/coefEstsENCV2b.rda")
+saveRDS(coefEstsENFIX, "DataRaw/coefEstsENFIX2b.rda")

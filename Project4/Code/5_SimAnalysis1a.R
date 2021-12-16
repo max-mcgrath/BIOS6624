@@ -79,33 +79,33 @@ falseDiscoveryENFIX <- sum(!is.na(coefEstsENFIX[, 6:20])) /
 
 # Calculate Type I and II error rates ------------------------------------------
 # Backwards selection
-typeOneBS <- sum(coefEstsBS[, 26:30] == 1, na.rm = TRUE) / 
+typeOneBS <- 1 - sum(coefEstsBS[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsBS[, 26:30]))
 typeTwoBS <- sum(coefEstsBS[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsBS[, 31:45]))
-typeOneAIC <- sum(coefEstsAIC[, 26:30] == 1, na.rm = TRUE) / 
+typeOneAIC <- 1 - sum(coefEstsAIC[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsAIC[, 26:30]))
 typeTwoAIC <- sum(coefEstsAIC[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsAIC[, 31:45]))
-typeOneBIC <- sum(coefEstsBIC[, 26:30] == 1, na.rm = TRUE) / 
+typeOneBIC <- 1 - sum(coefEstsBIC[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsBIC[, 26:30]))
 typeTwoBIC <- sum(coefEstsBIC[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsBIC[, 31:45]))
 
 # Regularization
-typeOneLASSOCV <- sum(coefEstsLASSOCV[, 26:30] == 1, na.rm = TRUE) / 
+typeOneLASSOCV <- 1 - sum(coefEstsLASSOCV[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsLASSOCV[, 26:30]))
 typeTwoLASSOCV <- sum(coefEstsLASSOCV[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsLASSOCV[, 31:45]))
-typeOneLASSOFIX <- sum(coefEstsLASSOFIX[, 26:30] == 1, na.rm = TRUE) / 
+typeOneLASSOFIX <- 1 - sum(coefEstsLASSOFIX[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsLASSOFIX[, 26:30]))
 typeTwoLASSOFIX <- sum(coefEstsLASSOFIX[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsLASSOFIX[, 31:45]))
-typeOneENCV <- sum(coefEstsENCV[, 26:30] == 1, na.rm = TRUE) / 
+typeOneENCV <- 1 - sum(coefEstsENCV[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsENCV[, 26:30]))
 typeTwoENCV <- sum(coefEstsENCV[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsENCV[, 31:45]))
-typeOneENFIX <- sum(coefEstsENFIX[, 26:30] == 1, na.rm = TRUE) / 
+typeOneENFIX <- 1 - sum(coefEstsENFIX[, 26:30] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsENFIX[, 26:30]))
 typeTwoENFIX <- sum(coefEstsENFIX[, 31:45] == 1, na.rm = TRUE) / 
     sum(!is.na(coefEstsENFIX[, 31:45]))
