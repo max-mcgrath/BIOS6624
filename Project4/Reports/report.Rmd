@@ -9,6 +9,10 @@ header-includes:
     - \usepackage{titling}
     - \usepackage{fixmath}
     - \usepackage{amsmath}
+    - \usepackage{lscape}
+    - \usepackage{gensymb}
+    - \newcommand{\blandscape}{\begin{landscape}}
+    - \newcommand{\elandscape}{\end{landscape}}
 output: pdf_document
 indent: true
 mainfont: Times New Roman
@@ -26,6 +30,11 @@ source("Code/5_SimAnalysis1a.R")
 source("Code/6_MakeTables1a.R")
 source("Code/7_SimAnalysis1b.R")
 source("Code/8_MakeTables1b.R")
+source("Code/9_SimAnalysis2a.R")
+source("Code/10_MakeTables2a.R")
+source("Code/11_SimAnalysis2b.R")
+source("Code/12_MakeTables2b.R")
+source("Code/13_MakePlots.R")
 ```
 
 \newpage
@@ -45,66 +54,256 @@ a number of criteria that quantify the technique's overall ability to identify
 significant predictors and to accurately estimate those predictors' known 
 associations with the response.
 
-Potential hypotheses:
+Based on these criteria, we will evaluate two hypotheses. First, 
+backwards selection using AIC will have a higher true positive rate than BIC at
+the cost of a higher false positive rate, as BIC generally favors more
+parsimonious models than AIC. Second, backwards selection 
+methods will generally perform "better" than regularization methods, as 
+regularization methods are typically preferred for prediction and situations 
+where the number of predictors is greater than the sample size rather than
+the situation under consideration in which inference is the goal and
+the set of predictors is relatively small.
 
- - Refitting after doing LASSO and EN will lead to a high FPR
- - AIC will have a higher TPR at the cost of a higher FPR relative to BIC
-
-## Methods
-
-### Simulation
+## Model Notation
 
 For all case scenarios, 1000 data sets will be simulated from the model
 $$
-y_i=\beta_1x_{1,i}+\beta_2x_{2,i}+\cdots+\beta_{20}x_{20,i}+\epsilon_i.
+y_j=\beta_1x_{1,j}+\beta_2x_{2,j}+\cdots+\beta_{20}x_{20,j}+\epsilon_j.
 $$
-where $\{\beta_1,...,\beta_5\}=\{\frac{1}{6},\frac{1}{3},\frac{1}{2},\frac{2}{3},\frac{5}{6}\}$, 
-$\beta_6,\ldots,\beta_{20}$ are equal to 0, and $\epsilon_i\sim{N(0,1)}$. The
-data sets for the four case scenarios will then differ based on sample size, $N$, and correlation 
-structure as follows: (1a) $N=250$ and all predictors are indepdendent, (1b)
+where 
+$\{\beta_1,...,\beta_5\}=\{\frac{1}{6},\frac{1}{3},\frac{1}{2},\frac{2}{3},\frac{5}{6}\}$, 
+$\beta_6,\ldots,\beta_{20}$ are equal to 0, $\epsilon_j\sim{N(0,1)}$, $X_p\sim{N(0,1)}$, and 
+$j=1,2,\ldots,N$. The
+data sets for the four case scenarios then differ based on sample size, $N$, 
+and correlation 
+structure as follows: (1a) $N=250$ and all predictors are independent, (1b)
 $N=250$ and predictors have an exchangeable correlation coefficient of $0.4$,
-(2a) $N=500$ and all predictors are indepdendent, and (2b)
+(2a) $N=500$ and all predictors are independent, and (2b)
 $N=500$ and predictors have an exchangeable correlation coefficient of $0.4$.
-All data will be generated using the `genData` R package.
+Predictors with a non-zero known coefficient will be referred to as significant
+predictors, and those with a known zero coefficient will be referred to as
+insignificant.
 
-### Backwards Selection
+## Methods
 
-For each data set, we will then apply model selection techniques including
-three backwards selection techniques and two regularization methods and record
-which predictors are retained in each final model along with estimated 
+For each data set, model selection techniques were applied including
+three backwards selection techniques and two regularization methods, and records
+were created of which predictors were retained in each final model along with estimated 
 coefficients and any other relevant statistics. For backwards selection,
-we will three techniques with differing predictor retention criteria. For the
-first, predictors will be removed one at a time according to highest p-value
+we evaluated three techniques with differing predictor retention criteria. For the
+first, predictors were removed one at a time according to highest p-value
 until all predictors have a p-value under $0.15$. For the second and third,
-we will use AIC and BIC, respectively, to iteratively reduce the model until
+we used AIC and BIC to iteratively reduce the model until
 the respective information criteria no longer decreases as predictors are 
-removed. 
+removed. For p-value backwards selection the `ols_step_backwards_p()` function
+was used from the `olsrr` package. For AIC and BIC backwards selection, the
+function `stepwise()` was used from the `RcmdrMisc` R package.
 
-### Regularization
-
-For regularization, we will use LASSO and Elastic Net, each with both
-a fixed regularization parameter and with regularization parameters selected using 
+For regularization, we applied LASSO and Elastic Net, each with both
+regularization parameter fixed at $0.2$ and with regularization parameters selected using 
 cross-validation. For Elastic Net, the penalization mixing parameter will
-be fixed at $0.5$. 
+be fixed at $0.5$. Parameters will then be be considered retained if their 
+coefficient estimate is greater than zero removed if their coefficient estimate
+is equal to zero. For full details on LASSO and Elastic Net see Tibsheranti (1996) and
+Zou and Hastie (2004). For LASSO and Elastic Net, the `cv.glment()` and `glmnet()` functions
+were used from the `glmnet` package.
 
-### Evaluation
+### Simulation
 
-After applying each model selection technique to each of the 1000 simulated 
-data sets for each of the case scenarios, technique performance will be
-evaluated and summarized. Table 1 provides an example of the statistics calculated
-for each model building technique for case scenario 1a. A similar table will
-be created for each case scenario, and the results of the technique evaluations
-will be discussed.
+For each case scenario and simulation, $X_p, p=1,\ldots,20$ was drawn from a $N(0,1)$ 
+distribution. Then, in the cases where predictors are correlated an additional
+step was added where the $X$ matrix is multiplied by the Cholesky decomposition
+of a $20\times20$ matrix with $1$'s along the diagonal and $0.4$ everywhere else to
+induce exchangeable correlation. The response for each observation is then drawn from a normal
+distribution with the linear combination of the predictors and coefficients as
+the mean and $1$ as the standard deviation. All data was generated using the 
+`genData()` function from the `hdrm` R package.
 
-## Results
+Then, for each data set, a model was selected using each technique, then the 
+model was refit using OLS using only the retained predictors. Let $I_R\{X_{p,i}\}$
+equal 1 if predictor $X_p,p=1,\ldots,20$ was retained for simulation $i=1,2,\ldots,1000$ and 0 
+otherwise. Then, each selection technique was evaluated for each case scenario 
+according to the following criteria:
+
+1. True positive rate for each significant predictor $p=1,\ldots,5$ where 
+$TPR_{p}=\frac{\sum_{i=1}^{1000}I_R\{X_{p,i}\}}{1000}$
+
+2. Total true positive rate where
+$TTPR=\frac{\sum_{i=1}^{1000}\sum_{p=1}^{5}I_R\{X_{p,i}\}}{5000}$
+
+3. False positive rate where 
+$FPR=\frac{\sum_{i=1}^{1000}\sum_{p=6}^{20}I_{R}\{{X_{p,i}}\}}{15000}$
+
+4. False discovery rate where 
+$FDR=\sum_{i=1}^{1000}\frac{\sum_{p=6}^{20}I_{R}\{{X_{p,i}}\}}{\sum_{p=1}^{20}I_{R}\{{X_{p,i}}\}}$
+
+5. Coefficient bias for each significant predictor $\beta_p, p=1,\ldots,5$ where
+$Bias_p=\sum_{i=1}^{1000}[\frac{\hat{\beta_p}I_{R}\{X_{p,i}\}}{I_{R}\{X_{p,i}\}}]-\beta_p$
+
+6. Confidence interval coverage for each significant predictor 
+$\beta_p, p=1,\ldots,5$ where
+$CIC_p=\sum_{i=1}^{1000}\frac{I_{CI}\{\hat{\beta}_{p,i}\}}{I_{R}\{X_{p,i}\}}$ where
+$I_{CI}\{\hat{\beta}_{p,i}\}$ equals 1 if the 95% confidence interval for $\hat{\beta_p}$
+contains $\beta_p$ for simulation $i$.
+
+7. Conditional Type I error rate where
+$T1ER=1-\sum_{i=1}^{1000}\sum_{p=1}^{5}\frac{I_{T1}\{{X_{p,i}}\}}{I_{R}\{{X_{p,i}}\}}$
+where $I_{T1}\{X_{p,i}\}$ equals 1 if the coefficient estimate for predictor $p$ is 
+statistically significant according to a Wald test for simulation $i$
+
+8. Conditional Type II error rate where
+$T2ER=\sum_{i=1}^{1000}\sum_{p=6}^{20}\frac{I_{T2}\{{X_{p,i}}\}}{I_{R}\{{X_{p,i}}\}}$
+where $I_{T2}\{X_{p,i}\}$ equals 1 if the coefficient estimate for predictor $p$ is 
+statistically significant according to a Wald test for simulation $i$
+
+## Results and Discussion
+
+Figure 1 provides plots of several of the above model selection technique 
+evaluation criteria for each case scenario, and Tables 1-4 provide more detailed
+results of the evaluation criteria for cases 1a, 1b, 2a, and 2b, respectively.
+
+From Figure 1 and the tables, we see that for TPR, backwards selection using p-values and
+AIC is roughly the same, but is lower when using BIC for backwards selection.
+Further, LASSO with CV and ENet with CV both have the best overall TPR of the
+seven methods. Those trends are reversed for FPR and FDR, where we see that
+BIC outperforms p-value and AIC selection, and the regularization methods with
+CV performing worse than the backwards selection techniques. 
+
+For TPR, we see that backwards selection generally performs slightly worse (lower) 
+than regularization methods across the four case scenarios, with BIC performing
+the worst among the seven techniques in all scenarios (disregarding regularization with
+fixed parameters as we will often do for the remainder of this
+analysis - their behavior is weird and preselected regularization parameters are
+unlikely to be used in practice). This trend is reversed for FPR where
+backwards selection generally outperforms (has lower FPR) 
+
+For Type I error, we see fairly consistent behavior across methods, with 
+backwards selection using p-values and AIC generally performing the best,
+followed by BIC and the regularization methods. However, for Case 2a we
+see regularization marginally outperforming backwards selection methods. In
+contrast, we see that for scenario 1b backwards selection greatly outperforms
+regularization, with backwards selection having conditional Type I error rates below
+0.05 and regularization methods all above 0.10.
+
+For conditional Type II error, we see that for case scenarios 1a, 1b, and 2b, 
+regularization outperforms backwards selection. However, for case scenario
+2a, we see AIC and BIC backwards selection notably outperform regularization
+methods (but backward selection using p-values performs worse).
+
+For coefficient bias, we see that backward selection techniques greatly 
+outperform regularization methods. This is to be expected, as regularization
+methods induce bias in their coefficient estimates in order to reduce model
+variance.
+
+For coefficient confidence interval coverage, we see fairly consistent
+performance across methods and case scenarios with most estimates ranging 
+from 0.93 to 0.97. 
 
 
+<!-- DISCUSS BIAS BUT MAYBE FIX YOUR SIMS FIRST -->
+
+## Discussion
+
+- We see strong consistency between false positive rate and false discovery rate
+across both different case scenarios and model selection techniques. 
+
+- For AIC and BIC, the hypothesized trade-off between true positive rate and 
+false positive rate is as expected: AIC generally has higher for both. However, we see
+that across the four case scenarios the change in TTPR between AIC and BIC and
+that of FPR is notably different. For BIC, all scenarios had a fairly
+consistent FPR (0.015 - 0.024) while for TTPR we see a greater range (0.880 - 
+0.980). This is noteworthy because it is indicative that the trade-off may be
+more beneficial for BIC in certain scenarios. Specifically, BIC had the lowest
+TTPR for 1b where data was limited as predictors correlated, whereas it was
+higher as data increased and predictors became less correlated. This is similar
+to the trend we see with other model selection techniques
+
+- Performance between AIC and pVal is very similar across case scenarios, with
+the exception of 2a.
+
+- TTPR essentially measures the TPR for coefficient one, as that was the only
+coefficient with a TPR consistently below 1
+
+
+## Limitations and Future Work
+
+Limitations
+
+- Given the incredibly high true positive rates for the majority of predictors,
+the results of this analysis may differ for the detection of smaller effects.
+
+- The correlation imposed on the predictors was simple and likely unrealistic.
+A more comprehensive analysis would consider imposing more complex correlation
+structures on the predictors. 
+
+- LASSO and ENet with pre-specified regularization parameters is detached from
+standard practice and is unlikely to reflect real world uses of those methods.
+Similarly, refitting the models "selected" via regularization using OLS is 
+likely problematic and mischaracterizes the statistical intentions of those 
+methods. A more statistically sound method for assessing significance and CI's
+would be more appropriate for regularization methods and would likely alter
+the results obtained.
+
+\newpage
+
+## Reproducibility
+
+The code used to generate this analysis is available on GitHub 
+at https://github.com/BIOS6624-UCD/bios6624-MaxMcGrath/tree/main/Project4
+. The `Background` folder contains information pertinent to understanding the
+analysis but unnecessary for reproducing it. The `Code` folder contains thirteen
+files: `1_Case1a.R`, `2_Case1b.R`, `3_Case2a.R`, `4_Case2b.R`,
+`5_SimAnalysis1a.R`, `6_MakeTables1a.R`,
+`7_SimAnalysis1b.R`, `8_MakeTables1b.R`,
+`9_SimAnalysis2a.R`, `10_MakeTables2a.R`,
+`11_SimAnalysis2b.R`, `12_MakeTables2b.R`, and `13_MakePlots.R`. 
+To run the complete analysis, each
+script should be run in the order of the number prefixing its filename. The
+last directory, `Report`, contains the RMarkdown file `report.Rmd` which may
+be used to generate this report (note that it also depends on the aforementioned
+scripts).
+
+The complete details of the `R` version, package versions, and
+machine details for the instance which generated this report are provided below.
+
+```{r, echo = FALSE}
+sessionInfo()
+```
+
+\newpage
+
+## Works Cited
+
+| Tibshirani, Robert. “Regression Shrinkage and Selection via the Lasso.” Journal of the
+|       Royal Statistical Society. Series B (Methodological) 58, no. 1 (1996): 267–88.
+|       http://www.jstor.org/stable/2346178.
+| Zou, H. and Hastie, T. (2005), Regularization and variable selection via the elastic net. 
+|       Journal of the Royal Statistical Society: Series B (Statistical Methodology), 67: 301-320.
+|       https://doi.org/10.1111/j.1467-9868.2005.00503.x
+
+\newpage
+
+## Appendix - Tables and Figures
+
+```{r, fig.cap = "Grouped coefficient evaluation criteria for model selection techniques by technique and case scenario", fig.height = 8.5, fig.width = 9, echo=FALSE}
+modelSummaryPlots
+```
+
+\newpage
+
+\blandscape
+
+```{r, fig.cap = "Known significant coefficient evaluation criteria by technique, case scenario, and coefficient. Here, pVal refers to backwards selection by p-value, LAS to LASSO, LCV to LASSO with cross-validation, EN to elastic net, and ENCV to Elastic Net with cross-validation", fig.height = 7, fig.width = 11, echo = FALSE}
+coefPlots
+```
+
+\elandscape
 
 \newpage
 
 ```{r, echo = FALSE}
 kable(bind_rows(modelDF, coefDF), booktabs = TRUE, 
-      caption = "Model Summary - Case 1a", 
+      caption = "Model Selection Technique Summary - Case 1a", 
       digits = 3,
       col.names = c("", "P-Val", "AIC", "BIC", "LASSO",
                 "LASSO with CV", "Elastic Net", "EN with CV"),
@@ -124,7 +323,7 @@ kable(bind_rows(modelDF, coefDF), booktabs = TRUE,
 
 ```{r, echo = FALSE}
 kable(bind_rows(modelDF1b, coefDF1b), booktabs = TRUE, 
-      caption = "Model Summary - Case 1b", 
+      caption = "Model Selection Technique Summary - Case 1b", 
       digits = 3,
       col.names = c("", "P-Val", "AIC", "BIC", "LASSO",
                 "LASSO with CV", "Elastic Net", "EN with CV"),
@@ -139,3 +338,46 @@ kable(bind_rows(modelDF1b, coefDF1b), booktabs = TRUE,
     column_spec(c(1), border_right = TRUE, width = "1.2in")  %>%
     add_header_above(c(" " = 1, "Backwards Selection" = 3, "Regularization" = 4))
 ```
+
+\newpage
+
+```{r, echo = FALSE}
+kable(bind_rows(modelDF2a, coefDF2a), booktabs = TRUE, 
+      caption = "Model Selection Technique Summary - Case 2a", 
+      digits = 3,
+      col.names = c("", "P-Val", "AIC", "BIC", "LASSO",
+                "LASSO with CV", "Elastic Net", "EN with CV"),
+      escape = FALSE) %>%
+    kable_styling(latex_options = c("scale_down")) %>%
+    pack_rows("Full Model", 1, 5, escape = FALSE, bold = FALSE) %>%
+    pack_rows("$\\beta_1=1/6$", 6, 8, escape = FALSE) %>%
+    pack_rows("$\\beta_2=1/3$", 9, 11, escape = FALSE) %>%
+    pack_rows("$\\beta_3=1/2$", 12, 14, escape = FALSE) %>%
+    pack_rows("$\\beta_4=2/3$", 15, 17, escape = FALSE) %>%
+    pack_rows("$\\beta_5=5/6$", 18, 20, escape = FALSE) %>%
+    column_spec(c(1), border_right = TRUE, width = "1.2in")  %>%
+    add_header_above(c(" " = 1, "Backwards Selection" = 3, "Regularization" = 4))
+```
+
+\newpage
+
+```{r, echo = FALSE}
+kable(bind_rows(modelDF2b, coefDF2b), booktabs = TRUE, 
+      caption = "Model Selection Technique Summary - Case 2b", 
+      digits = 3,
+      col.names = c("", "P-Val", "AIC", "BIC", "LASSO",
+                "LASSO with CV", "Elastic Net", "EN with CV"),
+      escape = FALSE) %>%
+    kable_styling(latex_options = c("scale_down")) %>%
+    pack_rows("Full Model", 1, 5, escape = FALSE, bold = FALSE) %>%
+    pack_rows("$\\beta_1=1/6$", 6, 8, escape = FALSE) %>%
+    pack_rows("$\\beta_2=1/3$", 9, 11, escape = FALSE) %>%
+    pack_rows("$\\beta_3=1/2$", 12, 14, escape = FALSE) %>%
+    pack_rows("$\\beta_4=2/3$", 15, 17, escape = FALSE) %>%
+    pack_rows("$\\beta_5=5/6$", 18, 20, escape = FALSE) %>%
+    column_spec(c(1), border_right = TRUE, width = "1.2in")  %>%
+    add_header_above(c(" " = 1, "Backwards Selection" = 3, "Regularization" = 4))
+```
+
+
+
