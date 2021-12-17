@@ -46,10 +46,10 @@ techniques for linear regression across four case scenarios. More specifically,
 it aims to evaluate the ability of a set of backwards selection and
 regularization techniques to select models that retain significant predictors
 and remove insignificant predictors across scenarios with varying sample sizes
-and correlation structures between predictors. To do so, simulation will
-be used to create regression data sets with known underlying models, then each 
-model selection technique will be applied to each data set to build a model. 
-Each model selection technique's performance will then be evaluated using
+and correlation structures between predictors. To do so, simulation was
+used to create regression data sets with known underlying models, then each 
+model selection technique was applied to each data set to build a model. 
+Each model selection technique's performance was then be evaluated using
 a number of criteria that quantify the technique's overall ability to identify 
 significant predictors and to accurately estimate those predictors' known 
 associations with the response.
@@ -91,21 +91,23 @@ three backwards selection techniques and two regularization methods, and records
 were created of which predictors were retained in each final model along with estimated 
 coefficients and any other relevant statistics. For backwards selection,
 we evaluated three techniques with differing predictor retention criteria. For the
-first, predictors were removed one at a time according to highest p-value
+first, predictors were removed one at a time according to highest t-test p-value
 until all predictors have a p-value under $0.15$. For the second and third,
-we used AIC and BIC to iteratively reduce the model until
+we used Akaike information criterion
+(AIC) and Bayesian information criterion (BIC) to iteratively reduce the model until
 the respective information criteria no longer decreases as predictors are 
 removed. For p-value backwards selection the `ols_step_backwards_p()` function
 was used from the `olsrr` package. For AIC and BIC backwards selection, the
 function `stepwise()` was used from the `RcmdrMisc` R package.
 
-For regularization, we applied LASSO and Elastic Net, each with both
+For regularization, we applied LASSO and Elastic Net (ENet), each with both
 regularization parameter fixed at $0.2$ and with regularization parameters selected using 
-cross-validation. For Elastic Net, the penalization mixing parameter will
+5-fold cross-validation across a range of parameter values from $10^{10}$ to $10^{-2}$. 
+For Elastic Net, the penalization mixing parameter will
 be fixed at $0.5$. Parameters will then be be considered retained if their 
-coefficient estimate is greater than zero removed if their coefficient estimate
-is equal to zero. For full details on LASSO and Elastic Net see Tibsheranti (1996) and
-Zou and Hastie (2004). For LASSO and Elastic Net, the `cv.glment()` and `glmnet()` functions
+coefficient estimate is greater than zero and removed if their coefficient estimate
+is equal to zero. For full details on LASSO and ENet see Tibsheranti (1996) and
+Zou and Hastie (2004). For LASSO and ENet, the `cv.glment()` and `glmnet()` functions
 were used from the `glmnet` package.
 
 ### Simulation
@@ -114,14 +116,16 @@ For each case scenario and simulation, $X_p, p=1,\ldots,20$ was drawn from a $N(
 distribution. Then, in the cases where predictors are correlated an additional
 step was added where the $X$ matrix is multiplied by the Cholesky decomposition
 of a $20\times20$ matrix with $1$'s along the diagonal and $0.4$ everywhere else to
-induce exchangeable correlation. The response for each observation is then drawn from a normal
+induce exchangeable correlation. The response for each observation is then drawn
+from a normal
 distribution with the linear combination of the predictors and coefficients as
 the mean and $1$ as the standard deviation. All data was generated using the 
 `genData()` function from the `hdrm` R package.
 
 Then, for each data set, a model was selected using each technique, then the 
 model was refit using OLS using only the retained predictors. Let $I_R\{X_{p,i}\}$
-equal 1 if predictor $X_p,p=1,\ldots,20$ was retained for simulation $i=1,2,\ldots,1000$ and 0 
+equal 1 if predictor $X_p,p=1,\ldots,20$ was retained for simulation 
+$i=1,2,\ldots,1000$ and 0 
 otherwise. Then, each selection technique was evaluated for each case scenario 
 according to the following criteria:
 
@@ -156,29 +160,49 @@ $T2ER=\sum_{i=1}^{1000}\sum_{p=6}^{20}\frac{I_{T2}\{{X_{p,i}}\}}{I_{R}\{{X_{p,i}
 where $I_{T2}\{X_{p,i}\}$ equals 1 if the coefficient estimate for predictor $p$ is 
 statistically significant according to a Wald test for simulation $i$
 
-## Results and Discussion
+Note that for regularization methods, evaluation metrics 5 through 8 were all
+calculated using the models refit with OLS following predictor selection. No
+data other than coefficient retention was used from the regularized model fits.
 
-Figure 1 provides plots of several of the above model selection technique 
-evaluation criteria for each case scenario, and Tables 1-4 provide more detailed
-results of the evaluation criteria for cases 1a, 1b, 2a, and 2b, respectively.
+## Results
 
-From Figure 1 and the tables, we see that for TPR, backwards selection using p-values and
-AIC is roughly the same, but is lower when using BIC for backwards selection.
-Further, LASSO with CV and ENet with CV both have the best overall TPR of the
-seven methods. Those trends are reversed for FPR and FDR, where we see that
-BIC outperforms p-value and AIC selection, and the regularization methods with
-CV performing worse than the backwards selection techniques. 
+Figure 1 provides plots of the TTPR, FPR, FDR, Types I and II error rates, and
+the average bias by case scenario and model selection technique, Figure 2 
+provides plots of bias, 95% confidence interval coverage, and TPR by coefficient,
+case scenario, and model selection technique, and Tables 1 through 4 provide
+a detailed look at all simulation evaluation metrics. In the discussion which
+follows, regularization will generally refer to LASSO with CV and ENet with CV,
+as regularization with fixed regularization parameters is contrary to standard
+practice and of secondary interest. However, all tables and figures report
+values for all seven model selection techniques considered.
 
-For TPR, we see that backwards selection generally performs slightly worse (lower) 
-than regularization methods across the four case scenarios, with BIC performing
-the worst among the seven techniques in all scenarios (disregarding regularization with
-fixed parameters as we will often do for the remainder of this
-analysis - their behavior is weird and preselected regularization parameters are
-unlikely to be used in practice). This trend is reversed for FPR where
-backwards selection generally outperforms (has lower FPR) 
+A higher TTPR indicates that a selection technique retains known significant
+predictors at a greater rate, and from Figure 1 and the tables, we see that
+regularization generally performs better than backwards selection in terms of
+TTPR. LASSO with CV and ENet with CV have higher TTPR than backwards selection
+techniques across all case scenarios. This difference is more pronounced in 
+scenarios where correlation is induced (1b and 2b) and when sample size is 
+smaller (1a and 1b). Among the backwards selection techniques, p-value selection
+and AIC selection perform relatively the same, while BIC selection has notably
+lower TTPR across all case scenarios. TTPR rates are all relatively high, with
+the majority of methods having a TTPR above 0.95 for most or all cases 
+scenarios. The lowest TTPR is BIC for cases scenario 1b, where it has a TTPR of
+0.880. From Figure 2 we see that TPR by coefficient
+was nearly 1 for all predictors other than $X_1$, and as such TTPR and TPR for
+$X_1$ are nearly identical.
 
-For Type I error, we see fairly consistent behavior across methods, with 
-backwards selection using p-values and AIC generally performing the best,
+These TTPR trends were reversed for FPR and FDR. Lower FPR and FDR generally
+reflects a model selection techniques ability to remove insignificant 
+predictors, and in this regard backwards selection performed better than 
+regularization. Across all case scenarios, backwards selection techniques
+had lower FPR and FDR than regularization techniques, with BIC having the lowest
+FPR and FDR among backwards selection techniques. However, we see far greater
+variation in FPR relative to TTPR, as across case scenarios BIC remains consistently
+near 0.025 while ENet with CV reaches a high of 0.504 for case scenario 2a.
+
+For conditional Type I error, we see fairly consistent behavior across methods, with 
+backwards selection using p-values and AIC generally having the lowest Type 1
+error rate,
 followed by BIC and the regularization methods. However, for Case 2a we
 see regularization marginally outperforming backwards selection methods. In
 contrast, we see that for scenario 1b backwards selection greatly outperforms
@@ -190,59 +214,81 @@ regularization outperforms backwards selection. However, for case scenario
 2a, we see AIC and BIC backwards selection notably outperform regularization
 methods (but backward selection using p-values performs worse).
 
-For coefficient bias, we see that backward selection techniques greatly 
-outperform regularization methods. This is to be expected, as regularization
-methods induce bias in their coefficient estimates in order to reduce model
-variance.
+For coefficient bias, we see somewhat mixed results across case scenarios
+and methods, but generally bias is higher for regularization selection over
+backwards selection, and coefficient bias was consistently small relative to
+coefficient size (between -0.03 and 0.03). Bias was generally greatest for 
+$\hat{\beta}_1$\ (as would be expected given its effect size), although
+regularization methods did have visibly higher biases for $X_2,\ldots,X_5$
+for case scenarios 1b and 2b.
 
 For coefficient confidence interval coverage, we see fairly consistent
 performance across methods and case scenarios with most estimates ranging 
-from 0.93 to 0.97. 
-
-
-<!-- DISCUSS BIAS BUT MAYBE FIX YOUR SIMS FIRST -->
+from 0.93 to 0.97 and little in the way of discernible trends between
+methods and case scenarios.
 
 ## Discussion
 
-- We see strong consistency between false positive rate and false discovery rate
-across both different case scenarios and model selection techniques. 
-
-- For AIC and BIC, the hypothesized trade-off between true positive rate and 
+The most notable trend across methods in terms of predictor retention was the
+trade off between TPR and FPR. Generally, methods with higher TPR also had
+higher FPR. However, these tradeoffs were not always proportional. 
+For AIC and BIC, the hypothesized trade off between true positive rate and 
 false positive rate is as expected: AIC generally has higher for both. However, we see
-that across the four case scenarios the change in TTPR between AIC and BIC and
+that across the four case scenarios the change in TPR between AIC and BIC and
 that of FPR is notably different. For BIC, all scenarios had a fairly
-consistent FPR (0.015 - 0.024) while for TTPR we see a greater range (0.880 - 
-0.980). This is noteworthy because it is indicative that the trade-off may be
-more beneficial for BIC in certain scenarios. Specifically, BIC had the lowest
-TTPR for 1b where data was limited as predictors correlated, whereas it was
-higher as data increased and predictors became less correlated. This is similar
-to the trend we see with other model selection techniques
+consistent FPR (0.015 - 0.024) while for TTPR we see a greater range across case
+scenarios (0.880 to 0.980). This is noteworthy because it is indicative that the
+trade-off may be
+more beneficial for BIC in certain scenarios. Specifically, BIC sees notable
+improvements in FPR and only marginal disadvantages in TPR in situations with
+greater sample size (2a and 2b), while the difference in FPR is more pronounced
+in situations with smaller sample sizes (1a and 1b).
 
-- Performance between AIC and pVal is very similar across case scenarios, with
-the exception of 2a.
+Similarly, while regularization methods all had extremely high TPR, this benefit
+comes at the cost of a much higher FPR. Gains in TPR for regularization over
+AIC selection were less than 0.025 in all scenarios, whereas FPR was more than
+doubled for regularization methods compared to AIC selection across cases scenarios,
+noting that this problem is even worse for situations without correlated predictors.
+This somewhat confirms our hypothesis that backwards selection generally performs
+"better" than regularization, but there are caveats.
 
-- TTPR essentially measures the TPR for coefficient one, as that was the only
-coefficient with a TPR consistently below 1
-
+Interestingly, the introduction of correlation and reduction of sample size
+appears to
+have a compounding effect in the reduction of TPR for backwards selection.
+However, for regularization methods, only sample size appeared to reduce TPR,
+as TPR was roughly the same for 1a and 1b (and 2a and 2b),
+indicating that regularization's ability to retain significant predictors may
+be more robust when predictors are correlated. This is contrasted by FPR,
+where backwards selection
+techniques had highly consistent FPR across case scenarios, whereas
+regularization selection had notably lower FPR for scenarios with correlated
+predictors. So, there is the potential that in situations with correlated
+predictors and in which the importance of significant predictor retention far exceeds
+that of insignificant predictor removal regularization may be preferable.
 
 ## Limitations and Future Work
 
-Limitations
-
-- Given the incredibly high true positive rates for the majority of predictors,
-the results of this analysis may differ for the detection of smaller effects.
-
-- The correlation imposed on the predictors was simple and likely unrealistic.
-A more comprehensive analysis would consider imposing more complex correlation
-structures on the predictors. 
-
-- LASSO and ENet with pre-specified regularization parameters is detached from
+There are several limitations to this analysis that provide insight into further
+cases scenarios and methodologies to consider. First, 
+using LASSO and ENet with pre-specified regularization parameters is detached from
 standard practice and is unlikely to reflect real world uses of those methods.
 Similarly, refitting the models "selected" via regularization using OLS is 
 likely problematic and mischaracterizes the statistical intentions of those 
 methods. A more statistically sound method for assessing significance and CI's
 would be more appropriate for regularization methods and would likely alter
 the results obtained.
+
+Second, as previously noted TTPR and TPR for $X_1$ were essentially the same
+stemming from the incredibly consistent TPR of 1 for all other predictors. As
+such, the effect sizes investigated in this analysis may have been too large, and
+future analysis should consider using smaller effect sizes as it may provide 
+greater insight into the efficacy of the considered model selection approaches.
+
+Lastly, the correlation structure induced in the predictors for case scenarios
+1b and 2b was fairly simplistic and is unlikely to be representative of real
+world correlations. Future works should consider inducing more realistic
+correlation scenarios to more thoroughly elucidate the differences
+in model selection techniques.
 
 \newpage
 
