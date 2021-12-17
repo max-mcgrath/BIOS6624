@@ -1,6 +1,6 @@
 ## Project 4 - Simulation
 
-his study aims to investigate the efficacy of several model selection 
+This study aims to investigate the efficacy of several model selection 
 techniques for linear regression across four case scenarios. More specifically,
 it aims to evaluate the ability of a set of backwards selection and
 regularization techniques to select models that retain significant predictors

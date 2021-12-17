@@ -95,14 +95,14 @@ first, predictors were removed one at a time according to highest t-test p-value
 until all predictors have a p-value under $0.15$. For the second and third,
 we used Akaike information criterion
 (AIC) and Bayesian information criterion (BIC) to iteratively reduce the model until
-the respective information criteria no longer decreases as predictors are 
+the respective information criteria no longer decreased as predictors are 
 removed. For p-value backwards selection the `ols_step_backwards_p()` function
 was used from the `olsrr` package. For AIC and BIC backwards selection, the
 function `stepwise()` was used from the `RcmdrMisc` R package.
 
 For regularization, we applied LASSO and Elastic Net (ENet), each with both
 regularization parameter fixed at $0.2$ and with regularization parameters selected using 
-5-fold cross-validation across a range of parameter values from $10^{10}$ to $10^{-2}$. 
+5-fold cross-validation from a range of parameter values from $10^{10}$ to $10^{-2}$. 
 For Elastic Net, the penalization mixing parameter will
 be fixed at $0.5$. Parameters will then be be considered retained if their 
 coefficient estimate is greater than zero and removed if their coefficient estimate
@@ -122,8 +122,8 @@ distribution with the linear combination of the predictors and coefficients as
 the mean and $1$ as the standard deviation. All data was generated using the 
 `genData()` function from the `hdrm` R package.
 
-Then, for each data set, a model was selected using each technique, then the 
-model was refit using OLS using only the retained predictors. Let $I_R\{X_{p,i}\}$
+Then, for each data set, a model was selected using each technique, and the 
+model was refit using OLS with only the retained predictors. Let $I_R\{X_{p,i}\}$
 equal 1 if predictor $X_p,p=1,\ldots,20$ was retained for simulation 
 $i=1,2,\ldots,1000$ and 0 
 otherwise. Then, each selection technique was evaluated for each case scenario 
@@ -216,7 +216,7 @@ methods (but backward selection using p-values performs worse).
 
 For coefficient bias, we see somewhat mixed results across case scenarios
 and methods, but generally bias is higher for regularization selection over
-backwards selection, and coefficient bias was consistently small relative to
+backwards selection, noting that coefficient bias was consistently small relative to
 coefficient size (between -0.03 and 0.03). Bias was generally greatest for 
 $\hat{\beta}_1$\ (as would be expected given its effect size), although
 regularization methods did have visibly higher biases for $X_2,\ldots,X_5$
@@ -231,14 +231,14 @@ methods and case scenarios.
 
 The most notable trend across methods in terms of predictor retention was the
 trade off between TPR and FPR. Generally, methods with higher TPR also had
-higher FPR. However, these tradeoffs were not always proportional. 
+higher FPR. However, these trade offs were not always proportional. 
 For AIC and BIC, the hypothesized trade off between true positive rate and 
 false positive rate is as expected: AIC generally has higher for both. However, we see
 that across the four case scenarios the change in TPR between AIC and BIC and
 that of FPR is notably different. For BIC, all scenarios had a fairly
 consistent FPR (0.015 - 0.024) while for TTPR we see a greater range across case
 scenarios (0.880 to 0.980). This is noteworthy because it is indicative that the
-trade-off may be
+trade off may be
 more beneficial for BIC in certain scenarios. Specifically, BIC sees notable
 improvements in FPR and only marginal disadvantages in TPR in situations with
 greater sample size (2a and 2b), while the difference in FPR is more pronounced
@@ -269,7 +269,7 @@ that of insignificant predictor removal regularization may be preferable.
 ## Limitations and Future Work
 
 There are several limitations to this analysis that provide insight into further
-cases scenarios and methodologies to consider. First, 
+cases scenarios and methodologies to consider for future analysis. First, 
 using LASSO and ENet with pre-specified regularization parameters is detached from
 standard practice and is unlikely to reflect real world uses of those methods.
 Similarly, refitting the models "selected" via regularization using OLS is 
