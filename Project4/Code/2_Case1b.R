@@ -204,6 +204,17 @@ for (i in 1:nSim) {
     coefEstsLASSOCV[i, 26:45] <- ifelse(is.na(coefEstsLASSOCV[i, 1:20]), NA, 
                                         as.numeric(allVars %in% sigCoefs))
     
+    # Store coefficient estimates from OLS Fit
+    keptCoefs <- numeric(20)
+    retainedVars <- names(olsFit$coefficients)[names(olsFit$coefficients) !=
+                                                   "(Intercept)"]
+    keptCoefs[(allVars %in% retainedVars)] <- 
+        olsFit$coefficients[names(olsFit$coefficients) != "(Intercept)"]
+    keptCoefs[!(allVars %in% retainedVars)] <- NA
+    coefEstsLASSOCV[i, 1:20] <- keptCoefs
+    
+    
+    
 }
 
 # Lasso w/ fixed lambda
@@ -254,6 +265,15 @@ for (i in 1:nSim) {
     coefEstsLASSOFIX[i, 26:45] <- ifelse(is.na(coefEstsLASSOFIX[i, 1:20]), NA, 
                                          as.numeric(allVars %in% sigCoefs))
     
+    # Store coefficient estimates from OLS Fit
+    keptCoefs <- numeric(20)
+    retainedVars <- names(olsFit$coefficients)[names(olsFit$coefficients) !=
+                                                   "(Intercept)"]
+    keptCoefs[(allVars %in% retainedVars)] <- 
+        olsFit$coefficients[names(olsFit$coefficients) != "(Intercept)"]
+    keptCoefs[!(allVars %in% retainedVars)] <- NA
+    coefEstsLASSOFIX[i, 1:20] <- keptCoefs
+    
 }
 
 # Elastic net w/ CV
@@ -267,15 +287,15 @@ for (i in 1:nSim) {
     
     # Get coefficient estimates
     allVars <- colnames(simData[[i]])[-1]
-    keptCoefs <- numeric(20)
+    # keptCoefs <- numeric(20)
     retainedVars <- rownames(
-        coef(modelCV, modelCV$lambda.min))[coef(modelCV, 
+        coef(modelCV, modelCV$lambda.min))[coef(modelCV,
                                                 modelCV$lambda.min)[, 1] != 0]
-    keptCoefs[(allVars %in% retainedVars)] <- 
-        as.matrix(coef(modelCV, modelCV$lambda.min))[rownames(coef(modelCV, modelCV$lambda.min)) != "(Intercept)" &
-                                                         coef(modelCV, modelCV$lambda.min)[, 1] != 0]
-    keptCoefs[!(allVars %in% retainedVars)] <- NA
-    coefEstsENCV[i, 1:20] <- keptCoefs
+    # keptCoefs[(allVars %in% retainedVars)] <- 
+    #     as.matrix(coef(modelCV, modelCV$lambda.min))[rownames(coef(modelCV, modelCV$lambda.min)) != "(Intercept)" &
+    #                                                      coef(modelCV, modelCV$lambda.min)[, 1] != 0]
+    # keptCoefs[!(allVars %in% retainedVars)] <- NA
+    # coefEstsENCV[i, 1:20] <- keptCoefs
     
     # Fit OLS model with retained variables
     formulaString <- paste0("y ~ ", paste0(retainedVars, collapse = " + "))
@@ -304,6 +324,15 @@ for (i in 1:nSim) {
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsENCV[i, 26:45] <- ifelse(is.na(coefEstsENCV[i, 1:20]), NA, 
                                      as.numeric(allVars %in% sigCoefs))
+    
+    # Store coefficient estimates from OLS Fit
+    keptCoefs <- numeric(20)
+    retainedVars <- names(olsFit$coefficients)[names(olsFit$coefficients) !=
+                                                   "(Intercept)"]
+    keptCoefs[(allVars %in% retainedVars)] <- 
+        olsFit$coefficients[names(olsFit$coefficients) != "(Intercept)"]
+    keptCoefs[!(allVars %in% retainedVars)] <- NA
+    coefEstsENCV[i, 1:20] <- keptCoefs
 }
 
 # Elastic net w/ fixed lambda
@@ -353,6 +382,15 @@ for (i in 1:nSim) {
     sigCoefs <- names(which(summary(olsFit)$coefficients[, 4] < 0.05))
     coefEstsENFIX[i, 26:45] <- ifelse(is.na(coefEstsENFIX[i, 1:20]), NA, 
                                       as.numeric(allVars %in% sigCoefs))
+    
+    # Store coefficient estimates from OLS Fit
+    keptCoefs <- numeric(20)
+    retainedVars <- names(olsFit$coefficients)[names(olsFit$coefficients) !=
+                                                   "(Intercept)"]
+    keptCoefs[(allVars %in% retainedVars)] <- 
+        olsFit$coefficients[names(olsFit$coefficients) != "(Intercept)"]
+    keptCoefs[!(allVars %in% retainedVars)] <- NA
+    coefEstsENFIX[i, 1:20] <- keptCoefs
 }
 
 # Write relevant objects to files ----------------------------------------------
